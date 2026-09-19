@@ -1,0 +1,122 @@
+[
+  {
+    "id": "GDR-4471",
+    "gender": "Women",
+    "category": "Dress",
+    "description": "Silk midi dress, draped waist",
+    "style": "GDR-4471",
+    "fabricCode": "SLK-100",
+    "color": "NVY-22",
+    "imageLink": "https://example.com/images/GDR-4471.jpg"
+  },
+  {
+    "id": "GJK-3390",
+    "gender": "Women",
+    "category": "Jacket",
+    "description": "Wool blazer, single button",
+    "style": "GJK-3390",
+    "fabricCode": "WLS-9010",
+    "color": "BEI-14",
+    "imageLink": "https://example.com/images/GJK-3390.jpg"
+  },
+  {
+    "id": "MSU-2210",
+    "gender": "Men",
+    "category": "Suit",
+    "description": "Two-piece tailored suit",
+    "style": "MSU-2210",
+    "fabricCode": "WOL-100",
+    "color": "CHR-08",
+    "imageLink": "https://example.com/images/MSU-2210.jpg"
+  },
+  {
+    "id": "MSH-1187",
+    "gender": "Men",
+    "category": "Shirt",
+    "description": "Cotton poplin shirt, slim fit",
+    "style": "MSH-1187",
+    "fabricCode": "CTN-100",
+    "color": "WHT-01",
+    "imageLink": "https://example.com/images/MSH-1187.jpg"
+  },
+  {
+    "id": "GCT-5502",
+    "gender": "Women",
+    "category": "Coat",
+    "description": "Double-breasted wool coat",
+    "style": "GCT-5502",
+    "fabricCode": "WLC-8020",
+    "color": "CAM-19",
+    "imageLink": "https://example.com/images/GCT-5502.jpg"
+  },
+  {
+    "id": "MKN-0876",
+    "gender": "Men",
+    "category": "Knitwear",
+    "description": "Crew neck cashmere sweater",
+    "style": "MKN-0876",
+    "fabricCode": "CSH-100",
+    "color": "GRN-27",
+    "imageLink": "https://example.com/images/MKN-0876.jpg"
+  },
+  {
+    "id": "GBG-6120",
+    "gender": "Women",
+    "category": "Bag",
+    "description": "Structured top-handle bag",
+    "style": "GBG-6120",
+    "fabricCode": "LTH-CLF",
+    "color": "BLK-01",
+    "imageLink": "https://example.com/images/GBG-6120.jpg"
+  },
+  {
+    "id": "GSH-3341",
+    "gender": "Women",
+    "category": "Shoes",
+    "description": "Pointed-toe leather pump",
+    "style": "GSH-3341",
+    "fabricCode": "LTH-STD",
+    "color": "NUD-11",
+    "imageLink": "https://example.com/images/GSH-3341.jpg"
+  },
+  {
+    "id": "MSH-4402",
+    "gender": "Men",
+    "category": "Shoes",
+    "description": "Derby shoe, polished calf",
+    "style": "MSH-4402",
+    "fabricCode": "LTH-CLF",
+    "color": "BRN-33",
+    "imageLink": "https://example.com/images/MSH-4402.jpg"
+  },
+  {
+    "id": "UAC-0091",
+    "gender": "Unisex",
+    "category": "Accessories",
+    "description": "Silk twill pocket square",
+    "style": "UAC-0091",
+    "fabricCode": "SLK-100",
+    "color": "BUR-45",
+    "imageLink": "https://example.com/images/UAC-0091.jpg"
+  },
+  {
+    "id": "MJK-2298",
+    "gender": "Men",
+    "category": "Jacket",
+    "description": "Unstructured linen jacket",
+    "style": "MJK-2298",
+    "fabricCode": "LIN-100",
+    "color": "SND-17",
+    "imageLink": "https://example.com/images/MJK-2298.jpg"
+  },
+  {
+    "id": "GKN-1150",
+    "gender": "Women",
+    "category": "Knitwear",
+    "description": "Ribbed wool polo neck",
+    "style": "GKN-1150",
+    "fabricCode": "WLS-100",
+    "color": "IVR-03",
+    "imageLink": "https://example.com/images/GKN-1150.jpg"
+  }
+]
