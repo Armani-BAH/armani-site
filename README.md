@@ -77,3 +77,5 @@ the live site updates automatically, still with no conversion step.
 - No backend, database, Python, or hosting cost is required for the core site.
 - `scripts/excel_to_json.py` is left in the project but unused — safe to
   delete, or keep as a reference if you ever want a JSON-based version again.
+
+  ##https://armani-bah.github.io/armani-site/armani-site/
