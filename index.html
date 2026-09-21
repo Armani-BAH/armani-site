@@ -3,70 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emporio Armani</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Emporio Armani — Bahrain, Marassi Mall</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="wordmark">EMPORIO</div>
-    <div class="tagline">ARMANI</div>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
+      <small>Bahrain-Marassi Mall</small>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="#4b4844" stroke-width="1.6" fill="none"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" placeholder="Search style, fabric or colour code…">
+      </div>
+      <button class="icon-btn" id="filterHeaderBtn">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="1.6" fill="#141414" stroke="none"/><circle cx="10" cy="18" r="1.6" fill="#141414" stroke="none"/></svg>
+        <span class="label">Filters</span>
+      </button>
+      <button class="icon-btn" id="openDrawerBtn">
+        <svg viewBox="0 0 24 24"><path d="M20.8 4.6c-1.9-1.6-4.7-1.4-6.3.4L12 7.6l-2.5-2.6c-1.6-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 7L12 21l9.1-9.4c1.9-2 1.8-5.2-.3-7z"/></svg>
+        <span class="label">My Selection</span>
+        <span class="selection-count zero" id="selCountBadge">0</span>
+      </button>
+    </div>
   </div>
-  <button class="wish-btn" id="openDrawer" aria-haspopup="dialog" aria-controls="drawer">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2.3 4.5 5.9 4c2-.3 3.9.7 6.1 3 2.2-2.3 4.1-3.3 6.1-3 3.6.5 5.5 4.1 3.9 7.7C19.5 16.4 12 21 12 21z"/></svg>
-    <span>Wishlist</span>
-    <span class="wish-count" id="wishCount">0</span>
-  </button>
+  <div class="wrap">
+    <nav class="categories gender-nav" id="genderNav"></nav>
+  </div>
 </header>
+<main class="wrap">
+  <div class="catalogue-layout">
 
-<div class="statement">
-  <h1>A private wishlist, sent straight to your advisor.</h1>
-  <p>Browse the collection, save what catches your eye, and send your list on WhatsApp to check price and availability in your size — no account, no checkout, just a conversation.</p>
-</div>
-
-<div class="shell">
-  <aside class="filters">
-    <div class="filter-group" id="genderFilters">
-      <h3>Gender</h3>
-    </div>
-    <div class="filter-group" id="categoryFilters">
-      <h3>Category</h3>
-    </div>
+  <aside class="category-sidebar">
+    <div class="sidebar-title">CATEGORY</div>
+    <nav class="category-nav" id="categoryNav"></nav>
   </aside>
-
-  <main>
-    <div class="results-bar">
-      <span id="resultsCount">— pieces</span>
-      <span id="activeFilterLabel"></span>
+  <section class="catalogue-content">
+  <div class="toolbar">
+    <div class="result-count"><strong id="resultCount">0</strong> products</div>
+    <div class="toolbar-controls">
+      <label class="select-field">
+        <span style="display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="selectedOnlyToggle">
+        </span>
+        <span>Selected only</span>
+      </label>
+      <div class="select-field">
+        <label for="sortSelect">Sort</label>
+        <select id="sortSelect">
+          <option value="default">Featured</option>
+          <option value="name">Product name, A–Z</option>
+          <option value="category">Category, A–Z</option>
+          <option value="style">Style code, A–Z</option>
+        </select>
+      </div>
+      <button class="filter-toggle-btn" id="filterToggleBtn">
+        Filter
+        <span class="count-badge" id="filterCountBadge" style="display:none;">0</span>
+      </button>
     </div>
-    <div class="grid" id="grid"></div>
-    <div class="empty-state" id="emptyState" style="display:none;">No pieces match this filter yet.</div>
-  </main>
+  </div>
+
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-panel-inner">
+      <div class="filter-group">
+        <h4>Gender</h4>
+        <div class="filter-chip-list" id="filterGender"></div>
+      </div>
+      <div class="filter-group">
+        <h4>Category</h4>
+        <div class="filter-chip-list" id="filterCategory"></div>
+      </div>
+      <div class="filter-group">
+        <h4>Sub-category</h4>
+        <div class="filter-chip-list" id="filterSub"></div>
+      </div>
+      <div class="filter-group">
+        <h4>&nbsp;</h4>
+        <button class="clear-filters" id="clearFiltersBtn">Clear all filters</button>
+      </div>
+    </div>
+  </div>
+  <div id="landingView" style="display:none;">
+  <div id="landingGrid"></div>
+</div>
+  <div class="grid" id="productGrid"></div>
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+    <button class="load-more-btn" id="loadMoreBtn">Load more</button>
+  </div>
+      </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Emporio Armani · Bahrain – Marassi Mall</p>
+    <p>Product selection — style, fabric and colour codes are from the FW26 item list.</p>
+  </div>
+</footer>
+
+<!-- Product detail modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-media">
+      <button class="modal-close" id="modalCloseBtn">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      </button>
+      <button class="modal-nav prev" id="modalPrevBtn">
+        <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg>
+      </button>
+      <button class="modal-nav next" id="modalNextBtn">
+        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
+      <div id="modalMediaInner"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-cat" id="modalCat"></div>
+      <h2 class="modal-name" id="modalName"></h2>
+      <div class="modal-gender" id="modalGender"></div>
+      <div class="modal-codes">
+        <div><span>Style code</span><b id="modalStyle"></b></div>
+        <div><span>Fabric code</span><b id="modalFabric"></b></div>
+        <div><span>Colour code</span><b id="modalColor"></b></div>
+        <div><span>Sub-category</span><b id="modalSub"></b></div>
+      </div>
+      <p class="modal-desc" id="modalDesc">Product description and photography pending.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" id="modalSelectBtn">Select this piece</button>
+        <button class="btn-secondary" id="modalDrawerBtn">View selection</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<footer>&copy; Armani. Product data loaded from data/products.json.</footer>
-
-<div class="overlay" id="overlay"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-label="Wishlist">
-  <div class="drawer-head">
-    <h2>Your wishlist</h2>
-    <button class="drawer-close" id="closeDrawer" aria-label="Close">&times;</button>
+<!-- Selection drawer -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-label="My Selection">
+  <div class="drawer-header">
+    <h2>My Selection</h2>
+    <button class="drawer-close" id="drawerCloseBtn">
+      <svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
+  <div class="drawer-sub">
+    <span id="drawerCount">0 products selected</span>
+    <button class="drawer-clear" id="drawerClearBtn">Clear all</button>
   </div>
   <div class="drawer-list" id="drawerList"></div>
-  <div class="drawer-foot">
-    <p>Sends your saved pieces — style code, color and category — as a WhatsApp message to our advisor to confirm price and size.</p>
-    <button class="whatsapp-btn" id="sendWhatsapp">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.3A8.9 8.9 0 0 0 12.03 3.7 8.94 8.94 0 0 0 3.1 12.6a8.85 8.85 0 0 0 1.2 4.5L3 21.3l4.3-1.3a8.9 8.9 0 0 0 4.7 1.3 8.94 8.94 0 0 0 8.9-8.9 8.85 8.85 0 0 0-2.3-6.1zM12 19.5a7.4 7.4 0 0 1-3.8-1l-.27-.16-2.55.78.8-2.5-.18-.28a7.4 7.4 0 0 1 6-11.4 7.35 7.35 0 0 1 7.4 7.4A7.4 7.4 0 0 1 12 19.5zm4.1-5.5c-.22-.1-1.3-.65-1.5-.72-.2-.08-.35-.1-.5.1-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.1-.94-.35-1.8-1.1-.66-.6-1.1-1.32-1.24-1.54-.13-.22 0-.34.1-.45.1-.1.22-.26.33-.4.1-.12.14-.22.22-.36.07-.15.03-.28-.02-.4-.05-.1-.5-1.2-.68-1.65-.18-.43-.36-.37-.5-.38h-.43c-.15 0-.4.05-.6.28-.22.22-.82.8-.82 1.96s.84 2.27.96 2.43c.1.15 1.65 2.5 4 3.5.56.24 1 .38 1.33.5.56.17 1.07.15 1.47.1.45-.07 1.3-.53 1.48-1.05.18-.5.18-.94.13-1.03-.05-.1-.2-.15-.4-.25z"/></svg>
-      <span id="sendLabel">Save some pieces first</span>
-    </button>
+  <div class="drawer-footer">
+    <button class="buyer-toggle" id="buyerToggleBtn">+ Add your name, company &amp; notes (optional)</button>
+    <div class="buyer-form" id="buyerForm">
+      <input type="text" id="buyerName" placeholder="Buyer / client name">
+      <input type="text" id="buyerCompany" placeholder="Company">
+      <input type="email" id="buyerEmail" placeholder="Email">
+      <textarea id="buyerNotes" placeholder="Notes — e.g. “Interested in these styles for the upcoming season.”"></textarea>
+    </div>
+    <button class="share-btn" id="shareBtn">Share My Selection</button>
+    <div class="share-options" id="shareOptions">
+      <button class="share-opt" id="shareWhatsapp">
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 01-12.3 7.6L3 20l1-5.4A8.5 8.5 0 1121 11.5z"/></svg>
+        WhatsApp
+      </button>
+    </div>
   </div>
 </aside>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="toast" id="toast"></div>
+
 <script src="js/app.js"></script>
 </body>
 </html>

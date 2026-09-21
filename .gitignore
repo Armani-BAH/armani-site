@@ -1,0 +1,9 @@
+# Resume checkpoint written by scripts/build_products.py
+data/products_progress.json
+
+# Python / OS / editor
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.vscode/
