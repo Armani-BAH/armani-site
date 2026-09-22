@@ -4,119 +4,119 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Emporio Armani — Bahrain, Marassi Mall</title>
+<meta name="description" content="Emporio Armani FW26 selection for Bahrain, Marassi Mall. Browse by department and category, then share your selection.">
+<meta name="theme-color" content="#ffffff">
+<link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main">Skip to products</a>
+
 <header class="site">
-  <div class="wrap">
+  <div class="wrap header-main">
     <div class="brand">
       <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
-      <small>Bahrain-Marassi Mall</small>
+      <small>Marassi Mall, Bahrain</small>
     </div>
     <div class="header-actions">
       <div class="search-box">
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="#4b4844" stroke-width="1.6" fill="none"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInput" type="text" placeholder="Search style, fabric or colour code…">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" aria-label="Search" placeholder="Search style, fabric or colour code">
       </div>
-      <button class="icon-btn" id="filterHeaderBtn">
-        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/><circle cx="6" cy="12" r="1.6" fill="#141414" stroke="none"/><circle cx="10" cy="18" r="1.6" fill="#141414" stroke="none"/></svg>
-        <span class="label">Filters</span>
-      </button>
-      <button class="icon-btn" id="openDrawerBtn">
-        <svg viewBox="0 0 24 24"><path d="M20.8 4.6c-1.9-1.6-4.7-1.4-6.3.4L12 7.6l-2.5-2.6c-1.6-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 7L12 21l9.1-9.4c1.9-2 1.8-5.2-.3-7z"/></svg>
-        <span class="label">My Selection</span>
+      <button class="icon-btn" id="openDrawerBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6c-1.9-1.6-4.7-1.4-6.3.4L12 7.6l-2.5-2.6c-1.6-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 7L12 21l9.1-9.4c1.9-2 1.8-5.2-.3-7z"/></svg>
+        <span class="label">My selection</span>
         <span class="selection-count zero" id="selCountBadge">0</span>
       </button>
     </div>
   </div>
   <div class="wrap">
-    <nav class="categories gender-nav" id="genderNav"></nav>
+    <nav class="categories gender-nav" id="genderNav" aria-label="Department"></nav>
   </div>
 </header>
-<main class="wrap">
+
+<main class="wrap" id="main">
   <div class="catalogue-layout">
 
-  <aside class="category-sidebar">
-    <div class="sidebar-title">CATEGORY</div>
-    <nav class="category-nav" id="categoryNav"></nav>
-  </aside>
-  <section class="catalogue-content">
-  <div class="toolbar">
-    <div class="result-count"><strong id="resultCount">0</strong> products</div>
-    <div class="toolbar-controls">
-      <label class="select-field">
-        <span style="display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="selectedOnlyToggle">
-        </span>
-        <span>Selected only</span>
-      </label>
-      <div class="select-field">
-        <label for="sortSelect">Sort</label>
-        <select id="sortSelect">
-          <option value="default">Featured</option>
-          <option value="name">Product name, A–Z</option>
-          <option value="category">Category, A–Z</option>
-          <option value="style">Style code, A–Z</option>
-        </select>
-      </div>
-      <button class="filter-toggle-btn" id="filterToggleBtn">
-        Filter
-        <span class="count-badge" id="filterCountBadge" style="display:none;">0</span>
-      </button>
-    </div>
-  </div>
+    <aside class="category-sidebar">
+      <nav class="category-nav" id="categoryNav" aria-label="Category"></nav>
+    </aside>
 
-  <div class="filter-panel" id="filterPanel">
-    <div class="filter-panel-inner">
-      <div class="filter-group">
-        <h4>Gender</h4>
-        <div class="filter-chip-list" id="filterGender"></div>
+    <section class="catalogue-content">
+      <h1 class="page-title">FW26 selection</h1>
+
+      <div class="toolbar">
+        <div class="result-count" id="resultCount" aria-live="polite"></div>
+        <div class="toolbar-controls">
+          <label class="select-field">
+            <input type="checkbox" id="selectedOnlyToggle">
+            <span>Selected only</span>
+          </label>
+          <div class="select-field">
+            <label for="sortSelect">Sort</label>
+            <select id="sortSelect">
+              <option value="default">Featured</option>
+              <option value="name">Name, A–Z</option>
+              <option value="category">Category, A–Z</option>
+              <option value="style">Style code, A–Z</option>
+            </select>
+          </div>
+          <button class="filter-toggle-btn" id="filterToggleBtn" type="button" aria-expanded="false" aria-controls="filterPanel">
+            Filters
+            <span class="count-badge" id="filterCountBadge" style="display:none;">0</span>
+          </button>
+        </div>
       </div>
-      <div class="filter-group">
-        <h4>Category</h4>
-        <div class="filter-chip-list" id="filterCategory"></div>
+
+      <div class="filter-panel" id="filterPanel">
+        <div class="filter-panel-inner">
+          <div class="filter-group">
+            <h2>Gender</h2>
+            <div class="filter-chip-list" id="filterGender"></div>
+          </div>
+          <div class="filter-group">
+            <h2>Category</h2>
+            <div class="filter-chip-list" id="filterCategory"></div>
+          </div>
+          <div class="filter-group">
+            <h2>Type</h2>
+            <div class="filter-chip-list" id="filterSub"></div>
+          </div>
+          <div class="filter-group filter-actions">
+            <button class="clear-filters" id="clearFiltersBtn" type="button">Clear all filters</button>
+          </div>
+        </div>
       </div>
-      <div class="filter-group">
-        <h4>Sub-category</h4>
-        <div class="filter-chip-list" id="filterSub"></div>
+
+      <div class="grid" id="productGrid"></div>
+
+      <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+        <button class="load-more-btn" id="loadMoreBtn" type="button">Show more</button>
       </div>
-      <div class="filter-group">
-        <h4>&nbsp;</h4>
-        <button class="clear-filters" id="clearFiltersBtn">Clear all filters</button>
-      </div>
-    </div>
-  </div>
-  <div id="landingView" style="display:none;">
-  <div id="landingGrid"></div>
-</div>
-  <div class="grid" id="productGrid"></div>
-  <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
-    <button class="load-more-btn" id="loadMoreBtn">Load more</button>
-  </div>
-      </section>
+    </section>
   </div>
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Emporio Armani · Bahrain – Marassi Mall</p>
-    <p>Product selection — style, fabric and colour codes are from the FW26 item list.</p>
+    <p>Emporio Armani, Marassi Mall, Bahrain</p>
+    <p>Style, fabric and colour codes are from the FW26 item list.</p>
   </div>
 </footer>
 
 <!-- Product detail modal -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal" role="dialog" aria-modal="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
     <div class="modal-media">
-      <button class="modal-close" id="modalCloseBtn">
-        <svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+      <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
       </button>
-      <button class="modal-nav prev" id="modalPrevBtn">
-        <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg>
+      <button class="modal-nav prev" id="modalPrevBtn" type="button" aria-label="Previous piece">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
       </button>
-      <button class="modal-nav next" id="modalNextBtn">
-        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+      <button class="modal-nav next" id="modalNextBtn" type="button" aria-label="Next piece">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
       </button>
       <div id="modalMediaInner"></div>
     </div>
@@ -124,16 +124,16 @@
       <div class="modal-cat" id="modalCat"></div>
       <h2 class="modal-name" id="modalName"></h2>
       <div class="modal-gender" id="modalGender"></div>
-      <div class="modal-codes">
-        <div><span>Style code</span><b id="modalStyle"></b></div>
-        <div><span>Fabric code</span><b id="modalFabric"></b></div>
-        <div><span>Colour code</span><b id="modalColor"></b></div>
-        <div><span>Sub-category</span><b id="modalSub"></b></div>
-      </div>
-      <p class="modal-desc" id="modalDesc">Product description and photography pending.</p>
+      <dl class="modal-codes">
+        <div><dt>Style code</dt><dd id="modalStyle"></dd></div>
+        <div><dt>Fabric code</dt><dd id="modalFabric"></dd></div>
+        <div><dt>Colour code</dt><dd id="modalColor"></dd></div>
+        <div><dt>Family</dt><dd id="modalFamily"></dd></div>
+      </dl>
+      <p class="modal-desc" id="modalDesc" hidden>Photography for this piece is not available yet.</p>
       <div class="modal-actions">
-        <button class="btn-primary" id="modalSelectBtn">Select this piece</button>
-        <button class="btn-secondary" id="modalDrawerBtn">View selection</button>
+        <button class="btn-primary" id="modalSelectBtn" type="button">Select this piece</button>
+        <button class="btn-secondary" id="modalDrawerBtn" type="button">View selection</button>
       </div>
     </div>
   </div>
@@ -141,37 +141,31 @@
 
 <!-- Selection drawer -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
-<aside class="drawer" id="drawer" aria-label="My Selection">
+<aside class="drawer" id="drawer" aria-label="My selection">
   <div class="drawer-header">
-    <h2>My Selection</h2>
-    <button class="drawer-close" id="drawerCloseBtn">
-      <svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    <h2>My selection</h2>
+    <button class="drawer-close" id="drawerCloseBtn" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
     </button>
   </div>
   <div class="drawer-sub">
-    <span id="drawerCount">0 products selected</span>
-    <button class="drawer-clear" id="drawerClearBtn">Clear all</button>
+    <span id="drawerCount">0 pieces selected</span>
+    <button class="drawer-clear" id="drawerClearBtn" type="button">Clear all</button>
   </div>
   <div class="drawer-list" id="drawerList"></div>
   <div class="drawer-footer">
-    <button class="buyer-toggle" id="buyerToggleBtn">+ Add your name, company &amp; notes (optional)</button>
+    <button class="buyer-toggle" id="buyerToggleBtn" type="button" aria-expanded="false">Add your name, company and notes (optional)</button>
     <div class="buyer-form" id="buyerForm">
-      <input type="text" id="buyerName" placeholder="Buyer / client name">
-      <input type="text" id="buyerCompany" placeholder="Company">
-      <input type="email" id="buyerEmail" placeholder="Email">
-      <textarea id="buyerNotes" placeholder="Notes — e.g. “Interested in these styles for the upcoming season.”"></textarea>
+      <input type="text" id="buyerName" placeholder="Name" autocomplete="name">
+      <input type="text" id="buyerCompany" placeholder="Company" autocomplete="organization">
+      <input type="email" id="buyerEmail" placeholder="Email" autocomplete="email">
+      <textarea id="buyerNotes" placeholder="Notes, for example: interested in these styles for the upcoming season."></textarea>
     </div>
-    <button class="share-btn" id="shareBtn">Share My Selection</button>
-    <div class="share-options" id="shareOptions">
-      <button class="share-opt" id="shareWhatsapp">
-        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 01-12.3 7.6L3 20l1-5.4A8.5 8.5 0 1121 11.5z"/></svg>
-        WhatsApp
-      </button>
-    </div>
+    <button class="share-btn" id="shareBtn" type="button">Send on WhatsApp</button>
   </div>
 </aside>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="js/app.js"></script>
 </body>
