@@ -406,13 +406,14 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .filter-toggle-btn{height:40px;padding:0 16px;}
   .filter-panel-inner{grid-template-columns:1fr;gap:22px;padding:20px 0;}
 
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 12px;padding-top:20px;}
-  .card-name{font-size:.92rem;}
-  .card-meta{font-size:.8rem;}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 14px;padding-top:20px;}
+  .card-name{font-size:.95rem;}
+  .card-meta{font-size:.82rem;}
   .card-meta span + span{margin-left:8px;padding-left:8px;}
-  .card-codes{grid-template-columns:1fr;gap:3px;}
-  .card-codes div{display:flex;justify-content:space-between;gap:8px;}
-  .heart-btn{top:8px;right:8px;width:36px;height:36px;}
+    .card-codes{grid-template-columns:1fr;gap:6px;margin-top:10px;}
+  .card-codes div{display:flex;flex-direction:column;gap:2px;}
+  .card-codes dt{font-size:.75rem;}
+  .card-codes dd{font-size:.88rem;font-weight:500;color:var(--ink);}  .heart-btn{top:8px;right:8px;width:36px;height:36px;}
 
   .modal-overlay{padding:0;align-items:stretch;}
   .modal{max-height:none;height:100%;}
