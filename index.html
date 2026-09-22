@@ -2,23 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Emporio Armani — Bahrain, Marassi Mall</title>
-<meta name="description" content="Emporio Armani FW26 selection for Bahrain, Marassi Mall. Browse by department and category, then share your selection.">
+<meta name="description" content="Emporio Armani FW26 selection for Bahrain, Marassi Mall.">
 <meta name="theme-color" content="#ffffff">
 <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- ======================== LANDING: GENDER ======================== -->
+<div class="landing" id="landingGender">
+  <div class="landing-header">
+    <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" class="landing-logo">
+    <small>Marassi Mall, Bahrain · FW26 selection</small>
+  </div>
+  <div class="landing-grid" id="genderCards"></div>
+  <button class="landing-skip" id="skipToAll" type="button">Browse all departments →</button>
+</div>
+
+<!-- ======================== LANDING: CATEGORY ======================== -->
+<div class="landing" id="landingCategory" hidden>
+  <div class="landing-header">
+    <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" class="landing-logo">
+    <button class="landing-back" id="backToGender" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
+      All departments
+    </button>
+  </div>
+  <p class="landing-dept" id="landingDeptLabel"></p>
+  <div class="landing-grid" id="categoryCards"></div>
+  <button class="landing-skip" id="skipToGender" type="button">Browse all categories →</button>
+</div>
+
+<!-- ======================== CATALOGUE ======================== -->
+<div id="catalogueWrap" hidden>
+
 <a class="skip-link" href="#main">Skip to products</a>
 
 <header class="site">
   <div class="wrap header-main">
-    <div class="brand">
+    <button class="brand" id="brandHomeBtn" type="button" aria-label="Back to home">
       <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
       <small>Marassi Mall, Bahrain</small>
-    </div>
+    </button>
     <div class="header-actions">
       <div class="search-box">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -31,9 +58,6 @@
       </button>
     </div>
   </div>
-  <div class="wrap">
-    <nav class="categories gender-nav" id="genderNav" aria-label="Department"></nav>
-  </div>
 </header>
 
 <main class="wrap" id="main">
@@ -44,7 +68,11 @@
     </aside>
 
     <section class="catalogue-content">
-      <h1 class="page-title">FW26 selection</h1>
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" id="breadcrumb" aria-label="You are here"></nav>
+
+      <h1 class="page-title" id="pageTitle">FW26 selection</h1>
 
       <div class="toolbar">
         <div class="result-count" id="resultCount" aria-live="polite"></div>
@@ -72,7 +100,7 @@
       <div class="filter-panel" id="filterPanel">
         <div class="filter-panel-inner">
           <div class="filter-group">
-            <h2>Gender</h2>
+            <h2>Department</h2>
             <div class="filter-chip-list" id="filterGender"></div>
           </div>
           <div class="filter-group">
@@ -104,6 +132,8 @@
     <p>Style, fabric and colour codes are from the FW26 item list.</p>
   </div>
 </footer>
+
+</div><!-- /catalogueWrap -->
 
 <!-- Product detail modal -->
 <div class="modal-overlay" id="modalOverlay">
