@@ -11,17 +11,17 @@
 </head>
 <body>
 
-<!-- ======================== LANDING: GENDER ======================== -->
+<!-- ===================== LANDING: GENDER ===================== -->
 <div class="landing" id="landingGender">
   <div class="landing-header">
     <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" class="landing-logo">
     <small>Marassi Mall, Bahrain · FW26 selection</small>
   </div>
-  <div class="landing-grid" id="genderCards"></div>
+  <div class="landing-grid gender-landing-grid" id="genderCards"></div>
   <button class="landing-skip" id="skipToAll" type="button">Browse all departments →</button>
 </div>
 
-<!-- ======================== LANDING: CATEGORY ======================== -->
+<!-- ===================== LANDING: CATEGORY ===================== -->
 <div class="landing" id="landingCategory" hidden>
   <div class="landing-header">
     <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" class="landing-logo">
@@ -35,7 +35,7 @@
   <button class="landing-skip" id="skipToGender" type="button">Browse all categories →</button>
 </div>
 
-<!-- ======================== CATALOGUE ======================== -->
+<!-- ===================== CATALOGUE ===================== -->
 <div id="catalogueWrap" hidden>
 
 <a class="skip-link" href="#main">Skip to products</a>
@@ -58,6 +58,10 @@
       </button>
     </div>
   </div>
+  <!-- Gender tabs row -->
+  <div class="wrap">
+    <nav class="gender-nav" id="genderNav" aria-label="Department"></nav>
+  </div>
 </header>
 
 <main class="wrap" id="main">
@@ -69,9 +73,7 @@
 
     <section class="catalogue-content">
 
-      <!-- Breadcrumb -->
       <nav class="breadcrumb" id="breadcrumb" aria-label="You are here"></nav>
-
       <h1 class="page-title" id="pageTitle">FW26 selection</h1>
 
       <div class="toolbar">
