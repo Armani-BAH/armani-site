@@ -319,8 +319,8 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
 @media(max-width:1000px){
   .wrap{padding:0 24px;}
   .catalogue-layout{grid-template-columns:1fr;gap:0;padding-top:20px;}
-  .category-sidebar{position:static;max-height:none;overflow:hidden;margin-bottom:16px;border-bottom:1px solid var(--line);}
-  .category-nav{flex-direction:row;gap:24px;overflow-x:auto;scrollbar-width:none;width:100%;max-width:100%;}
+  .category-sidebar{position:static;max-height:none;overflow:hidden;margin-bottom:16px;border-bottom:1px solid var(--line);width:100%;}  
+  .category-nav{flex-direction:row;gap:24px;overflow-x:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;max-width:100%;}
   .category-nav::-webkit-scrollbar{display:none;}
   .category-nav .cat-btn{flex:none;}
   .category-nav .cat-btn{flex:none;padding:12px 0;white-space:nowrap;border-left:0;border-bottom:2px solid transparent;font-size:1rem;}  .category-nav .cat-btn.active{border-left-color:transparent;border-bottom-color:var(--ink);}
