@@ -112,8 +112,8 @@ h1,h2,h3{font-weight:400;}
 .landing-card.cat-card .landing-card-body{color:var(--ink);}
 .landing-card.cat-card .landing-card-arrow{border-color:var(--line);color:var(--ink);}
 .landing-card.cat-card:hover .landing-card-arrow{background:var(--ink);border-color:var(--ink);color:var(--paper);}
-.landing-card.cat-card .landing-card-img{opacity:.18;transition:opacity var(--dur) var(--ease);}
-.landing-card.cat-card:hover .landing-card-img{opacity:.28;}
+.landing-card.cat-card .landing-card-img{opacity:.35;transition:opacity var(--dur) var(--ease);}
+.landing-card.cat-card:hover .landing-card-img{opacity:.5;}
 
 .landing-skip{
   margin-top:32px;color:var(--stone);font-size:.9rem;
@@ -322,8 +322,7 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .category-sidebar{position:static;max-height:none;overflow:visible;margin-bottom:16px;border-bottom:1px solid var(--line);}
   .category-nav{flex-direction:row;gap:24px;overflow-x:auto;scrollbar-width:none;}
   .category-nav::-webkit-scrollbar{display:none;}
-  .category-nav .cat-btn{flex:none;padding:10px 0;white-space:nowrap;border-left:0;border-bottom:2px solid transparent;font-size:.95rem;}
-  .category-nav .cat-btn.active{border-left-color:transparent;border-bottom-color:var(--ink);}
+  .category-nav .cat-btn{flex:none;padding:12px 0;white-space:nowrap;border-left:0;border-bottom:2px solid transparent;font-size:1rem;}  .category-nav .cat-btn.active{border-left-color:transparent;border-bottom-color:var(--ink);}
   .filter-panel-inner{grid-template-columns:1fr 1fr;}
   .filter-group:nth-child(3){grid-column:1/-1;}
   .modal{grid-template-columns:1fr;overflow-y:auto;}
@@ -347,8 +346,8 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .search-box{order:3;flex:1 1 100%;max-width:none;}
 
   /* Gender nav — bigger tap targets */
-  .gender-nav{gap:20px;height:48px;padding:0 16px;border-top:1px solid var(--line);}
-  .gender-nav .g-btn{font-size:1rem;height:48px;}
+  .gender-nav{gap:20px;height:52px;padding:0 16px;border-top:1px solid var(--line);}
+  .gender-nav .g-btn{font-size:1.05rem;height:52px;font-weight:500;}
 
   .page-title{font-size:1.55rem;margin-bottom:10px;}
   .breadcrumb{font-size:.9rem;margin-bottom:10px;}

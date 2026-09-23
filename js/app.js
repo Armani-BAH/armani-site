@@ -87,7 +87,6 @@ function buildGenderLanding(){
       <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       <span class="landing-card-body">
         <span class="landing-card-label">${esc(GENDER_LABELS[g])}</span>
-        <span class="landing-card-count">${fmt(count)} pieces</span>
       </span>`;
     btn.addEventListener("click",()=>showCategoryLanding(g));
     grid.appendChild(btn);
@@ -119,7 +118,6 @@ function showCategoryLanding(dGender){
       <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       <span class="landing-card-body">
         <span class="landing-card-label">${esc(sentenceCase(cat))}</span>
-        <span class="landing-card-count">${fmt(count)} pieces</span>
       </span>`;
     btn.addEventListener("click",()=>enterCatalogue(dGender,cat));
     grid.appendChild(btn);
