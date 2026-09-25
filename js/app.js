@@ -680,5 +680,17 @@ function renderSheet(){
         });
         subList.appendChild(subBtn);
       });
+      cBox.appendChild(subList);
+    }
+  });
+  updateMobileFilterBadge();
+}
+
+function updateMobileFilterBadge(){
+  const total=state.filters.gender.size+state.filters.category.size+state.filters.sub.size;
+  const badge=$("#mobileFilterBadge");
+  badge.textContent=total; badge.style.display=total>0?"inline-flex":"none";
+}
+
 /* ========================= INIT ========================= */
 loadProducts();
