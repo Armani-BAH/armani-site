@@ -255,8 +255,8 @@ function renderCategoryNav(){
   allBtn.textContent="All categories";
   allBtn.addEventListener("click",()=>{
     state.filters.category.clear(); state.filters.sub.clear();
-    state.activeCategory=null; state.visibleCount=PAGE_SIZE;
-    renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+    state.expandedCategory=null; state.activeCategory=null; state.visibleCount=PAGE_SIZE;
+    renderSubNav(null); renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
   });
   nav.appendChild(allBtn);
 
@@ -266,15 +266,17 @@ function renderCategoryNav(){
     btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
     btn.textContent=sentenceCase(cat);
     btn.addEventListener("click",()=>{
-      /* toggle open/close only — don't filter */
       if(state.expandedCategory===cat){
         state.expandedCategory=null;
+        renderSubNav(null);
       } else {
         state.expandedCategory=cat;
+        renderSubNav(cat);
       }
       state.filters.sub.clear();
       renderCategoryNav();
     });
+
     nav.appendChild(btn);
 
     /* Sub-family dropdown — show when category is expanded */
