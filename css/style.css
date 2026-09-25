@@ -464,7 +464,6 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .desktop-only{display:none !important;}
   .mobile-only{display:flex !important;}
   .mobile-filter-btn{display:inline-flex;}
-  .category-sidebar{display:none;}
 }
 
 @media(prefers-reduced-motion:reduce){
