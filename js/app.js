@@ -235,7 +235,7 @@ function renderCategoryNav(){
   nav.appendChild(allBtn);
 
   relevantCats.forEach(cat=>{
-    const isCatActive = state.filters.category.has(cat);
+    const isCatActive = state.expandedCategory === cat;
     const btn=document.createElement("button");
     btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
     btn.textContent=sentenceCase(cat);
