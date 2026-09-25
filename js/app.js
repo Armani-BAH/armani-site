@@ -244,7 +244,10 @@ function renderSubNav(cat){
 }
 
 function renderCategoryNav(){
+  const navMobile = $("#categoryNavMobile");
+  if(navMobile) navMobile.innerHTML="";
   const nav = $("#categoryNav"); nav.innerHTML="";
+
   const relevantProds = state.filters.gender.size
     ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
     : PRODUCTS;
@@ -259,6 +262,7 @@ function renderCategoryNav(){
     renderSubNav(null); renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
   });
   nav.appendChild(allBtn);
+  if(navMobile) navMobile.appendChild(allBtn.cloneNode(true));
 
   relevantCats.forEach(cat=>{
     const isCatActive = state.expandedCategory === cat;
@@ -291,7 +295,6 @@ function renderCategoryNav(){
         subBtn.textContent=sentenceCase(sub);
         subBtn.addEventListener("click",e=>{
           e.stopPropagation();
-          /* single select — clicking another sub deselects the previous */
           if(state.filters.sub.has(sub)){
             state.filters.sub.clear();
           } else {
@@ -308,6 +311,25 @@ function renderCategoryNav(){
       });
     }
   });
+
+  /* Mirror to mobile nav */
+  if(navMobile){
+    relevantCats.forEach(cat=>{
+      const isCatActive = state.expandedCategory === cat;
+      const mBtn=document.createElement("button");
+      mBtn.type="button"; mBtn.className="cat-btn"+(isCatActive?" active":"");
+      mBtn.textContent=sentenceCase(cat);
+      mBtn.addEventListener("click",()=>{
+        if(state.expandedCategory===cat){
+          state.expandedCategory=null; renderSubNav(null);
+        } else {
+          state.expandedCategory=cat; renderSubNav(cat);
+        }
+        state.filters.sub.clear(); renderCategoryNav();
+      });
+      navMobile.appendChild(mBtn);
+    });
+  }
 }
 
 /* ========================= FILTER PANEL ========================= */
