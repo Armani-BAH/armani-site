@@ -584,6 +584,101 @@ $("#brandHomeBtn").addEventListener("click",()=>showScreen("gender"));
 $("#backToGender").addEventListener("click",()=>showScreen("gender"));
 $("#skipToAll").addEventListener("click",()=>enterCatalogue(null,null));
 $("#skipToGender").addEventListener("click",()=>enterCatalogue(state.activeGender,null));
+/* ====================== MOBILE BOTTOM SHEET ====================== */
+function openSheet(){
+  renderSheet();
+  $("#sheetOverlay").classList.add("open");
+  $("#bottomSheet").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeSheet(){
+  $("#sheetOverlay").classList.remove("open");
+  $("#bottomSheet").classList.remove("open");
+  document.body.style.overflow="";
+}
+$("#mobileFilterBtn").addEventListener("click", openSheet);
+$("#sheetCloseBtn").addEventListener("click", closeSheet);
+$("#sheetOverlay").addEventListener("click", closeSheet);
 
+function renderSheet(){
+  /* Sort */
+  $$("#sheetSort .sheet-opt").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.sort===state.sort);
+    btn.onclick=()=>{
+      state.sort=btn.dataset.sort;
+      $$("#sheetSort .sheet-opt").forEach(b=>b.classList.toggle("active",b===btn));
+      $("#sortSelect").value=state.sort;
+      state.visibleCount=PAGE_SIZE; render();
+    };
+  });
+
+  /* Selected only */
+  $("#sheetSelectedOnly").checked=state.selectedOnly;
+  $("#sheetSelectedOnly").onchange=e=>{
+    state.selectedOnly=e.target.checked;
+    $("#selectedOnlyToggle").checked=state.selectedOnly;
+    state.visibleCount=PAGE_SIZE; render();
+  };
+
+  /* Departments */
+  const gBox=$("#sheetGender"); gBox.innerHTML="";
+  GENDERS.forEach(g=>{
+    const active=state.activeGender===g;
+    const btn=document.createElement("button");
+    btn.type="button"; btn.className="sheet-opt"+(active?" active":"");
+    btn.textContent=GENDER_LABELS[g];
+    btn.addEventListener("click",()=>{
+      enterCatalogue(g,null); closeSheet();
+    });
+    gBox.appendChild(btn);
+  });
+
+  /* Categories with sub-family expand */
+  const cBox=$("#sheetCategory"); cBox.innerHTML="";
+  const relevantProds = state.filters.gender.size
+    ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
+    : PRODUCTS;
+  const cats=[...new Set(relevantProds.map(p=>p.category))].sort();
+
+  cats.forEach(cat=>{
+    const isCatOpen = state.expandedCategory===cat;
+    const isCatActive = state.filters.category.has(cat) && state.filters.sub.size>0;
+
+    const catBtn=document.createElement("button");
+    catBtn.type="button";
+    catBtn.className="sheet-cat-btn"+(isCatOpen?" open":"")+(isCatActive?" active":"");
+    catBtn.innerHTML=`<span>${sentenceCase(cat)}</span><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>`;
+    catBtn.addEventListener("click",()=>{
+      state.expandedCategory = isCatOpen ? null : cat;
+      renderSheet();
+    });
+    cBox.appendChild(catBtn);
+
+    if(isCatOpen){
+      const subs=[...new Set(relevantProds.filter(p=>p.category===cat).map(p=>p.sub))].sort();
+      const subList=document.createElement("div");
+      subList.className="sheet-sub-list";
+      subs.forEach(sub=>{
+        const active=state.filters.sub.has(sub);
+        const subBtn=document.createElement("button");
+        subBtn.type="button"; subBtn.className="sheet-sub-btn"+(active?" active":"");
+        subBtn.textContent=sentenceCase(sub);
+        subBtn.addEventListener("click",()=>{
+          if(state.filters.sub.has(sub)){
+            state.filters.sub.clear();
+            state.filters.category.clear();
+            state.activeCategory=null;
+          } else {
+            state.filters.sub.clear(); state.filters.sub.add(sub);
+            state.filters.category.clear(); state.filters.category.add(cat);
+            state.activeCategory=cat;
+          }
+          state.visibleCount=PAGE_SIZE;
+          renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+          updateMobileFilterBadge();
+          renderSheet();
+        });
+        subList.appendChild(subBtn);
+      });
 /* ========================= INIT ========================= */
 loadProducts();
