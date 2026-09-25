@@ -219,9 +219,10 @@ function heartSVG(){ return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d
 /* ========================= CATEGORY SIDEBAR ========================= */
 function renderCategoryNav(){
   const nav = $("#categoryNav"); nav.innerHTML="";
-  const relevantCats = state.filters.gender.size
-    ? [...new Set(PRODUCTS.filter(p=>state.filters.gender.has(p.gender)).map(p=>p.category))].sort()
-    : CATEGORIES;
+  const relevantProds = state.filters.gender.size
+    ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
+    : PRODUCTS;
+  const relevantCats = [...new Set(relevantProds.map(p=>p.category))].sort();
 
   const allBtn = document.createElement("button");
   allBtn.type="button"; allBtn.className="cat-btn"+(state.filters.category.size===0?" active":"");
@@ -234,8 +235,9 @@ function renderCategoryNav(){
   nav.appendChild(allBtn);
 
   relevantCats.forEach(cat=>{
+    const isCatActive = state.filters.category.has(cat);
     const btn=document.createElement("button");
-    btn.type="button"; btn.className="cat-btn"+(state.filters.category.has(cat)?" active":"");
+    btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
     btn.textContent=sentenceCase(cat);
     btn.addEventListener("click",()=>{
       state.filters.category.clear(); state.filters.category.add(cat);
@@ -243,6 +245,26 @@ function renderCategoryNav(){
       renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
     });
     nav.appendChild(btn);
+
+    /* Sub-family dropdown — only show when this category is active */
+    if(isCatActive){
+      const subs = [...new Set(
+        relevantProds.filter(p=>p.category===cat).map(p=>p.sub)
+      )].sort();
+      subs.forEach(sub=>{
+        const subBtn=document.createElement("button");
+        subBtn.type="button";
+        subBtn.className="cat-btn sub-btn"+(state.filters.sub.has(sub)?" active":"");
+        subBtn.textContent=sentenceCase(sub);
+        subBtn.addEventListener("click",e=>{
+          e.stopPropagation();
+          state.filters.sub.has(sub)?state.filters.sub.delete(sub):state.filters.sub.add(sub);
+          state.visibleCount=PAGE_SIZE;
+          renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+        });
+        nav.appendChild(subBtn);
+      });
+    }
   });
 }
 
