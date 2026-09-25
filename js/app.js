@@ -202,7 +202,7 @@ const state = {
   selected: new Set(JSON.parse(localStorage.getItem("ea_selection")||"[]")),
   buyer:    JSON.parse(localStorage.getItem("ea_buyer")||"{}"),
   modalIndex:null, visibleCount:PAGE_SIZE,
-  activeGender:null, activeCategory:null
+  activeGender:null, activeCategory:null, expandedCategory:null
 };
 function persist(){ localStorage.setItem("ea_selection",JSON.stringify([...state.selected])); }
 
@@ -240,14 +240,19 @@ function renderCategoryNav(){
     btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
     btn.textContent=sentenceCase(cat);
     btn.addEventListener("click",()=>{
-      state.filters.category.clear(); state.filters.category.add(cat);
-      state.filters.sub.clear(); state.activeCategory=cat; state.visibleCount=PAGE_SIZE;
-      renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+      /* toggle open/close only — don't filter */
+      if(state.expandedCategory===cat){
+        state.expandedCategory=null;
+      } else {
+        state.expandedCategory=cat;
+      }
+      state.filters.sub.clear();
+      renderCategoryNav();
     });
     nav.appendChild(btn);
 
-    /* Sub-family dropdown — only show when this category is active */
-    if(isCatActive){
+    /* Sub-family dropdown — show when category is expanded */
+    if(state.expandedCategory===cat){
       const subs = [...new Set(
         relevantProds.filter(p=>p.category===cat).map(p=>p.sub)
       )].sort();
@@ -258,7 +263,16 @@ function renderCategoryNav(){
         subBtn.textContent=sentenceCase(sub);
         subBtn.addEventListener("click",e=>{
           e.stopPropagation();
-          state.filters.sub.has(sub)?state.filters.sub.delete(sub):state.filters.sub.add(sub);
+          /* single select — clicking another sub deselects the previous */
+          if(state.filters.sub.has(sub)){
+            state.filters.sub.clear();
+          } else {
+            state.filters.sub.clear();
+            state.filters.sub.add(sub);
+            state.filters.category.clear();
+            state.filters.category.add(cat);
+            state.activeCategory=cat;
+          }
           state.visibleCount=PAGE_SIZE;
           renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
         });
