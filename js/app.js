@@ -217,6 +217,32 @@ function pendingSVG(){ return `<svg viewBox="0 0 24 24" aria-hidden="true"><rect
 function heartSVG(){ return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6c-1.9-1.6-4.7-1.4-6.3.4L12 7.6l-2.5-2.6c-1.6-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 7L12 21l9.1-9.4c1.9-2 1.8-5.2-.3-7z"/></svg>`; }
 
 /* ========================= CATEGORY SIDEBAR ========================= */
+function renderSubNav(cat){
+  const subNav=$("#subNav");
+  if(!cat){ subNav.style.display="none"; subNav.innerHTML=""; return; }
+  const relevantProds = state.filters.gender.size
+    ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
+    : PRODUCTS;
+  const subs=[...new Set(relevantProds.filter(p=>p.category===cat).map(p=>p.sub))].sort();
+  subNav.innerHTML="";
+  subs.forEach(sub=>{
+    const btn=document.createElement("button");
+    btn.type="button"; btn.className="sub-btn"+(state.filters.sub.has(sub)?" active":"");
+    btn.textContent=sentenceCase(sub);
+    btn.addEventListener("click",()=>{
+      if(state.filters.sub.has(sub)){
+        state.filters.sub.clear();
+      } else {
+        state.filters.sub.clear(); state.filters.sub.add(sub);
+      }
+      state.visibleCount=PAGE_SIZE;
+      renderSubNav(cat); render(); renderBreadcrumb();
+    });
+    subNav.appendChild(btn);
+  });
+  subNav.style.display="flex";
+}
+
 function renderCategoryNav(){
   const nav = $("#categoryNav"); nav.innerHTML="";
   const relevantProds = state.filters.gender.size
