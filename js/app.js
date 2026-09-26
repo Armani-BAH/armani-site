@@ -283,7 +283,10 @@ const relevantCats = [...new Set(
   relevantCats.forEach(cat=>{
     const isCatActive = state.expandedCategory === cat;
     const btn=document.createElement("button");
-    btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
+    btn.type="button"; 
+    btn.className="cat-btn"+(isCatActive?" active":"");
+    btn.textContent=sentenceCase(cat);
+    
  btn.addEventListener("click",()=>{
   if(state.expandedCategory===cat){
     state.expandedCategory=null;
