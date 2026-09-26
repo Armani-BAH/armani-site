@@ -322,7 +322,7 @@ function renderCategoryNav(){
     }
   });
 
-  });
+  };
 
   /* Mirror to mobile nav */
   if(navMobile){
