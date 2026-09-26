@@ -279,18 +279,34 @@ function renderCategoryNav(){
     const isCatActive = state.expandedCategory === cat;
     const btn=document.createElement("button");
     btn.type="button"; btn.className="cat-btn"+(isCatActive?" active":"");
-    btn.textContent=sentenceCase(cat);
-    btn.addEventListener("click",()=>{
-      if(state.expandedCategory===cat){
-        state.expandedCategory=null;
-        renderSubNav(null);
-      } else {
-        state.expandedCategory=cat;
-        renderSubNav(cat);
-      }
-      state.filters.sub.clear();
-      renderCategoryNav();
-    });
+ btn.addEventListener("click",()=>{
+  if(state.expandedCategory===cat){
+    state.expandedCategory=null;
+    state.filters.category.clear();
+    state.filters.sub.clear();
+    state.activeCategory=null;
+
+    renderSubNav(null);
+  } else {
+    state.expandedCategory=cat;
+
+    /* Show this category immediately */
+    state.filters.category.clear();
+    state.filters.category.add(cat);
+    state.filters.sub.clear();
+    state.activeCategory=cat;
+
+    /* Open the subcategories */
+    renderSubNav(cat);
+  }
+
+  state.visibleCount=PAGE_SIZE;
+
+  renderCategoryNav();
+  renderFilterPanel();
+  render();
+  renderBreadcrumb();
+});
 
     nav.appendChild(btn);
 
@@ -331,13 +347,33 @@ function renderCategoryNav(){
       mBtn.type="button"; mBtn.className="cat-btn"+(isCatActive?" active":"");
       mBtn.textContent=sentenceCase(cat);
       mBtn.addEventListener("click",()=>{
-        if(state.expandedCategory===cat){
-          state.expandedCategory=null; renderSubNav(null);
-        } else {
-          state.expandedCategory=cat; renderSubNav(cat);
-        }
-        state.filters.sub.clear(); renderCategoryNav();
-      });
+  if(state.expandedCategory===cat){
+    state.expandedCategory=null;
+    state.filters.category.clear();
+    state.filters.sub.clear();
+    state.activeCategory=null;
+
+    renderSubNav(null);
+  } else {
+    state.expandedCategory=cat;
+
+    /* Show this category immediately */
+    state.filters.category.clear();
+    state.filters.category.add(cat);
+    state.filters.sub.clear();
+    state.activeCategory=cat;
+
+    /* Open the subcategories */
+    renderSubNav(cat);
+  }
+
+  state.visibleCount=PAGE_SIZE;
+
+  renderCategoryNav();
+  renderFilterPanel();
+  render();
+  renderBreadcrumb();
+});
       navMobile.appendChild(mBtn);
     });
   }
