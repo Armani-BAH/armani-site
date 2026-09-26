@@ -218,31 +218,65 @@ function heartSVG(){ return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d
 
 /* ========================= CATEGORY SIDEBAR ========================= */
 function renderSubNav(cat){
-  const subNav=$("#subNav");
-  if(!cat){ subNav.style.display="none"; subNav.innerHTML=""; return; }
-  const relevantProds = state.activeGender
-  ? PRODUCTS.filter(p => displayGender(p.gender) === state.activeGender)
-  : PRODUCTS;
 
-const relevantCats = [...new Set(
-  relevantProds.map(p => p.category)
-)].sort();  subNav.innerHTML="";
+  const subNav=$("#subNav");
+
+  if(!cat){
+    subNav.style.display="none";
+    subNav.innerHTML="";
+    return;
+  }
+
+  const relevantProds = state.activeGender
+    ? PRODUCTS.filter(p => displayGender(p.gender) === state.activeGender)
+    : PRODUCTS;
+
+  const subs = [...new Set(
+    relevantProds
+      .filter(p => p.category === cat)
+      .map(p => p.sub)
+      .filter(Boolean)
+  )].sort();
+
+  subNav.innerHTML="";
+
   subs.forEach(sub=>{
+
     const btn=document.createElement("button");
-    btn.type="button"; btn.className="sub-btn"+(state.filters.sub.has(sub)?" active":"");
+
+    btn.type="button";
+    btn.className="sub-btn"+(
+      state.filters.sub.has(sub) ? " active" : ""
+    );
+
     btn.textContent=sentenceCase(sub);
+
     btn.addEventListener("click",()=>{
-      if(state.filters.sub.has(sub)){
-        state.filters.sub.clear();
-      } else {
-        state.filters.sub.clear(); state.filters.sub.add(sub);
-      }
+
+      state.filters.category.clear();
+      state.filters.category.add(cat);
+
+      state.filters.sub.clear();
+      state.filters.sub.add(sub);
+
+      state.activeCategory=cat;
+      state.expandedCategory=cat;
       state.visibleCount=PAGE_SIZE;
-      renderSubNav(cat); render(); renderBreadcrumb();
+
+      renderSubNav(cat);
+      renderCategoryNav();
+      renderFilterPanel();
+      render();
+      renderBreadcrumb();
+
     });
+
     subNav.appendChild(btn);
+
   });
-  subNav.style.display="flex";
+
+  subNav.style.display = subs.length ? "flex" : "none";
+
 }
 
 function renderCategoryNav(){
@@ -286,9 +320,10 @@ const relevantCats = [...new Set(
     btn.type="button"; 
     btn.className="cat-btn"+(isCatActive?" active":"");
     btn.textContent=sentenceCase(cat);
-    
- btn.addEventListener("click",()=>{
-  if(state.expandedCategory===cat){
+
+     btn.addEventListener("click",()=>{
+      
+   if(state.expandedCategory===cat){
     state.expandedCategory=null;
     state.filters.category.clear();
     state.filters.sub.clear();
