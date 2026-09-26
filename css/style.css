@@ -477,14 +477,62 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .mobile-only{display:flex !important;}
   .mobile-filter-btn{display:inline-flex;}
   .category-sidebar{display:none;}
-  .category-nav-mobile{display:flex;gap:20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:10px 16px 12px;border-bottom:1px solid var(--line);width:100%;max-width:100%;}
-  .category-nav-mobile::-webkit-scrollbar{display:none;}
-  .category-nav-mobile .cat-btn{flex:none;padding:8px 0;white-space:nowrap;font-size:1rem;color:var(--stone);border-bottom:2px solid transparent;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);}
-  .category-nav-mobile .cat-btn:hover{color:var(--ink);}
-  .category-nav-mobile .cat-btn.active{color:var(--ink);font-weight:500;border-bottom-color:var(--ink);}
+
+  .category-nav-mobile{
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:24px;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:10px 16px 12px;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x;
+    scrollbar-width:none;
+    border-bottom:1px solid var(--line);
+  }
+
+  .category-nav-mobile::-webkit-scrollbar{
+    display:none;
+  }
+
+  .category-nav-mobile .cat-btn{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    padding:8px 0;
+    margin:0;
+    white-space:nowrap;
+    word-break:keep-all;
+    font-size:1rem;
+    line-height:1.2;
+    color:var(--stone);
+    border-bottom:2px solid transparent;
+    touch-action:manipulation;
+    transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+  }
+
+  .category-nav-mobile .cat-btn:hover{
+    color:var(--ink);
+  }
+
+  .category-nav-mobile .cat-btn.active{
+    color:var(--ink);
+    font-weight:500;
+    border-bottom-color:var(--ink);
+  }
 }
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important;}
 }
-  .catalogue-content{width:100%;max-width:100%;overflow-x:hidden;}
+  .catalogue-content{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow-x:clip;
+}
