@@ -247,6 +247,7 @@ function renderCategoryNav(){
   const navMobile = $("#categoryNavMobile");
   if(navMobile) navMobile.innerHTML="";
   const nav = $("#categoryNav"); nav.innerHTML="";
+  console.log("renderCategoryNav called, navMobile:", navMobile, "display:", navMobile ? getComputedStyle(navMobile).display : "not found");
 
   const relevantProds = state.filters.gender.size
     ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
