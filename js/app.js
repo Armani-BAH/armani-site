@@ -322,6 +322,8 @@ function renderCategoryNav(){
     }
   });
 
+  });
+
   /* Mirror to mobile nav */
   if(navMobile){
     relevantCats.forEach(cat=>{
