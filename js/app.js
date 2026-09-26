@@ -342,7 +342,6 @@ function renderCategoryNav(){
       navMobile.appendChild(mBtn);
     });
   }
-}
 
 /* ========================= FILTER PANEL ========================= */
 function renderFilterPanel(){
