@@ -386,7 +386,11 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
 }
 .sub-nav .sub-btn:hover{border-color:var(--ink);color:var(--ink);}
 .sub-nav .sub-btn.active{background:var(--ink);border-color:var(--ink);color:var(--paper);}
-
+@media(min-width:701px){
+  .sub-nav{
+    display:none !important;
+  }
+}
 /* ====================== TABLET ====================== */
 @media(max-width:1000px){
   .wrap{padding:0 24px;}
