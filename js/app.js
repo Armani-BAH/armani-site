@@ -220,11 +220,13 @@ function heartSVG(){ return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d
 function renderSubNav(cat){
   const subNav=$("#subNav");
   if(!cat){ subNav.style.display="none"; subNav.innerHTML=""; return; }
-  const relevantProds = state.filters.gender.size
-    ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
-    : PRODUCTS;
-  const subs=[...new Set(relevantProds.filter(p=>p.category===cat).map(p=>p.sub))].sort();
-  subNav.innerHTML="";
+  const relevantProds = state.activeGender
+  ? PRODUCTS.filter(p => displayGender(p.gender) === state.activeGender)
+  : PRODUCTS;
+
+const relevantCats = [...new Set(
+  relevantProds.map(p => p.category)
+)].sort();  subNav.innerHTML="";
   subs.forEach(sub=>{
     const btn=document.createElement("button");
     btn.type="button"; btn.className="sub-btn"+(state.filters.sub.has(sub)?" active":"");
@@ -249,10 +251,13 @@ function renderCategoryNav(){
   const nav = $("#categoryNav"); nav.innerHTML="";
   console.log("renderCategoryNav called, navMobile:", navMobile, "display:", navMobile ? getComputedStyle(navMobile).display : "not found");
 
-  const relevantProds = state.filters.gender.size
-    ? PRODUCTS.filter(p=>state.filters.gender.has(p.gender))
-    : PRODUCTS;
-  const relevantCats = [...new Set(relevantProds.map(p=>p.category))].sort();
+  const relevantProds = state.activeGender
+  ? PRODUCTS.filter(p => displayGender(p.gender) === state.activeGender)
+  : PRODUCTS;
+
+const relevantCats = [...new Set(
+  relevantProds.map(p => p.category)
+)].sort();
 
   const allBtn = document.createElement("button");
   allBtn.type="button"; allBtn.className="cat-btn"+(state.filters.category.size===0?" active":"");
