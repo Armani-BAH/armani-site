@@ -54,9 +54,11 @@ async function loadProducts(){
 
     CATEGORIES = [...new Set(PRODUCTS.map(p=>p.category))].sort();
 
-    buildGenderLanding();
-    updateSelectionBadge();
-    renderDrawer();
+  buildGenderLanding();
+updateSelectionBadge();
+renderDrawer();
+restorePageState();
+
   }catch(e){
     console.error("Could not load products.json",e);
     document.getElementById("landingGender").innerHTML =
@@ -205,7 +207,57 @@ const state = {
   activeGender:null, activeCategory:null, expandedCategory:null
 };
 function persist(){ localStorage.setItem("ea_selection",JSON.stringify([...state.selected])); }
+function savePageState(){
+  localStorage.setItem("ea_page_state", JSON.stringify({
+    screen:
+      document.getElementById("catalogueWrap").hidden
+        ? (document.getElementById("landingCategory").hidden ? "gender" : "category")
+        : "catalogue",
 
+    gender: state.activeGender,
+    category: state.activeCategory,
+    sub: [...state.filters.sub]
+  }));
+}
+function restorePageState(){
+  const saved = localStorage.getItem("ea_page_state");
+
+  if(!saved) return;
+
+  try{
+    const page = JSON.parse(saved);
+
+    if(page.screen === "catalogue" && page.gender){
+
+      enterCatalogue(page.gender, page.category || null);
+
+      if(page.sub && page.sub.length){
+        state.filters.sub.clear();
+        state.filters.sub.add(page.sub[0]);
+
+        state.activeCategory = page.category || null;
+        state.expandedCategory = page.category || null;
+        state.visibleCount = PAGE_SIZE;
+
+        renderCategoryNav();
+        renderFilterPanel();
+        render();
+        renderBreadcrumb();
+      }
+
+      return;
+    }
+
+    if(page.screen === "category" && page.gender){
+      showCategoryLanding(page.gender);
+      return;
+    }
+
+  }catch(e){
+    console.warn("Could not restore page state", e);
+    localStorage.removeItem("ea_page_state");
+  }
+}
 const $  = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
@@ -528,6 +580,7 @@ function render(){
   currentFilteredList=getFilteredProducts();
   $("#resultCount").textContent=piecesText(currentFilteredList.length);
   renderGrid();
+  savePageState();
 }
 
 function cardHTML(p){
