@@ -262,7 +262,17 @@ function renderCategoryNav(){
     renderSubNav(null); renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
   });
   nav.appendChild(allBtn);
-  if(navMobile) navMobile.appendChild(allBtn.cloneNode(true));
+  if(navMobile){
+    const allBtnM=document.createElement("button");
+    allBtnM.type="button"; allBtnM.className="cat-btn"+(state.filters.category.size===0?" active":"");
+    allBtnM.textContent="All categories";
+    allBtnM.addEventListener("click",()=>{
+      state.filters.category.clear(); state.filters.sub.clear();
+      state.expandedCategory=null; state.activeCategory=null; state.visibleCount=PAGE_SIZE;
+      renderSubNav(null); renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+    });
+    navMobile.appendChild(allBtnM);
+  }
 
   relevantCats.forEach(cat=>{
     const isCatActive = state.expandedCategory === cat;
