@@ -320,9 +320,7 @@ function renderCategoryNav(){
         nav.appendChild(subBtn);
       });
     }
-  });
-
-  };
+    });
 
   /* Mirror to mobile nav */
   if(navMobile){
@@ -342,8 +340,10 @@ function renderCategoryNav(){
       navMobile.appendChild(mBtn);
     });
   }
+}
 
 /* ========================= FILTER PANEL ========================= */
+
 function renderFilterPanel(){
   const genBox=$("#filterGender"); genBox.innerHTML="";
   GENDERS.forEach(g=>{
