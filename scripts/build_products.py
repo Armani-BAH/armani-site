@@ -1,314 +1,131 @@
-import pandas as pd
-import json
-import requests
-import time
+"""
+build_products.py
+Reads armani_styles.xlsx and writes data/products.json.
+Images are read directly from the Excel columns (Image 1–4).
+Run from anywhere inside the repo — paths resolve automatically.
+"""
+
 from pathlib import Path
+import json
+import re
+import openpyxl
 
-# Paths are resolved from the repo root, so the script works from any folder.
-ROOT = Path(__file__).resolve().parent.parent
-EXCEL_FILE = ROOT / "data" / "armani_styles.xlsx"
+ROOT        = Path(__file__).resolve().parent.parent
+EXCEL_FILE  = ROOT / "data" / "armani_styles.xlsx"
 OUTPUT_FILE = ROOT / "data" / "products.json"
-# Resume checkpoint (git-ignored). Delete it to re-crawl everything from scratch.
-PROGRESS_FILE = ROOT / "data" / "products_progress.json"
-
-IMAGE_BASE = (
-    "https://assets-cf.armani.com/image/upload/"
-    "f_auto,q_auto:best,ar_4:5,w_1536,c_fill/"
-)
-
-# Search newest seasons first
-SEASONS = [
-    "FW2026",
-    "FW2025",
-    "SS2026",
-    "SS2025",
-    "FW2024",
-    "SS2024",
-    "FW2023",
-    "SS2023",
-]
-
-# Images to look for
-IMAGE_SUFFIXES = ["F", "D", "L"]
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0"
-}
-
-SAVE_EVERY = 25
 
 
-print("Reading Excel file...")
-
-df = pd.read_excel(EXCEL_FILE)
-
-df.columns = [str(column).strip() for column in df.columns]
-
-print(f"Found {len(df)} rows.")
-
-
-def check_image(url):
-
-    try:
-
-        response = requests.get(
-            url,
-            headers=HEADERS,
-            timeout=5
-        )
-
-        content_type = response.headers.get(
-            "Content-Type",
-            ""
-        )
-
-        if (
-            response.status_code == 200
-            and "image" in content_type
-        ):
-            return True
-
-        return False
-
-    except requests.RequestException:
-
-        return False
+def clean(value):
+    """Return a stripped string or empty string for None/NaN."""
+    if value is None:
+        return ""
+    return str(value).strip()
 
 
 def display_name(text):
-    """'SUN GLASSES' -> 'Sun Glasses' (same rule the site used before)."""
+    """'SUN GLASSES' -> 'Sun Glasses'"""
     words = " ".join(str(text).split()).split(" ")
     return " ".join(w[:1].upper() + w[1:].lower() for w in words)
 
 
-def save_progress(products):
-
-    with open(
-        PROGRESS_FILE,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-            products,
-            file,
-            ensure_ascii=False,
-            indent=2
-        )
+def make_id(row_index, style, fabric, color):
+    return f"{style}-{fabric}-{color}-{row_index}"
 
 
-# --------------------------------------------------
-# Load previous progress if available
-# --------------------------------------------------
+def main():
+    print(f"Reading {EXCEL_FILE} ...")
+    wb = openpyxl.load_workbook(EXCEL_FILE, read_only=True, data_only=True)
+    ws = wb.active
 
-if PROGRESS_FILE.exists():
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        print("ERROR: worksheet is empty.")
+        return
 
-    print()
-    print("Previous progress found.")
+    # Build header map from first row
+    header = [clean(h).lower() for h in rows[0]]
+    print("Columns found:", header)
 
-    with open(
-        PROGRESS_FILE,
-        "r",
-        encoding="utf-8"
-    ) as file:
+    def col(name):
+        """Return index of a column by lowercase name, or None."""
+        try:
+            return header.index(name.lower())
+        except ValueError:
+            return None
 
-        products = json.load(file)
+    # Locate columns
+    c_gender   = col("gender")
+    c_category = col("category")
+    c_family   = col("family")
+    c_sub      = col("sub-family")
+    c_model    = col("model")
+    c_fabric_n = col("fabric")
+    c_color_n  = col("color")
+    c_style    = col("style code")
+    c_fabric_c = col("fabric code")
+    c_color_c  = col("color code")
 
-    processed_ids = {
-        product["id"]
-        for product in products
-    }
+    # Image columns — there may be duplicates in the header (Image 1 appears twice)
+    # Collect ALL positions that match "image 1", "image 2", "image 3", "image 4"
+    image_cols = []
+    seen_img = {}
+    for i, h in enumerate(header):
+        m = re.match(r"image\s*(\d+)", h)
+        if m:
+            num = int(m.group(1))
+            if num not in seen_img:
+                seen_img[num] = i
+                image_cols.append(i)
 
-    print(
-        f"Already processed: "
-        f"{len(products)} products"
-    )
-
-else:
+    image_cols = sorted(image_cols)  # keep in order 1,2,3,4
+    print(f"Image columns at positions: {image_cols}")
 
     products = []
-    processed_ids = set()
+    for row_idx, row in enumerate(rows[1:], start=2):
+        def v(c):
+            return clean(row[c]) if c is not None and c < len(row) else ""
+
+        gender   = v(c_gender).upper()
+        category = v(c_category).upper()
+        family   = v(c_family)
+        sub      = v(c_sub)
+        style    = v(c_style)
+        fabric   = v(c_fabric_c)
+        color    = v(c_color_c)
+
+        if not style and not gender:
+            continue  # skip empty rows
+
+        # Collect non-empty image URLs
+        images = []
+        for ic in image_cols:
+            url = clean(row[ic]) if ic < len(row) else ""
+            if url and url.lower().startswith("http"):
+                images.append(url)
+
+        products.append({
+            "id":          make_id(row_idx, style, fabric, color),
+            "gender":      gender,
+            "category":    category,
+            "family":      family,
+            "sub":         sub,
+            "name":        display_name(sub),
+            "model":       v(c_model),
+            "styleCode":   style,
+            "fabricCode":  fabric,
+            "colorCode":   color,
+            "images":      images
+        })
+
+    print(f"Writing {len(products)} products to {OUTPUT_FILE} ...")
+    with open(OUTPUT_FILE, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(products, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+    with_images    = sum(1 for p in products if p["images"])
+    without_images = sum(1 for p in products if not p["images"])
+    print(f"Done. {with_images} with images, {without_images} without.")
 
 
-print()
-print("========================================")
-print("ARMANI IMAGE SEARCH")
-print("========================================")
-print()
-
-
-total_rows = len(df)
-
-for index, row in df.iterrows():
-
-    product_id = f"p{index}"
-
-    # Skip products already processed
-    if product_id in processed_ids:
-        continue
-
-    style = str(
-        row["Style Code"]
-    ).strip()
-
-    fabric = str(
-        row["Fabric Code"]
-    ).strip()
-
-    color = str(
-        row["Color Code"]
-    ).strip()
-
-    # Skip incomplete rows
-    if (
-        style in ("", "nan")
-        or fabric in ("", "nan")
-        or color in ("", "nan")
-    ):
-        continue
-
-    product_key = (
-        f"{style}-{fabric}-{color}"
-    )
-
-    images = []
-    found_season = None
-
-    # ----------------------------------------------
-    # Search seasons
-    # ----------------------------------------------
-
-    for season in SEASONS:
-
-        season_images = []
-
-        for suffix in IMAGE_SUFFIXES:
-
-            filename = (
-                f"{style}_{fabric}_{color}_"
-                f"{suffix}_{season}.jpg"
-            )
-
-            image_url = (
-                IMAGE_BASE + filename
-            )
-
-            if check_image(image_url):
-
-                season_images.append(
-                    image_url
-                )
-
-            time.sleep(0.02)
-
-        # Stop at first season where
-        # at least one image exists
-        if season_images:
-
-            images = season_images
-            found_season = season
-
-            break
-
-    product = {
-
-        "id": product_id,
-
-        "gender": str(
-            row["Gender"]
-        ).strip(),
-
-        "category": str(
-            row["Category"]
-        ).strip(),
-
-        "family": str(
-            row["Family"]
-        ).strip(),
-
-        "sub": str(
-            row["Sub-Family"]
-        ).strip(),
-
-        "name": display_name(
-            row["Sub-Family"]
-        ),
-
-        "styleCode": style,
-
-        "fabricCode": fabric,
-
-        "colorCode": color,
-
-        "productKey": product_key,
-
-        "season": found_season,
-
-        "images": images
-    }
-
-    products.append(product)
-
-    processed_ids.add(product_id)
-
-    # ----------------------------------------------
-    # Progress display
-    # ----------------------------------------------
-
-    print(
-        f"{index + 1:4} / {total_rows}  |  "
-        f"{style} | {fabric} | {color}  |  "
-        f"{found_season or 'NO IMAGE'}  |  "
-        f"{len(images)} image(s)"
-    )
-
-    # ----------------------------------------------
-    # Save progress every 25 products
-    # ----------------------------------------------
-
-    if len(products) % SAVE_EVERY == 0:
-
-        save_progress(products)
-
-        print()
-        print(
-            f"Progress saved: "
-            f"{len(products)} products"
-        )
-        print()
-
-
-# --------------------------------------------------
-# Final save
-# --------------------------------------------------
-
-save_progress(products)
-
-with open(
-    OUTPUT_FILE,
-    "w",
-    encoding="utf-8"
-) as file:
-
-    json.dump(
-        products,
-        file,
-        ensure_ascii=False,
-        indent=2
-    )
-
-
-print()
-print("========================================")
-print("SEARCH COMPLETE")
-print("========================================")
-
-print(
-    f"Products processed: {len(products)}"
-)
-
-print(
-    f"Final file: {OUTPUT_FILE}"
-)
-
-print("========================================")
+if __name__ == "__main__":
+    main()
