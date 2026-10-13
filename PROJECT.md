@@ -27,7 +27,7 @@ armani-site/
 ├── js/app.js                   All logic (~19 KB)
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
-│   └── products.json           Generated catalogue used by the site (1,309 items)
+│   └── products.json           Generated catalogue used by the site (1,276 items)
 └── scripts/
     ├── build_products.py       Excel -> products.json (+ image lookup on Armani CDN)
     ├── check_missing.py        Lists products with no image
@@ -41,10 +41,10 @@ armani-site/
 2. For each row it probes the Armani image CDN (`assets-cf.armani.com`) for `F`, `D`, `L` views, newest season first (FW2026 → SS2023), and records the first season that has images.
 3. Output is `data/products.json` (each product has `id, gender, category, family, sub, name, styleCode, fabricCode, colorCode, productKey, season, images[]`). `name` is the Sub-Family in Title Case.
 4. `js/app.js` loads the JSON and renders the gender nav, category sidebar, filter chips, grid (60 per page + "Load more"), product modal with gallery, and the selection drawer.
-5. Selection and buyer details persist in `localStorage` (`ea_selection`, `ea_buyer`). Sharing opens `wa.me` with a text summary.
+5. Selection and buyer details persist in `localStorage` (`ea_selection`, `ea_buyer`). Sharing opens `wa.me` with a text summary plus a link to the selection.
 6. The build script writes a resume checkpoint `data/products_progress.json` (git-ignored). Delete it to re-crawl everything.
 
-**Catalogue snapshot (Oct 2026):** 1,309 products (808 styles; 277 styles come in more than one colour) — 1,040 with images, 269 without. Genders: MAN 688, WOMAN 258, BOY 200, GIRL 108, UNISEX JUNIOR 43, UNISEX 12. Categories: Ready to Wear 723, Leather Goods 213, Glasses 91, Soft Accessories 73, Shoes 73, Underwear 67, Bodywear 28, Perfume 25, Textile Accessories 8, Bijoux 8.
+**Catalogue snapshot (Oct 2026):** 1,276 products after removing duplicates (see #20). Genders: MAN 688, WOMAN 258, BOY 200, GIRL 108, UNISEX JUNIOR 43, UNISEX 12. Categories: Ready to Wear 723, Leather Goods 213, Glasses 91, Soft Accessories 73, Shoes 73, Underwear 67, Bodywear 28, Perfume 25, Textile Accessories 8, Bijoux 8.
 
 Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows the Excel files under category "OTHER" are re-filed by family in `build_products.py` (GLASSES → Glasses, PERFUMES → Perfume).
 
@@ -70,12 +70,14 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 | 16 | Grid/drawer/landing loaded full 1536px images | **Fixed** — `sized()` asks the CDN for 640px (grid), 160px (thumbs), 720px (landing) |
 | 17 | Phone cards: codes stacked vertically | **Fixed** — one compact line |
 | 18 | No favicon / no WhatsApp link preview | **Fixed** — eagle icons + `og-image.jpg` + Open Graph tags |
+| 20 | 30 duplicate rows + 3 placeholder rows (codes = type name) in the Excel | **Fixed** — skipped by `build_products.py` (1,309 → 1,276) |
+| 21 | Opening a category from the landing page didn't highlight it in the sidebar | **Fixed** |
 | 19 | Debug `console.log` in `renderCategoryNav`, duplicate CSS rules | **Fixed** |
 
 ## 4. Roadmap (agreed 2026-10-13, one phase at a time)
 
 1. ✅ Quick fixes — categories, pinch-zoom, smaller images, compact phone cards, department landing layout, favicon + WhatsApp preview, cleanup.
-2. Shareable links — URL for each department / category / product, and a link that opens a ready-made selection.
+2. ✅ Shareable links — every screen has its own address (see §7), browser/phone Back works, "Share this piece" in the product window, "Copy link to this selection" + the link is added to the WhatsApp message, shared selections open with an "Add all" banner.
 3. Group colours — one card per style with colour dots.
 4. Photo experience — back view on hover, swipe on phone, tap to zoom.
 5. Selection export — size + quantity per piece, printable PDF line sheet, Excel.
@@ -95,4 +97,18 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 |------|----------|
 | 2026-09-21 | Project files shared; goal is to reorganize and make the site look professional. |
 | 2026-10-13 | Agreed 6-phase upgrade plan (see §4). Phase 1 done. |
+| 2026-10-13 | Phase 2: hash-based links (works on GitHub Pages without server setup). Product links use STYLE-FABRIC-COLOUR, not the row-based `id`, so they survive Excel updates. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
+
+## 7. Link format (Phase 2)
+
+| Address | Shows |
+|---|---|
+| `#/` | Home (departments) |
+| `#/men` | Category tiles for Men |
+| `#/men/shoes` | Men's shoes |
+| `#/men/ready-to-wear?type=5-pockets-pant` | One type inside a category |
+| `#/women,men/glasses` | Several departments/categories (comma-separated) |
+| `#/all/all` | Every product |
+| `…?p=EM001739-AF14774-UC001` | Same page with that product open |
+| `#/selection/KEY,KEY,…` | A selection someone shared (KEY = style-fabric-colour) |

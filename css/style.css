@@ -372,6 +372,23 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
 .buyer-form textarea{resize:vertical;min-height:76px;}
 .share-btn{width:100%;}
 
+/* ====================== SHARING ====================== */
+.text-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:underline;text-underline-offset:3px;font-size:.9rem;}
+.text-btn:hover{color:var(--stone);}
+.text-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.modal-share{margin-top:18px;align-self:flex-start;}
+.copy-link-btn{display:flex;margin:12px auto 0;}
+.shared-banner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px 24px;padding:18px 22px;margin-bottom:20px;background:var(--greige);}
+.shared-banner p{font-size:1rem;}
+.shared-banner-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;}
+.shared-banner .btn-primary{height:42px;padding:0 20px;}
+@media(max-width:700px){
+  .shared-banner{padding:16px;}
+  .shared-banner-actions{width:100%;flex-direction:column;align-items:stretch;gap:12px;}
+  .shared-banner .btn-primary{white-space:nowrap;}
+  .shared-banner .text-btn{justify-content:center;}
+}
+
 /* ====================== TOAST ====================== */
 .toast{position:fixed;left:50%;bottom:28px;z-index:80;max-width:calc(100% - 32px);padding:13px 22px;background:var(--ink);color:var(--paper);text-align:center;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
 .toast.show{opacity:1;transform:translate(-50%,0);}

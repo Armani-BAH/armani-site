@@ -97,6 +97,14 @@
 
       <h1 class="page-title" id="pageTitle">FW26 selection</h1>
 
+      <div class="shared-banner" id="sharedBanner" hidden>
+        <p id="sharedBannerText"></p>
+        <div class="shared-banner-actions">
+          <button class="btn-primary" id="sharedAddAllBtn" type="button">Add all to my selection</button>
+          <button class="text-btn" id="sharedBrowseBtn" type="button">Browse the full collection</button>
+        </div>
+      </div>
+
       <div class="toolbar">
         <div class="result-count" id="resultCount" aria-live="polite"></div>
         <div class="toolbar-controls">
@@ -225,6 +233,10 @@
         <button class="btn-primary" id="modalSelectBtn" type="button">Select this piece</button>
         <button class="btn-secondary" id="modalDrawerBtn" type="button">View selection</button>
       </div>
+      <button class="text-btn modal-share" id="modalShareBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+        Share this piece
+      </button>
     </div>
   </div>
 </div>
@@ -252,6 +264,7 @@
       <textarea id="buyerNotes" placeholder="Notes, for example: interested in these styles for the upcoming season."></textarea>
     </div>
     <button class="share-btn" id="shareBtn" type="button">Send on WhatsApp</button>
+    <button class="text-btn copy-link-btn" id="copyLinkBtn" type="button">Copy link to this selection</button>
   </div>
 </aside>
 

@@ -2875,117 +2875,6 @@
     ]
   },
   {
-    "id": "EM004583-AF13669-M0307-186",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004583",
-    "fabricCode": "AF13669",
-    "colorCode": "M0307",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004583_AF13669_M0307_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004583-AF13669-MB563-187",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004583",
-    "fabricCode": "AF13669",
-    "colorCode": "MB563",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004583_AF13669_MB563_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004583_AF13669_MB563_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004583-AF13669-MC540-188",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004583",
-    "fabricCode": "AF13669",
-    "colorCode": "MC540",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004583_AF13669_MC540_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004583_AF13669_MC540_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004592-AF13747-U0003-189",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004592",
-    "fabricCode": "AF13747",
-    "colorCode": "U0003",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004592_AF13747_U0003_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004592_AF13747_U0003_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004592-AF13747-UB118-190",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004592",
-    "fabricCode": "AF13747",
-    "colorCode": "UB118",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004592_AF13747_UB118_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004592_AF13747_UB118_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004593-AF10762-F0200-191",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004593",
-    "fabricCode": "AF10762",
-    "colorCode": "F0200",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004593_AF10762_F0200_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004593_AF10762_F0200_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004593-AF10762-FC302-192",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "T-SHIRTS",
-    "sub": "T-SHIRT",
-    "name": "T-shirt",
-    "model": "",
-    "styleCode": "EM004593",
-    "fabricCode": "AF10762",
-    "colorCode": "FC302",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004593_AF10762_FC302_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004593_AF10762_FC302_D_FW2026.jpg"
-    ]
-  },
-  {
     "id": "EB001371-AF26093-U8114-193",
     "gender": "BOY",
     "category": "READY TO WEAR",
@@ -4176,67 +4065,6 @@
     ]
   },
   {
-    "id": "EM004543-AF10013-UC001-270",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "TROUSER",
-    "name": "Trouser",
-    "model": "",
-    "styleCode": "EM004543",
-    "fabricCode": "AF10013",
-    "colorCode": "UC001",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004543_AF10013_UC001_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004543_AF10013_UC001_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004672-TE10410-U0006-271",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "TROUSER",
-    "name": "Trouser",
-    "model": "",
-    "styleCode": "EM004672",
-    "fabricCode": "TE10410",
-    "colorCode": "U0006",
-    "images": []
-  },
-  {
-    "id": "EM004672-TE10410-UB094-272",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "TROUSER",
-    "name": "Trouser",
-    "model": "",
-    "styleCode": "EM004672",
-    "fabricCode": "TE10410",
-    "colorCode": "UB094",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004672_TE10410_UB094_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004672_TE10410_UB094_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004672-TE22989-PB006-273",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "TROUSER",
-    "name": "Trouser",
-    "model": "",
-    "styleCode": "EM004672",
-    "fabricCode": "TE22989",
-    "colorCode": "PB006",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004672_TE22989_PB006_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004672_TE22989_PB006_D_FW2026.jpg"
-    ]
-  },
-  {
     "id": "EM007922-TE24591-FC030-274",
     "gender": "MAN",
     "category": "READY TO WEAR",
@@ -4604,19 +4432,6 @@
   },
   {
     "id": "EW004413-AF25603-U1161-297",
-    "gender": "WOMAN",
-    "category": "UNDERWEAR",
-    "family": "INTIMATES",
-    "sub": "TOP",
-    "name": "Top",
-    "model": "",
-    "styleCode": "EW004413",
-    "fabricCode": "AF25603",
-    "colorCode": "U1161",
-    "images": []
-  },
-  {
-    "id": "EW004413-AF25603-U1161-298",
     "gender": "WOMAN",
     "category": "UNDERWEAR",
     "family": "INTIMATES",
@@ -5792,22 +5607,6 @@
     ]
   },
   {
-    "id": "EM004536-AF10013-UC001-374",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "JERSEYWEAR",
-    "sub": "SWEATSHIRT",
-    "name": "Sweatshirt",
-    "model": "",
-    "styleCode": "EM004536",
-    "fabricCode": "AF10013",
-    "colorCode": "UC001",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004536_AF10013_UC001_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004536_AF10013_UC001_D_SS2026.jpg"
-    ]
-  },
-  {
     "id": "8N2MUW-2M46Z-0926-375",
     "gender": "WOMAN",
     "category": "READY TO WEAR",
@@ -5835,19 +5634,6 @@
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EW004679_AF28233_UB003_F_FW2026.jpg",
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EW004679_AF28233_UB003_D_FW2026.jpg"
     ]
-  },
-  {
-    "id": "SUN GLASSES-SUN GLASSES-SUN GLASSES-377",
-    "gender": "MAN",
-    "category": "GLASSES",
-    "family": "GLASSES",
-    "sub": "SUN GLASSES",
-    "name": "Sun Glasses",
-    "model": "",
-    "styleCode": "SUN GLASSES",
-    "fabricCode": "SUN GLASSES",
-    "colorCode": "SUN GLASSES",
-    "images": []
   },
   {
     "id": "EA2147.L-30017G.L-58.L-378",
@@ -9068,23 +8854,6 @@
     ]
   },
   {
-    "id": "EG001024-AF26324-U8061-588",
-    "gender": "GIRL",
-    "category": "READY TO WEAR",
-    "family": "SKIRTS",
-    "sub": "SKIRT",
-    "name": "Skirt",
-    "model": "",
-    "styleCode": "EG001024",
-    "fabricCode": "AF26324",
-    "colorCode": "U8061",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EG001024_AF26324_U8061_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EG001024_AF26324_U8061_D_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EG001024_AF26324_U8061_L_FW2026.jpg"
-    ]
-  },
-  {
     "id": "EG000501-AF18976-U4218-589",
     "gender": "GIRL",
     "category": "LEATHER GOODS",
@@ -10660,22 +10429,6 @@
     ]
   },
   {
-    "id": "EM000099-TE10397-UA344-690",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "SHIRTS",
-    "sub": "SHIRT",
-    "name": "Shirt",
-    "model": "",
-    "styleCode": "EM000099",
-    "fabricCode": "TE10397",
-    "colorCode": "UA344",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000099_TE10397_UA344_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000099_TE10397_UA344_D_SS2026.jpg"
-    ]
-  },
-  {
     "id": "EM000099-TE10397-UB109-691",
     "gender": "MAN",
     "category": "READY TO WEAR",
@@ -10700,54 +10453,6 @@
     "fabricCode": "TE10397",
     "colorCode": "UC001",
     "images": []
-  },
-  {
-    "id": "EM004603-AF10017-UB118-693",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "SHIRTS",
-    "sub": "SHIRT",
-    "name": "Shirt",
-    "model": "",
-    "styleCode": "EM004603",
-    "fabricCode": "AF10017",
-    "colorCode": "UB118",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004603_AF10017_UB118_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004603_AF10017_UB118_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004603-AF10017-UC001-694",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "SHIRTS",
-    "sub": "SHIRT",
-    "name": "Shirt",
-    "model": "",
-    "styleCode": "EM004603",
-    "fabricCode": "AF10017",
-    "colorCode": "UC001",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004603_AF10017_UC001_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004603_AF10017_UC001_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM007205-TE23282-UB109-695",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "SHIRTS",
-    "sub": "SHIRT",
-    "name": "Shirt",
-    "model": "",
-    "styleCode": "EM007205",
-    "fabricCode": "TE23282",
-    "colorCode": "UB109",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007205_TE23282_UB109_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007205_TE23282_UB109_D_FW2026.jpg"
-    ]
   },
   {
     "id": "EM007369-AF29236-MB002-696",
@@ -12487,54 +12192,6 @@
     "images": [
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007359_AF10763_FB572_F_FW2026.jpg",
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007359_AF10763_FB572_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004607-AF23090-U0003-808",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "JERSEYWEAR",
-    "sub": "POLO SHIRT",
-    "name": "Polo Shirt",
-    "model": "",
-    "styleCode": "EM004607",
-    "fabricCode": "AF23090",
-    "colorCode": "U0003",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004607_AF23090_U0003_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004607_AF23090_U0003_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM006341-AF10017-U0003-809",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "JERSEYWEAR",
-    "sub": "POLO SHIRT",
-    "name": "Polo Shirt",
-    "model": "",
-    "styleCode": "EM006341",
-    "fabricCode": "AF10017",
-    "colorCode": "U0003",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM006341_AF10017_U0003_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM006341_AF10017_U0003_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM007355-AF10497-U7046-810",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "JERSEYWEAR",
-    "sub": "POLO SHIRT",
-    "name": "Polo Shirt",
-    "model": "",
-    "styleCode": "EM007355",
-    "fabricCode": "AF10497",
-    "colorCode": "U7046",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007355_AF10497_U7046_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM007355_AF10497_U7046_D_FW2026.jpg"
     ]
   },
   {
@@ -15115,22 +14772,6 @@
     ]
   },
   {
-    "id": "EW004926-AF27019-UB102-976",
-    "gender": "WOMAN",
-    "category": "READY TO WEAR",
-    "family": "DRESSES",
-    "sub": "DRESS",
-    "name": "Dress",
-    "model": "",
-    "styleCode": "EW004926",
-    "fabricCode": "AF27019",
-    "colorCode": "UB102",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EW004926_AF27019_UB102_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EW004926_AF27019_UB102_D_FW2026.jpg"
-    ]
-  },
-  {
     "id": "8NHBQ2-1NLRZ-0920-977",
     "gender": "BOY",
     "category": "READY TO WEAR",
@@ -16390,19 +16031,6 @@
     ]
   },
   {
-    "id": "BLOUSON JACKET-BLOUSON JACKET-BLOUSON JACKET-1060",
-    "gender": "BOY",
-    "category": "READY TO WEAR",
-    "family": "OUTERWEAR",
-    "sub": "BLOUSON JACKET",
-    "name": "Blouson Jacket",
-    "model": "",
-    "styleCode": "BLOUSON JACKET",
-    "fabricCode": "BLOUSON JACKET",
-    "colorCode": "BLOUSON JACKET",
-    "images": []
-  },
-  {
     "id": "EB000428-AF13081-UB118-1061",
     "gender": "BOY",
     "category": "READY TO WEAR",
@@ -16879,19 +16507,6 @@
     ]
   },
   {
-    "id": "BLAZER-BLAZER-BLAZER-1091",
-    "gender": "WOMAN",
-    "category": "READY TO WEAR",
-    "family": "JACKETS",
-    "sub": "BLAZER",
-    "name": "Blazer",
-    "model": "",
-    "styleCode": "BLAZER",
-    "fabricCode": "BLAZER",
-    "colorCode": "BLAZER",
-    "images": []
-  },
-  {
     "id": "EB000105-AF13010-MB051-1092",
     "gender": "BOY",
     "category": "READY TO WEAR",
@@ -17323,22 +16938,6 @@
     ]
   },
   {
-    "id": "EM005058-TE14101-U8139-1120",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "JACKETS",
-    "sub": "BLAZER",
-    "name": "Blazer",
-    "model": "",
-    "styleCode": "EM005058",
-    "fabricCode": "TE14101",
-    "colorCode": "U8139",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM005058_TE14101_U8139_F_FW2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM005058_TE14101_U8139_D_FW2026.jpg"
-    ]
-  },
-  {
     "id": "EW005856-TE23011-U6199-1121",
     "gender": "WOMAN",
     "category": "READY TO WEAR",
@@ -17600,38 +17199,6 @@
     "images": [
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM006778_AF28011_UC001_F_FW2026.jpg",
       "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM006778_AF28011_UC001_D_FW2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004544-AF10013-UB118-1138",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "BERMUDA",
-    "name": "Bermuda",
-    "model": "",
-    "styleCode": "EM004544",
-    "fabricCode": "AF10013",
-    "colorCode": "UB118",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004544_AF10013_UB118_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004544_AF10013_UB118_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM004544-AF10013-UC001-1139",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "TROUSERS",
-    "sub": "BERMUDA",
-    "name": "Bermuda",
-    "model": "",
-    "styleCode": "EM004544",
-    "fabricCode": "AF10013",
-    "colorCode": "UC001",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004544_AF10013_UC001_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM004544_AF10013_UC001_D_SS2026.jpg"
     ]
   },
   {
@@ -19788,64 +19355,6 @@
     "images": []
   },
   {
-    "id": "EM000121-AF22611-UB118-1279",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "5 POCKETS",
-    "sub": "5 POCKETS PANT",
-    "name": "5 Pockets Pant",
-    "model": "",
-    "styleCode": "EM000121",
-    "fabricCode": "AF22611",
-    "colorCode": "UB118",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000121_AF22611_UB118_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000121_AF22611_UB118_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM000121-AF22800-MB003-1280",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "5 POCKETS",
-    "sub": "5 POCKETS PANT",
-    "name": "5 Pockets Pant",
-    "model": "",
-    "styleCode": "EM000121",
-    "fabricCode": "AF22800",
-    "colorCode": "MB003",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000121_AF22800_MB003_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000121_AF22800_MB003_D_SS2026.jpg"
-    ]
-  },
-  {
-    "id": "EM000121-AF22814-MC002-1281",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "5 POCKETS",
-    "sub": "5 POCKETS PANT",
-    "name": "5 Pockets Pant",
-    "model": "",
-    "styleCode": "EM000121",
-    "fabricCode": "AF22814",
-    "colorCode": "MC002",
-    "images": []
-  },
-  {
-    "id": "EM000121-AF23022-MB001-1282",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "5 POCKETS",
-    "sub": "5 POCKETS PANT",
-    "name": "5 Pockets Pant",
-    "model": "",
-    "styleCode": "EM000121",
-    "fabricCode": "AF23022",
-    "colorCode": "MB001",
-    "images": []
-  },
-  {
     "id": "EM000121-AF29662-MB002-1283",
     "gender": "MAN",
     "category": "READY TO WEAR",
@@ -19872,22 +19381,6 @@
     "fabricCode": "AF29663",
     "colorCode": "MB003",
     "images": []
-  },
-  {
-    "id": "EM000668-AF22245-MB002-1285",
-    "gender": "MAN",
-    "category": "READY TO WEAR",
-    "family": "5 POCKETS",
-    "sub": "5 POCKETS PANT",
-    "name": "5 Pockets Pant",
-    "model": "",
-    "styleCode": "EM000668",
-    "fabricCode": "AF22245",
-    "colorCode": "MB002",
-    "images": [
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000668_AF22245_MB002_F_SS2026.jpg",
-      "https://assets-cf.armani.com/image/upload/f_auto,q_auto:best,ar_4:5,w_1536,c_fill/EM000668_AF22245_MB002_D_SS2026.jpg"
-    ]
   },
   {
     "id": "EW006357-AF31470-MB010-1286",

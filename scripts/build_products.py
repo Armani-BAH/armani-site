@@ -94,6 +94,8 @@ def main():
     print(f"Image columns at positions: {image_cols}")
 
     products = []
+    seen_keys = set()
+    skipped_dupes = skipped_blank = 0
     for row_idx, row in enumerate(rows[1:], start=2):
         def v(c):
             return clean(row[c]) if c is not None and c < len(row) else ""
@@ -108,6 +110,18 @@ def main():
 
         if not style and not gender:
             continue  # skip empty rows
+
+        # Placeholder rows: the "codes" are just the type name (e.g. SUN GLASSES)
+        if style.upper() == sub.upper():
+            skipped_blank += 1
+            continue
+
+        # The same piece listed twice for the same department
+        key = (gender, style, fabric, color)
+        if key in seen_keys:
+            skipped_dupes += 1
+            continue
+        seen_keys.add(key)
 
         # Collect non-empty image URLs
         images = []
@@ -138,6 +152,7 @@ def main():
     with_images    = sum(1 for p in products if p["images"])
     without_images = sum(1 for p in products if not p["images"])
     print(f"Done. {with_images} with images, {without_images} without.")
+    print(f"Skipped {skipped_dupes} duplicate rows and {skipped_blank} placeholder rows.")
 
 
 if __name__ == "__main__":

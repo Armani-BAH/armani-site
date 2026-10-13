@@ -35,6 +35,21 @@ const fmt          = n => n.toLocaleString("en-US");
 const piecesText   = n => `${fmt(n)} ${n===1?"piece":"pieces"}`;
 const esc          = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
+/* ---- Links: every screen has its own web address (after the #) ----
+   #/                         home (departments)
+   #/men                      categories for Men
+   #/men/shoes?type=sneaker   products (several values allowed, comma-separated)
+   #/all/all                  every product
+   ...?p=STYLE-FABRIC-COLOUR  same page with that product open
+   #/selection/KEY,KEY,...    a selection someone shared                    */
+const G_SLUG = {"WOMAN":"women","MAN":"men","GIRL":"girls","BOY":"boys","UNISEX JUNIOR":"unisex-junior"};
+const slug = s => String(s).toLowerCase().trim().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+const gSlug = g => G_SLUG[g] || slug(g);
+const pKey = p => `${p.styleCode}-${p.fabricCode}-${p.colorCode}`;
+let KEY_INDEX = new Map();   /* pKey -> product */
+let ID_INDEX  = new Map();   /* id   -> product */
+const SITE_URL = () => location.origin + location.pathname;
+
 /* Map a raw gender to its display key (UNISEX → MAN) */
 const displayGender = g => MAN_GENDERS.has(g) ? "MAN" : g;
 
@@ -62,11 +77,18 @@ async function loadProducts(){
     GENDERS.sort((a,b)=>genderRank(a)-genderRank(b));
 
     CATEGORIES = [...new Set(PRODUCTS.map(p=>p.category))].sort();
+    KEY_INDEX  = new Map(PRODUCTS.map(p=>[pKey(p),p]));
+    ID_INDEX   = new Map(PRODUCTS.map(p=>[p.id,p]));
 
-  buildGenderLanding();
-updateSelectionBadge();
-renderDrawer();
-restorePageState();
+    /* drop ids that no longer exist in the catalogue */
+    state.selected = new Set([...state.selected].filter(id=>ID_INDEX.has(id))); persist();
+    try{ localStorage.removeItem("ea_page_state"); }catch(e){}
+
+    ROUTING = true; buildGenderLanding(); ROUTING = false;
+    updateSelectionBadge();
+    renderDrawer();
+    route();                       /* open whatever the address says */
+    window.addEventListener("popstate", route);
 
   }catch(e){
     console.error("Could not load products.json",e);
@@ -80,6 +102,7 @@ function showScreen(name){
   document.getElementById("landingGender").hidden   = name!=="gender";
   document.getElementById("landingCategory").hidden = name!=="category";
   document.getElementById("catalogueWrap").hidden   = name!=="catalogue";
+  if(name!=="catalogue") syncUrl();
 }
 
 /* ========================= GENDER LANDING ========================= */
@@ -138,8 +161,10 @@ function showCategoryLanding(dGender){
 
 /* ========================= ENTER CATALOGUE ========================= */
 function enterCatalogue(dGender, category){
+  state.shared         = null;
   state.activeGender   = dGender;
   state.activeCategory = category;
+  state.expandedCategory = category || null;
 
   /* translate display gender back to raw genders for filtering */
   if(dGender){
@@ -157,6 +182,7 @@ function enterCatalogue(dGender, category){
 
   showScreen("catalogue");
   renderGenderNav();
+  renderSubNav(category || null);
   renderCategoryNav();
   renderFilterPanel();
   render();
@@ -201,7 +227,8 @@ function renderBreadcrumb(){
   const parts=[];
   if(state.activeGender) parts.push(GENDER_LABELS[state.activeGender]||state.activeGender);
   if(state.activeCategory) parts.push(sentenceCase(state.activeCategory));
-  document.getElementById("pageTitle").textContent = parts.length ? parts.join(" · ") : "FW26 selection";
+  document.getElementById("pageTitle").textContent =
+    state.shared ? "Shared selection" : (parts.length ? parts.join(" · ") : "FW26 selection");
 }
 
 /* ========================= STATE ========================= */
@@ -212,61 +239,10 @@ const state = {
   selectedOnly:false, sort:"default",
   selected: new Set(JSON.parse(localStorage.getItem("ea_selection")||"[]")),
   buyer:    JSON.parse(localStorage.getItem("ea_buyer")||"{}"),
-  modalIndex:null, visibleCount:PAGE_SIZE,
+  modalIndex:null, modalPushed:false, visibleCount:PAGE_SIZE, shared:null,
   activeGender:null, activeCategory:null, expandedCategory:null
 };
 function persist(){ localStorage.setItem("ea_selection",JSON.stringify([...state.selected])); }
-function savePageState(){
-  localStorage.setItem("ea_page_state", JSON.stringify({
-    screen:
-      document.getElementById("catalogueWrap").hidden
-        ? (document.getElementById("landingCategory").hidden ? "gender" : "category")
-        : "catalogue",
-
-    gender: state.activeGender,
-    category: state.activeCategory,
-    sub: [...state.filters.sub]
-  }));
-}
-function restorePageState(){
-  const saved = localStorage.getItem("ea_page_state");
-
-  if(!saved) return;
-
-  try{
-    const page = JSON.parse(saved);
-
-    if(page.screen === "catalogue" && page.gender){
-
-      enterCatalogue(page.gender, page.category || null);
-
-      if(page.sub && page.sub.length){
-        state.filters.sub.clear();
-        state.filters.sub.add(page.sub[0]);
-
-        state.activeCategory = page.category || null;
-        state.expandedCategory = page.category || null;
-        state.visibleCount = PAGE_SIZE;
-
-        renderCategoryNav();
-        renderFilterPanel();
-        render();
-        renderBreadcrumb();
-      }
-
-      return;
-    }
-
-    if(page.screen === "category" && page.gender){
-      showCategoryLanding(page.gender);
-      return;
-    }
-
-  }catch(e){
-    console.warn("Could not restore page state", e);
-    localStorage.removeItem("ea_page_state");
-  }
-}
 const $  = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
@@ -565,6 +541,7 @@ function getFilteredProducts(){
     if(state.filters.category.size && !state.filters.category.has(p.category)) return false;
     if(state.filters.sub.size      && !state.filters.sub.has(p.sub))           return false;
     if(state.selectedOnly && !state.selected.has(p.id))                         return false;
+    if(state.shared && !state.shared.has(p.id))                                 return false;
     if(state.search){
       const q=state.search.toLowerCase();
       const hay=[p.name,p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
@@ -588,7 +565,8 @@ function render(){
   currentFilteredList=getFilteredProducts();
   $("#resultCount").textContent=piecesText(currentFilteredList.length);
   renderGrid();
-  savePageState();
+  renderSharedBanner();
+  syncUrl();
 }
 
 function cardHTML(p){
@@ -660,15 +638,21 @@ function toggleSelect(id){
 /* ========================= MODAL ========================= */
 let modalList=[]; let lastFocus=null;
 
-function openModal(id){
+function openModal(id, fromRoute){
   modalList=currentFilteredList;
-  const idx=modalList.findIndex(p=>p.id===id);
-  state.modalIndex=idx>=0?idx:0; lastFocus=document.activeElement;
+  let idx=modalList.findIndex(p=>p.id===id);
+  if(idx<0){ const p=ID_INDEX.get(id); if(!p) return; modalList=[p,...modalList]; idx=0; }
+  const wasOpen = state.modalIndex!==null;
+  state.modalIndex=idx; if(!wasOpen) lastFocus=document.activeElement;
   paintModal(); $("#modalOverlay").classList.add("open"); document.body.style.overflow="hidden"; $("#modalCloseBtn").focus();
+  if(!fromRoute){ syncUrl(); state.modalPushed=true; }   /* phone back button closes it */
 }
-function closeModal(){
-  $("#modalOverlay").classList.remove("open"); state.modalIndex=null;
+function closeModal(fromRoute){
+  if(state.modalIndex===null) return;
+  if(!fromRoute && state.modalPushed){ state.modalPushed=false; history.back(); return; }
+  $("#modalOverlay").classList.remove("open"); state.modalIndex=null; state.modalPushed=false;
   document.body.style.overflow=""; if(lastFocus&&lastFocus.focus) lastFocus.focus();
+  if(!fromRoute) syncUrl(true);
 }
 function paintModal(){
   const p=modalList[state.modalIndex]; if(!p) return;
@@ -705,10 +689,14 @@ $("#modalMediaInner").addEventListener("click",e=>{
   if(main&&p.images[thumb.dataset.galleryIndex]) main.src=p.images[thumb.dataset.galleryIndex];
   $$(".thumb-btn").forEach(b=>b.classList.toggle("active",b===thumb));
 });
-$("#modalCloseBtn").addEventListener("click",closeModal);
+$("#modalCloseBtn").addEventListener("click",()=>closeModal());
 $("#modalOverlay").addEventListener("click",e=>{ if(e.target.id==="modalOverlay") closeModal(); });
-$("#modalPrevBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex-1+modalList.length)%modalList.length; paintModal(); });
-$("#modalNextBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex+1)%modalList.length; paintModal(); });
+$("#modalPrevBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex-1+modalList.length)%modalList.length; paintModal(); syncUrl(true); });
+$("#modalNextBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex+1)%modalList.length; paintModal(); syncUrl(true); });
+$("#modalShareBtn").addEventListener("click",()=>{
+  const p=modalList[state.modalIndex]; if(!p) return;
+  shareLink(productUrl(p), `Emporio Armani — ${p.name} (${p.styleCode})`);
+});
 $("#modalSelectBtn").addEventListener("click",()=>toggleSelect(modalList[state.modalIndex].id));
 $("#modalDrawerBtn").addEventListener("click",()=>{ closeModal(); openDrawer(); });
 
@@ -773,8 +761,136 @@ $("#shareBtn").addEventListener("click",()=>{
   if(state.buyer.notes) text+=`\nNotes: ${state.buyer.notes}`;
   text+=`\n\n${piecesText(list.length)} selected:\n`;
   list.forEach((p,i)=>{ text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}, ${sentenceCase(p.category)})\n   Style ${p.styleCode}, Fabric ${p.fabricCode}, Colour ${p.colorCode}`; });
+  text+=`\n\nView with photos:\n${selectionUrl()}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
 });
+
+$("#copyLinkBtn").addEventListener("click",()=>{
+  if(!state.selected.size){ toast("Select at least one piece first"); return; }
+  shareLink(selectionUrl(), "Emporio Armani — my selection");
+});
+
+/* ========================= SHARED SELECTION ========================= */
+function openShared(keys){
+  const ids = keys.map(k=>KEY_INDEX.get(k)).filter(Boolean).map(p=>p.id);
+  enterCatalogue(null,null);
+  state.shared = new Set(ids);
+  renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+}
+function renderSharedBanner(){
+  const b=$("#sharedBanner");
+  b.hidden = !state.shared;
+  if(!state.shared) return;
+  const n=state.shared.size, mine=[...state.shared].filter(id=>state.selected.has(id)).length;
+  $("#sharedBannerText").textContent = n
+    ? `${piecesText(n)} were shared with you.`
+    : "This link has no pieces that are in the current catalogue.";
+  $("#sharedAddAllBtn").hidden = !n || mine===n;
+}
+$("#sharedAddAllBtn").addEventListener("click",()=>{
+  state.shared.forEach(id=>state.selected.add(id));
+  persist(); updateSelectionBadge(); renderDrawer(); render();
+  toast(`Added ${piecesText(state.shared.size)} to your selection`);
+});
+$("#sharedBrowseBtn").addEventListener("click",()=>enterCatalogue(null,null));
+
+/* ========================= LINKS (URL) ========================= */
+let ROUTING = false;
+
+function catalogueHash(gs, cs, ss){
+  let h = "#/" + (gs.length ? gs.map(gSlug).join(",") : "all") + "/" + (cs.length ? cs.map(slug).join(",") : "all");
+  if(ss.length) h += "?type=" + ss.map(slug).join(",");
+  return h;
+}
+function stateHash(){
+  if(!$("#landingGender").hidden)   return "#/";
+  if(!$("#landingCategory").hidden) return "#/" + gSlug(state.activeGender);
+  if(state.shared) return "#/selection/" + [...state.shared].map(id=>encodeURIComponent(pKey(ID_INDEX.get(id)))).join(",");
+  const gs = [...new Set([...state.filters.gender].map(displayGender))].sort((a,b)=>genderRank(a)-genderRank(b));
+  return catalogueHash(gs, [...state.filters.category].sort(), [...state.filters.sub].sort());
+}
+/* Put the current screen in the address bar (new history step, or replace) */
+function syncUrl(replace){
+  if(ROUTING) return;
+  let h = stateHash();
+  const open = state.modalIndex!==null && modalList[state.modalIndex];
+  if(open) h += (h.includes("?")?"&":"?") + "p=" + encodeURIComponent(pKey(open));
+  const now = location.hash || "#/";
+  if(h===now) return;
+  history[replace ? "replaceState" : "pushState"](null, "", h);
+}
+
+const findGender = s => GENDERS.find(g=>gSlug(g)===s);
+const findCat    = s => CATEGORIES.find(c=>slug(c)===s);
+const findSub    = s => { for(const p of PRODUCTS) if(slug(p.sub)===s) return p.sub; return null; };
+const rawGenders = d => d==="MAN" ? [...MAN_GENDERS] : [d];
+
+/* Read the address bar and show that screen (page load, back/forward, pasted link) */
+function route(){
+  ROUTING = true;
+  try{
+    const raw = decodeURI(location.hash).replace(/^#\/?/, "");
+    const qi = raw.indexOf("?");
+    const path = qi<0 ? raw : raw.slice(0,qi);
+    const q = {};
+    (qi<0 ? "" : raw.slice(qi+1)).split("&").filter(Boolean).forEach(kv=>{
+      const i=kv.indexOf("="); if(i>0) q[kv.slice(0,i)] = kv.slice(i+1);
+    });
+    const parts = path.split("/").filter(Boolean);
+
+    if(parts[0]==="selection"){
+      const keys = (parts.slice(1).join("/")).split(",").filter(Boolean).map(k=>{ try{return decodeURIComponent(k);}catch(e){return k;} });
+      const wanted = keys.map(k=>KEY_INDEX.get(k)?.id).filter(Boolean);
+      const same = state.shared && $("#landingGender").hidden && $("#landingCategory").hidden &&
+                   wanted.length===state.shared.size && wanted.every(id=>state.shared.has(id));
+      if(!same) openShared(keys);
+    }
+    else if(parts.length===1 && findGender(parts[0])){
+      closeModal(true); showCategoryLanding(findGender(parts[0])); return;
+    }
+    else if(parts.length>=1){
+      const gs = parts[0]==="all" ? [] : parts[0].split(",").map(findGender).filter(Boolean);
+      const cs = (!parts[1]||parts[1]==="all") ? [] : parts[1].split(",").map(findCat).filter(Boolean);
+      const ss = q.type ? q.type.split(",").map(findSub).filter(Boolean) : [];
+      const target = catalogueHash(gs, cs, ss);
+      const onCatalogue = !$("#catalogueWrap").hidden && !state.shared;
+      if(!(onCatalogue && stateHash()===target)){
+        enterCatalogue(gs.length===1 ? gs[0] : null, cs.length===1 ? cs[0] : null);
+        state.filters.gender   = new Set(gs.flatMap(rawGenders));
+        state.filters.category = new Set(cs);
+        state.filters.sub      = new Set(ss);
+        renderGenderNav(); renderSubNav(cs.length===1 ? cs[0] : null);
+        renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
+      }
+    }
+    else { closeModal(true); showScreen("gender"); return; }
+
+    /* product open in the modal? */
+    const p = q.p ? KEY_INDEX.get(decodeURIComponent(q.p)) : null;
+    if(p) openModal(p.id, true); else closeModal(true);
+  } finally { ROUTING = false; }
+}
+
+function productUrl(p){
+  return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${encodeURIComponent(pKey(p))}`;
+}
+function selectionUrl(){
+  const keys = PRODUCTS.filter(p=>state.selected.has(p.id)).map(p=>encodeURIComponent(pKey(p)));
+  return `${SITE_URL()}#/selection/${keys.join(",")}`;
+}
+/* Phone: opens the share sheet. Computer: copies the link. */
+async function shareLink(url, title){
+  if(navigator.share && matchMedia("(pointer:coarse)").matches){
+    try{ await navigator.share({title, url}); return; }catch(e){ if(e.name==="AbortError") return; }
+  }
+  try{ await navigator.clipboard.writeText(url); }
+  catch(e){
+    const t=document.createElement("textarea"); t.value=url; document.body.appendChild(t); t.select();
+    try{ document.execCommand("copy"); }catch(_){}
+    t.remove();
+  }
+  toast("Link copied — paste it anywhere");
+}
 
 /* ========================= SEARCH / SORT ========================= */
 $("#searchInput").addEventListener("input",e=>{ state.search=e.target.value.trim(); state.visibleCount=PAGE_SIZE; render(); });
