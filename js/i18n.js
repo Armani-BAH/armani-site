@@ -131,6 +131,13 @@ const AR_UI = {
 
   "Install the app on this device": "ثبّت التطبيق على هذا الجهاز",
 
+  "New season": "الموسم الجديد",
+  "You may also like": "قد يعجبك أيضاً",
+  "Recently viewed": "شوهدت مؤخراً",
+  "{pieces} without a photo yet.": "{pieces} بدون صورة حتى الآن.",
+  "Show them": "اعرضها",
+  "Hide pieces without photos": "إخفاء القطع التي بلا صور",
+
   /* store */
   "Open now · until {time}": "مفتوح الآن · حتى {time}",
   "Closed · opens today at {time}": "مغلق · يفتح اليوم الساعة {time}",

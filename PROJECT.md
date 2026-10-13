@@ -126,6 +126,16 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | `…?p=EM001739-AF14774-UC001` | Same page with that product open |
 | `#/selection/KEY,KEY,…` | A selection someone shared (KEY = style-fabric-colour) |
 
+## 7b. Shopping improvements (2026-10-14)
+
+- Phone: one slim sticky top bar (logo · search icon · language · selection), no breadcrumb/title, compact tabs → products start ~⅓ down the screen.
+- Cards: photo, name, department/category, colour dots only (codes in product window, WhatsApp, PDF; search still finds codes).
+- "New season" label = photo season `NEW_SEASON` ("FW2026", top of `js/app.js`); default sort puts new season first.
+- Pieces without photos hidden by default ("N pieces without a photo yet — Show them" at the end); always shown when searching, in a shared link or "Selected only".
+- Product window: "You may also like" (same department + type, then category; one per style; with photos).
+- "Recently viewed" strip under the grid (`ea_recent`, last 12, this phone only).
+- More products load automatically when scrolling ("Show more" stays as a fallback).
+
 ## 8. Custom domain (to do — Jasim will buy it himself)
 
 1. Check the name with the brand (no "armani" in a self-owned domain without written approval).

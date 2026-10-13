@@ -161,7 +161,12 @@ async function loadProducts(){
     const r = await fetch("data/products.json");
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     PRODUCTS = await r.json();
-    PRODUCTS.forEach(p=>{ p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name; });
+    PRODUCTS.forEach(p=>{
+      p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name;
+      /* season comes from the photo file name, e.g. …_F_FW2026.jpg */
+      const m=(p.images?.[0]||"").match(/_(FW|SS)(\d{4})\./); p.season=m?m[1]+m[2]:"";
+      p.isNew = p.season===NEW_SEASON;
+    });
 
     /* Build display gender list — deduplicated and ordered */
     const seen = new Set();
@@ -255,6 +260,7 @@ function showCategoryLanding(dGender){
 /* ========================= ENTER CATALOGUE ========================= */
 function enterCatalogue(dGender, category){
   state.shared         = null;
+  state.showNoPhoto    = false;
   state.activeGender   = dGender;
   state.activeCategory = category;
   state.expandedCategory = category || null;
@@ -326,6 +332,7 @@ function renderBreadcrumb(){
 
 /* ========================= STATE ========================= */
 const PAGE_SIZE = 60;
+const NEW_SEASON = "FW2026";       /* pieces whose photos are from this season get the "New season" label */
 const state = {
   search:"",
   filters:{ gender:new Set(), category:new Set(), sub:new Set() },
@@ -333,7 +340,7 @@ const state = {
   selected: new Set(JSON.parse(localStorage.getItem("ea_selection")||"[]")),
   buyer:    JSON.parse(localStorage.getItem("ea_buyer")||"{}"),
   notes:    JSON.parse(localStorage.getItem("ea_notes")||"{}"),   /* id -> client's note on that piece */
-  modalIndex:null, modalPushed:false, visibleCount:PAGE_SIZE, shared:null,
+  modalIndex:null, modalPushed:false, visibleCount:PAGE_SIZE, shared:null, showNoPhoto:false,
   activeGender:null, activeCategory:null, expandedCategory:null
 };
 function persist(){ localStorage.setItem("ea_selection",JSON.stringify([...state.selected])); }
@@ -629,13 +636,17 @@ $("#filterToggleBtn").addEventListener("click",()=>{
 });
 
 /* ========================= FILTERING ========================= */
+let hiddenNoPhoto=0, hiddenSet=new Set();   /* styles hidden because they have no photo */
+const showingNoPhoto = () => state.showNoPhoto || !!state.search || state.selectedOnly || !!state.shared;
 function getFilteredProducts(){
+  hiddenSet=new Set();
   let list=PRODUCTS.filter(p=>{
     if(state.filters.gender.size   && !state.filters.gender.has(p.gender))     return false;
     if(state.filters.category.size && !state.filters.category.has(p.category)) return false;
     if(state.filters.sub.size      && !state.filters.sub.has(p.sub))           return false;
     if(state.selectedOnly && !state.selected.has(p.id))                         return false;
     if(state.shared && !state.shared.has(p.id))                                 return false;
+    if(!p.images?.length && !showingNoPhoto())                                   { hiddenSet.add(gKey(p)); return false; }
     if(state.search){
       const q=state.search.toLowerCase();
       const hay=[p.name,p.nameEn,p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
@@ -647,8 +658,9 @@ function getFilteredProducts(){
     case "name":     list.sort((a,b)=>a.name.localeCompare(b.name)); break;
     case "category": list.sort((a,b)=>a.category.localeCompare(b.category)||a.sub.localeCompare(b.sub)); break;
     case "style":    list.sort((a,b)=>a.styleCode.localeCompare(b.styleCode)); break;
-    default:         list.sort((a,b)=>(b.images?.length>0)-(a.images?.length>0));
+    default:         list.sort((a,b)=>(b.isNew-a.isNew) || ((b.images?.length>0)-(a.images?.length>0)));
   }
+  hiddenNoPhoto=[...hiddenSet].filter(k=>!list.some(p=>gKey(p)===k)).length;
   return list;
 }
 
@@ -679,6 +691,7 @@ function render(){
   const colours=currentFilteredList.length, styles=currentGroups.length;
   $("#resultCount").textContent = piecesText(styles) + (colours>styles ? ` · ${coloursText(colours)}` : "");
   renderGrid();
+  renderRecent();
   renderSharedBanner();
   syncUrl();
 }
@@ -709,6 +722,7 @@ function cardHTML(group){
     <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}" data-group="${esc(gKey(p))}">
       <div class="card-media" data-open="${esc(p.id)}"${p.images?.length>1?` data-alt="${esc(sized(p.images[1],IMG_CARD))}"`:""}>
         ${media}
+        ${p.isNew?`<span class="badge-new">${t("New season")}</span>`:""}
         <button type="button" class="heart-btn${selected?" selected":""}" data-select="${esc(p.id)}"
                 aria-pressed="${selected}" aria-label="${t("Select {name}",{name})}">${heartSVG()}</button>
       </div>
@@ -736,6 +750,29 @@ function renderGrid(){
   const wrap=$("#loadMoreWrap");
   if(remaining>0){ wrap.style.display="flex"; $("#loadMoreBtn").textContent=t("Show more ({n} left)",{n:fmt(remaining)}); }
   else wrap.style.display="none";
+  renderNoPhotoNote(remaining>0);
+}
+/* "12 more pieces don't have a photo yet — Show them" (only once everything else is on screen) */
+function renderNoPhotoNote(moreToCome){
+  const box=$("#noPhotoNote");
+  const autoShown = !state.showNoPhoto && showingNoPhoto();          /* searching, shared link, selected only */
+  if(moreToCome || autoShown || (!state.showNoPhoto && !hiddenNoPhoto)){ box.hidden=true; return; }
+  box.hidden=false;
+  box.innerHTML = state.showNoPhoto
+    ? `<button type="button" class="text-btn" data-nophoto="hide">${t("Hide pieces without photos")}</button>`
+    : `${t("{pieces} without a photo yet.",{pieces:piecesText(hiddenNoPhoto)})} <button type="button" class="text-btn" data-nophoto="show">${t("Show them")}</button>`;
+}
+$("#noPhotoNote").addEventListener("click",e=>{
+  const b=e.target.closest("[data-nophoto]"); if(!b) return;
+  state.showNoPhoto = b.dataset.nophoto==="show"; render();
+});
+/* more pieces appear by themselves as you reach the bottom */
+if("IntersectionObserver" in window){
+  new IntersectionObserver(es=>{
+    if(es.some(x=>x.isIntersecting) && $("#loadMoreWrap").style.display!=="none" && !$("#catalogueWrap").hidden){
+      state.visibleCount+=PAGE_SIZE; renderGrid();
+    }
+  },{rootMargin:"600px 0px"}).observe($("#loadMoreWrap"));
 }
 
 /* redraw one card in place (after a colour switch or a selection change) */
@@ -797,7 +834,10 @@ function openModal(id, fromRoute){
   const wasOpen = state.modalIndex!==null;
   state.modalIndex=idx; if(!wasOpen) lastFocus=document.activeElement;
   paintModal(); $("#modalOverlay").classList.add("open"); document.body.style.overflow="hidden"; $("#modalCloseBtn").focus();
-  if(!fromRoute){ syncUrl(); state.modalPushed=true; }   /* phone back button closes it */
+  if(!fromRoute){
+    if(wasOpen) syncUrl(true);                          /* switching product inside the window: Close still closes */
+    else { syncUrl(); state.modalPushed=true; }         /* phone back button closes it */
+  }
   track("view_item", { items:[itemInfo(target)], opened_from: fromRoute ? "link" : "catalogue" });
 }
 function closeModal(fromRoute){
@@ -805,6 +845,7 @@ function closeModal(fromRoute){
   if(!fromRoute && state.modalPushed){ state.modalPushed=false; history.back(); return; }
   closeZoom();
   $("#modalOverlay").classList.remove("open"); state.modalIndex=null; state.modalPushed=false;
+  renderRecent();
   document.body.style.overflow=""; if(lastFocus&&lastFocus.focus) lastFocus.focus();
   if(!fromRoute) syncUrl(true);
 }
@@ -843,7 +884,48 @@ function paintModal(){
   $("#modalFamily").textContent=famLabel(p.family);
   $("#modalDesc").hidden=hasImages;
   syncModalSelectButton();
+  paintAlsoLike(p);
+  rememberViewed(p);
 }
+
+/* ---- You may also like: same department, same type (then same category), other styles ---- */
+function paintAlsoLike(p){
+  const dg=displayGender(p.gender), seen=new Set([gKey(p)]), out=[];
+  const pick=list=>{ for(const q of list){ if(out.length>=6) return; const k=gKey(q); if(!seen.has(k) && q.images?.length){ seen.add(k); out.push(q); } } };
+  const pool=PRODUCTS.filter(q=>displayGender(q.gender)===dg).sort((a,b)=>b.isNew-a.isNew);
+  pick(pool.filter(q=>q.sub===p.sub)); pick(pool.filter(q=>q.category===p.category));
+  $("#alsoLike").innerHTML = out.length ? `<h3>${t("You may also like")}</h3>${miniStrip(out)}` : "";
+}
+function miniStrip(list){
+  return `<div class="mini-strip">${list.map(q=>`
+    <button type="button" class="mini-card" data-mini="${esc(q.id)}">
+      <img src="${esc(sized(q.images[0],IMG_THUMB*2))}" alt="" loading="lazy">
+      <span>${esc(q.name)}</span>
+    </button>`).join("")}</div>`;
+}
+$("#alsoLike").addEventListener("click",e=>{
+  const m=e.target.closest("[data-mini]"); if(!m) return;
+  track("select_item",{ list:"you_may_also_like", items:[itemInfo(ID_INDEX.get(m.dataset.mini))] });
+  openModal(m.dataset.mini); $(".modal-body").scrollTop=0; $(".modal").scrollTop=0;
+});
+
+/* ---- Recently viewed (kept on this phone only) ---- */
+let RECENT=[]; try{ RECENT=JSON.parse(localStorage.getItem("ea_recent")||"[]"); }catch(e){}
+function rememberViewed(p){
+  RECENT=[p.id,...RECENT.filter(id=>id!==p.id)].slice(0,12);
+  try{ localStorage.setItem("ea_recent",JSON.stringify(RECENT)); }catch(e){}
+}
+function renderRecent(){
+  const list=RECENT.map(id=>ID_INDEX.get(id)).filter(q=>q?.images?.length);
+  const box=$("#recentlyViewed");
+  box.hidden = list.length<2;
+  box.innerHTML = list.length<2 ? "" : `<h3>${t("Recently viewed")}</h3>${miniStrip(list)}`;
+}
+$("#recentlyViewed").addEventListener("click",e=>{
+  const m=e.target.closest("[data-mini]"); if(!m) return;
+  track("select_item",{ list:"recently_viewed", items:[itemInfo(ID_INDEX.get(m.dataset.mini))] });
+  openModal(m.dataset.mini);
+});
 function paintModalColours(){
   const p=modalCur(); if(!p) return; const group=modalList[state.modalIndex];
   $("#modalColours").innerHTML = group.length>1
