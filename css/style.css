@@ -320,9 +320,23 @@ header.site{
 .btn-secondary:hover{background:var(--ink);color:var(--paper);}
 
 /* ====================== FOOTER ====================== */
-footer{border-top:1px solid var(--line);padding:32px 0 44px;}
-footer p{font-size:.85rem;color:var(--stone);}
-footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
+footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
+.store-info{display:grid;grid-template-columns:1fr minmax(260px,360px);gap:32px 64px;}
+.store-col h2{font-weight:400;font-size:1.25rem;margin-bottom:6px;}
+.store-col p{color:var(--stone);}
+.store-status{margin-top:10px;font-size:.9rem;color:var(--stone);}
+.store-status.is-open{color:var(--ink);}
+.store-status.is-open::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#2e7d4f;margin-right:8px;vertical-align:1px;}
+.store-links{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:18px;}
+.store-links a,.landing-store a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+.store-links a:hover,.landing-store a:hover{color:var(--stone);}
+.store-hours div{display:flex;justify-content:space-between;padding:6px 0;font-size:.9rem;color:var(--stone);border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+.store-hours div.today{color:var(--ink);font-weight:500;}
+.footer-note{margin-top:32px;font-size:.8rem;color:var(--stone);}
+.landing-store{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 20px;margin-top:40px;padding-top:22px;border-top:1px solid var(--line);
+  width:100%;max-width:1120px;font-size:.9rem;}
+.landing-store .store-status{margin:0;}
+@media(max-width:700px){ .store-info{grid-template-columns:1fr;} footer{padding-bottom:100px;} }
 
 /* ====================== MODAL ====================== */
 .modal-overlay{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:24px;opacity:0;pointer-events:none;transition:opacity var(--dur) var(--ease);}

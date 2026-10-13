@@ -82,7 +82,9 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 4. ✅ Photo experience — second photo on hover (computer, loaded only on first hover), swipeable gallery with dots (phone) / thumbnails (computer), zoom viewer at 2048px (computer: click + follows the mouse; phone: pan with a finger, pinch works).
 5. ✅ Selection for the Client Advisor — no sizes/qty (Jasim's decision: keep it an open conversation). Note per piece (`ea_notes`), client details = name, mobile, message; "Send to your Client Advisor" (WhatsApp), "Save as PDF" (print stylesheet, `#printSheet`), "Copy link". Excel export dropped.
 6. Store info (location, hours), Arabic (RTL), install as an app (PWA).
-   - ✅ Boutique WhatsApp ready: set `STORE.whatsapp` at the top of `js/app.js` (digits only, with 973). When set: floating "Chat with us" button + "Send your selection" pop-up (to the boutique / share with someone else). When empty: both hidden, sharing stays open. **Waiting for the number.**
+   - ✅ Boutique WhatsApp: `STORE.whatsapp` at the top of `js/app.js` (digits only, with 973) = 97317564991 (same as the store phone — **to be confirmed by Jasim**). Floating "Chat with us" + "Send your selection" pop-up (to the boutique / share with someone else). Empty = both hidden.
+   - ✅ Store info: footer (address, live Open/Closed in Bahrain time, hours with today highlighted, directions, call, WhatsApp) + a short line on the landing page. All details live in `STORE` in `js/app.js`.
+   - Next: Arabic (RTL), install as an app (PWA).
 
 Open: 269 products without photos; CDN hot-linking permission; custom domain.
 

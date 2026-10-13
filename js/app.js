@@ -10,8 +10,53 @@
    "Send to the boutique" option stay hidden and sharing stays open.          */
 const STORE = {
   name:     "Emporio Armani · Marassi Mall",
-  whatsapp: ""
+  whatsapp: "97317564991",
+  phone:    "+973 1756 4991",
+  address:  "Marassi Galleria Mall, Diyar Al Muharraq, Bahrain",
+  maps:     "https://www.google.com/maps/search/?api=1&query=Emporio+Armani+Marassi+Galleria+Mall+Bahrain",
+  /* opening hours, Bahrain time. "24:00" = midnight */
+  hours: {
+    Sunday:["10:00","22:00"], Monday:["10:00","22:00"], Tuesday:["10:00","22:00"], Wednesday:["10:00","22:00"],
+    Thursday:["10:00","24:00"], Friday:["10:00","24:00"], Saturday:["10:00","22:00"]
+  }
 };
+const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const showTime = t => t==="24:00" ? "00:00" : t;
+
+/* "Open now · until 22:00" / "Closed · opens at 10:00", always in Bahrain time */
+function storeStatus(){
+  const parts=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Bahrain",weekday:"long",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})
+    .formatToParts(new Date()).reduce((o,x)=>(o[x.type]=x.value,o),{});
+  const day=parts.weekday, now=`${parts.hour}:${parts.minute}`;
+  const [open,close]=STORE.hours[day];
+  if(now>=open && now<close) return {open:true, day, text:`Open now · until ${showTime(close)}`};
+  if(now<open) return {open:false, day, text:`Closed · opens today at ${open}`};
+  const next=STORE.hours[DAYS[(DAYS.indexOf(day)+1)%7]][0];
+  return {open:false, day, text:`Closed · opens tomorrow at ${next}`};
+}
+function renderStoreInfo(){
+  const st=storeStatus(); const wa=STORE.whatsapp?`https://wa.me/${STORE.whatsapp}`:"";
+  const tel="tel:"+STORE.phone.replace(/\s/g,"");
+  $("#storeInfo").innerHTML=`
+    <div class="store-col">
+      <h2>${esc(STORE.name)}</h2>
+      <p>${esc(STORE.address)}</p>
+      <p class="store-status ${st.open?"is-open":""}">${esc(st.text)}</p>
+      <div class="store-links">
+        <a href="${STORE.maps}" target="_blank" rel="noopener">Get directions</a>
+        <a href="${tel}">${esc(STORE.phone)}</a>
+        ${wa?`<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+      </div>
+    </div>
+    <dl class="store-hours">${DAYS.slice(1).concat(DAYS[0]).map(d=>`
+      <div class="${d===st.day?"today":""}"><dt>${d}</dt><dd>${STORE.hours[d][0]} – ${showTime(STORE.hours[d][1])}</dd></div>`).join("")}
+    </dl>`;
+  $("#landingStore").innerHTML=`
+    <span class="store-status ${st.open?"is-open":""}">${esc(st.text)}</span>
+    <a href="${STORE.maps}" target="_blank" rel="noopener">Get directions</a>
+    <a href="${tel}">Call</a>
+    ${wa?`<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}`;
+}
 
 let PRODUCTS = [];
 let GENDERS  = [];
@@ -921,6 +966,9 @@ $("#sendToAnyoneBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhat
 $("#sendChoiceCancel").addEventListener("click",closeSendChoice);
 $("#sendChoice").addEventListener("click",e=>{ if(e.target.id==="sendChoice") closeSendChoice(); });
 $("#sendStoreName").textContent=STORE.name;
+
+renderStoreInfo();
+setInterval(renderStoreInfo, 5*60*1000);   /* keep "Open now" correct if the page stays open */
 
 /* floating "Chat with us" button */
 if(STORE.whatsapp){
