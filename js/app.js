@@ -22,6 +22,37 @@ const STORE = {
     Thursday:["10:00","24:00"], Friday:["10:00","24:00"], Saturday:["10:00","22:00"]
   }
 };
+/* ========================= VISITOR STATISTICS (Google Analytics 4) =========================
+   Put your Measurement ID here, e.g. "G-AB12CD34EF". Empty = nothing is measured.   */
+const ANALYTICS_ID = "";
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){ dataLayer.push(arguments); }
+if(ANALYTICS_ID){
+  const sc=document.createElement("script"); sc.async=true;
+  sc.src=`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_ID}`; document.head.appendChild(sc);
+  gtag("js", new Date());
+  gtag("config", ANALYTICS_ID, { send_page_view:false });       /* pages are sent by trackPage() */
+  gtag("set", "user_properties", { site_language: LANG });
+}
+/* one place for every measured action */
+function track(name, params={}){
+  params.site_language = LANG;
+  if(ANALYTICS_ID) gtag("event", name, params);
+  if(window.EA_DEBUG) console.log("[track]", name, params);
+}
+/* what we record about a piece (always the English names, so reports read the same in both languages) */
+const itemInfo = p => ({
+  item_id: `${p.styleCode}-${p.fabricCode}-${p.colorCode}`, item_name: p.nameEn || p.name,
+  item_category: p.category, item_category2: p.sub, item_category3: p.gender, item_variant: p.colorCode
+});
+let lastTrackedPage="";
+function trackPage(){
+  const where = location.pathname + location.hash;
+  if(where===lastTrackedPage) return; lastTrackedPage=where;
+  track("page_view", { page_location: location.href, page_path: where, page_title: document.getElementById("pageTitle")?.textContent || document.title });
+}
+
 const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const showTime = t => t==="24:00" ? "00:00" : t;
 
@@ -719,6 +750,7 @@ function redrawCard(key){
 function choose(id){
   const p=ID_INDEX.get(id); if(!p) return;
   pick.set(gKey(p), id); redrawCard(gKey(p));
+  track("select_colour", { items:[itemInfo(p)] });
 }
 
 $("#productGrid").addEventListener("click",e=>{
@@ -748,6 +780,7 @@ function paintSelection(id){
 }
 function toggleSelect(id){
   const was=state.selected.has(id); was?state.selected.delete(id):state.selected.add(id);
+  { const pp=ID_INDEX.get(id); if(pp) track(was?"remove_from_selection":"add_to_wishlist", { items:[itemInfo(pp)], selection_size: state.selected.size }); }
   persist(); updateSelectionBadge(); renderDrawer();
   if(state.selectedOnly) render(); else paintSelection(id);
   if(state.modalIndex!==null){ syncModalSelectButton(); paintModalColours(); }
@@ -769,6 +802,7 @@ function openModal(id, fromRoute){
   state.modalIndex=idx; if(!wasOpen) lastFocus=document.activeElement;
   paintModal(); $("#modalOverlay").classList.add("open"); document.body.style.overflow="hidden"; $("#modalCloseBtn").focus();
   if(!fromRoute){ syncUrl(); state.modalPushed=true; }   /* phone back button closes it */
+  track("view_item", { items:[itemInfo(target)], opened_from: fromRoute ? "link" : "catalogue" });
 }
 function closeModal(fromRoute){
   if(state.modalIndex===null) return;
@@ -869,6 +903,7 @@ $("#modalPrevBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalI
 $("#modalNextBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex+1)%modalList.length; paintModal(); syncUrl(true); });
 $("#modalShareBtn").addEventListener("click",()=>{
   const p=modalCur(); if(!p) return;
+  track("share", { method:"share_piece", content_type:"product", items:[itemInfo(p)] });
   shareLink(productUrl(p), `Emporio Armani — ${p.name} (${p.styleCode})`);
 });
 $("#modalSelectBtn").addEventListener("click",()=>toggleSelect(modalCur().id));
@@ -966,6 +1001,8 @@ $("#shareBtn").addEventListener("click",()=>{
 /* ---- WhatsApp: to the boutique, or to anyone the client chooses ---- */
 let pendingShareText="";
 function sendWhatsApp(number, text=pendingShareText){
+  track("send_selection", { method: number ? "whatsapp_boutique" : "whatsapp_other", pieces: state.selected.size,
+    notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length });
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
 function openSendChoice(){ $("#sendChoice").hidden=false; $("#sendToStoreBtn").focus(); }
@@ -977,18 +1014,27 @@ $("#sendChoice").addEventListener("click",e=>{ if(e.target.id==="sendChoice") cl
 $("#sendStoreName").textContent=t(STORE.name);
 
 renderStoreInfo();
+["#storeInfo","#landingStore"].forEach(sel=>$(sel).addEventListener("click",e=>{
+  const a=e.target.closest("a"); if(!a) return;
+  const method = a.href.startsWith("tel:") ? "call" : a.href.includes("wa.me") ? "whatsapp_chat" : "directions";
+  track("contact", { method, place: sel==="#storeInfo" ? "footer" : "home_page" });
+}));
 setInterval(renderStoreInfo, 5*60*1000);   /* keep "Open now" correct if the page stays open */
 
 /* English ⇄ العربية */
 $$(".lang-btn").forEach(b=>{
   b.textContent = IS_AR ? "English" : "العربية";
   b.lang = IS_AR ? "en" : "ar";
-  b.addEventListener("click",()=>setLang(IS_AR?"en":"ar"));
+  b.addEventListener("click",()=>{
+    track("language_change", { new_language: IS_AR?"en":"ar" });
+    setTimeout(()=>setLang(IS_AR?"en":"ar"), ANALYTICS_ID ? 300 : 0);   /* give the event time to leave */
+  });
 });
 
 /* floating "Chat with us" button */
 if(STORE.whatsapp){
   const fab=$("#chatFab"); fab.hidden=false;
+  fab.addEventListener("click",()=>track("contact", { method:"whatsapp_chat", place:"floating_button" }));
   fab.href=`https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(t("Hello, I have a question about the Emporio Armani FW26 collection."))}`;
 }
 
@@ -1016,6 +1062,7 @@ $("#pdfBtn").addEventListener("click",async()=>{
     </div>
     <footer class="ps-foot">${piecesText(list.length)} · ${t("Emporio Armani · Marassi Mall")} · ${t("View online")}: <span dir="ltr">${esc(selectionUrl())}</span></footer>`;
   toast(t("Preparing your PDF…"));
+  track("save_pdf", { pieces: list.length });
   /* wait for the photos (max 6 s) so they appear in the PDF */
   const imgs=[...$("#printSheet").querySelectorAll("img")];
   await Promise.race([
@@ -1029,12 +1076,14 @@ $("#pdfBtn").addEventListener("click",async()=>{
 
 $("#copyLinkBtn").addEventListener("click",()=>{
   if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
+  track("share", { method:"copy_link", content_type:"selection", pieces: state.selected.size });
   shareLink(selectionUrl(), t("Emporio Armani — my selection"));
 });
 
 /* ========================= SHARED SELECTION ========================= */
 function openShared(keys){
   const ids = keys.map(k=>KEY_INDEX.get(k)).filter(Boolean).map(p=>p.id);
+  track("open_shared_selection", { pieces: ids.length });
   enterCatalogue(null,null);
   state.shared = new Set(ids);
   renderCategoryNav(); renderFilterPanel(); render(); renderBreadcrumb();
@@ -1051,6 +1100,7 @@ function renderSharedBanner(){
 }
 $("#sharedAddAllBtn").addEventListener("click",()=>{
   state.shared.forEach(id=>state.selected.add(id));
+  track("add_all_shared", { pieces: state.shared.size });
   persist(); updateSelectionBadge(); renderDrawer(); render();
   toast(t("Added {pieces} to your selection",{pieces:piecesText(state.shared.size)}));
 });
@@ -1080,6 +1130,7 @@ function syncUrl(replace){
   const now = location.hash || "#/";
   if(h===now) return;
   history[replace ? "replaceState" : "pushState"](null, "", h);
+  setTimeout(trackPage, 0);
 }
 
 const findGender = s => GENDERS.find(g=>gSlug(g)===s);
@@ -1130,7 +1181,7 @@ function route(){
     /* product open in the modal? */
     const p = q.p ? KEY_INDEX.get(decodeURIComponent(q.p)) : null;
     if(p) openModal(p.id, true); else closeModal(true);
-  } finally { ROUTING = false; }
+  } finally { ROUTING = false; setTimeout(trackPage, 0); }
 }
 
 function productUrl(p){
@@ -1155,7 +1206,12 @@ async function shareLink(url, title){
 }
 
 /* ========================= SEARCH / SORT ========================= */
-$("#searchInput").addEventListener("input",e=>{ state.search=e.target.value.trim(); state.visibleCount=PAGE_SIZE; render(); });
+let searchTimer;
+$("#searchInput").addEventListener("input",e=>{
+  state.search=e.target.value.trim(); state.visibleCount=PAGE_SIZE; render();
+  clearTimeout(searchTimer);
+  if(state.search.length>=2) searchTimer=setTimeout(()=>track("search",{ search_term: state.search, results: currentFilteredList.length }),1500);
+});
 $("#sortSelect").addEventListener("change",e=>{ state.sort=e.target.value; state.visibleCount=PAGE_SIZE; render(); });
 $("#selectedOnlyToggle").addEventListener("change",e=>{ state.selectedOnly=e.target.checked; state.visibleCount=PAGE_SIZE; render(); });
 
@@ -1234,7 +1290,7 @@ $("#installBtn").addEventListener("click",async()=>{
   if(!installPrompt) return; installPrompt.prompt();
   await installPrompt.userChoice.catch(()=>{}); installPrompt=null; $("#installBtn").hidden=true;
 });
-window.addEventListener("appinstalled",()=>{ $("#installBtn").hidden=true; });
+window.addEventListener("appinstalled",()=>{ $("#installBtn").hidden=true; track("install_app"); });
 
 /* ========================= INIT ========================= */
 loadProducts();
