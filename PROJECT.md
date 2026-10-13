@@ -125,3 +125,13 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | `#/all/all` | Every product |
 | `…?p=EM001739-AF14774-UC001` | Same page with that product open |
 | `#/selection/KEY,KEY,…` | A selection someone shared (KEY = style-fabric-colour) |
+
+## 8. Custom domain (to do — Jasim will buy it himself)
+
+1. Check the name with the brand (no "armani" in a self-owned domain without written approval).
+2. Buy on Namecheap (1 year, auto-renew, free Domain Privacy, no extras).
+3. Advanced DNS: delete the default parking records, then add
+   - A `@` → 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153
+   - CNAME `www` → armani-bah.github.io
+4. Claude: add a `CNAME` file with the domain, update `og:url` / `og:image` in `index.html`, Google Analytics stream URL.
+5. GitHub → Settings → Pages → Custom domain → Save → (after the DNS check) Enforce HTTPS.
