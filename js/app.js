@@ -4,6 +4,15 @@
    styleCode, fabricCode, colorCode, productKey, season, images[]
    ========================================================================= */
 
+/* ========================= BOUTIQUE SETTINGS =========================
+   Put the boutique's WhatsApp number here: country code + number, digits only
+   (e.g. "97317123456"). While it is empty, the "Chat with us" button and the
+   "Send to the boutique" option stay hidden and sharing stays open.          */
+const STORE = {
+  name:     "Emporio Armani · Marassi Mall",
+  whatsapp: ""
+};
+
 let PRODUCTS = [];
 let GENDERS  = [];
 let CATEGORIES = [];
@@ -815,6 +824,7 @@ $("#modalDrawerBtn").addEventListener("click",()=>{ closeModal(); openDrawer(); 
 document.addEventListener("keydown",e=>{
   const mo=$("#modalOverlay").classList.contains("open");
   if(!$("#zoomOverlay").hidden){ if(e.key==="Escape") closeZoom(); return; }
+  if(!$("#sendChoice").hidden){ if(e.key==="Escape") closeSendChoice(); return; }
   if(e.key==="Escape"){ if(mo) closeModal(); else if($("#drawer").classList.contains("open")) closeDrawer(); return; }
   if(!mo) return;
   if(e.key==="ArrowLeft")  $("#modalPrevBtn").click();
@@ -894,8 +904,29 @@ $("#shareBtn").addEventListener("click",()=>{
     if(state.notes[p.id]) text+=`\n   Note: ${state.notes[p.id]}`;
   });
   text+=`\n\nView with photos:\n${selectionUrl()}`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
+  pendingShareText=text;
+  if(STORE.whatsapp) openSendChoice();
+  else sendWhatsApp("");
 });
+
+/* ---- WhatsApp: to the boutique, or to anyone the client chooses ---- */
+let pendingShareText="";
+function sendWhatsApp(number, text=pendingShareText){
+  window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
+}
+function openSendChoice(){ $("#sendChoice").hidden=false; $("#sendToStoreBtn").focus(); }
+function closeSendChoice(){ $("#sendChoice").hidden=true; }
+$("#sendToStoreBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(STORE.whatsapp); });
+$("#sendToAnyoneBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(""); });
+$("#sendChoiceCancel").addEventListener("click",closeSendChoice);
+$("#sendChoice").addEventListener("click",e=>{ if(e.target.id==="sendChoice") closeSendChoice(); });
+$("#sendStoreName").textContent=STORE.name;
+
+/* floating "Chat with us" button */
+if(STORE.whatsapp){
+  const fab=$("#chatFab"); fab.hidden=false;
+  fab.href=`https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent("Hello, I have a question about the Emporio Armani FW26 collection.")}`;
+}
 
 /* ---- Save as PDF: a printable page of the selection (the browser's Print → Save as PDF) ---- */
 $("#pdfBtn").addEventListener("click",async()=>{

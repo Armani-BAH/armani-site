@@ -81,7 +81,8 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 3. ✅ Group colours — one card per style (department + style code); small photo swatches switch the colour on the card and in the product window; a dot marks colours already in the selection. Count reads "159 pieces · 332 colours".
 4. ✅ Photo experience — second photo on hover (computer, loaded only on first hover), swipeable gallery with dots (phone) / thumbnails (computer), zoom viewer at 2048px (computer: click + follows the mouse; phone: pan with a finger, pinch works).
 5. ✅ Selection for the Client Advisor — no sizes/qty (Jasim's decision: keep it an open conversation). Note per piece (`ea_notes`), client details = name, mobile, message; "Send to your Client Advisor" (WhatsApp), "Save as PDF" (print stylesheet, `#printSheet`), "Copy link". Excel export dropped.
-6. Store info (location, hours, WhatsApp the boutique), Arabic (RTL), install as an app (PWA).
+6. Store info (location, hours), Arabic (RTL), install as an app (PWA).
+   - ✅ Boutique WhatsApp ready: set `STORE.whatsapp` at the top of `js/app.js` (digits only, with 973). When set: floating "Chat with us" button + "Send your selection" pop-up (to the boutique / share with someone else). When empty: both hidden, sharing stays open. **Waiting for the number.**
 
 Open: 269 products without photos; CDN hot-linking permission; custom domain.
 

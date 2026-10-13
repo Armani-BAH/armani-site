@@ -427,6 +427,25 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
 .drawer-note textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:0;font-size:.85rem;resize:vertical;background:var(--paper);}
 .drawer-note textarea:focus{border-color:var(--ink);outline:none;}
 
+/* ====================== WHATSAPP ====================== */
+.send-choice{position:fixed;inset:0;z-index:96;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px;}
+.send-choice-box{width:min(420px,100%);background:var(--paper);padding:28px 24px 18px;display:flex;flex-direction:column;gap:12px;}
+.send-choice-box h2{font-weight:300;font-size:1.5rem;margin-bottom:6px;}
+.send-opt{width:100%;gap:10px;}
+.send-opt svg{width:20px;height:20px;fill:currentColor;flex:none;}
+.send-cancel{align-self:center;margin-top:4px;}
+.chat-fab{position:fixed;right:20px;bottom:20px;z-index:50;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 18px 0 14px;
+  border-radius:24px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.18);
+  transition:transform var(--dur) var(--ease);}
+.chat-fab:hover{transform:translateY(-2px);}
+.chat-fab svg{width:22px;height:22px;fill:currentColor;}
+@media(max-width:700px){
+  .send-choice{align-items:flex-end;padding:0;}
+  .send-choice-box{width:100%;padding:24px 20px calc(16px + env(safe-area-inset-bottom));}
+  .chat-fab{right:14px;bottom:14px;width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;}
+  .chat-fab span{display:none;}
+}
+
 /* ====================== PRINT / PDF ====================== */
 .print-sheet{display:none;}
 @media print{
