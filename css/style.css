@@ -416,7 +416,39 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
 .buyer-form input:focus,.buyer-form textarea:focus{border-color:var(--ink);}
 .buyer-form input::placeholder,.buyer-form textarea::placeholder{color:var(--stone);}
 .buyer-form textarea{resize:vertical;min-height:76px;}
-.share-btn{width:100%;}
+.share-btn{width:100%;gap:10px;}
+.share-btn svg{width:20px;height:20px;fill:currentColor;}
+.drawer-more{display:flex;justify-content:center;gap:28px;margin-top:14px;}
+.drawer-item-actions{display:flex;gap:18px;margin-top:8px;}
+.drawer-link{font-size:.85rem;text-decoration:underline;text-underline-offset:3px;}
+.drawer-link:hover{color:var(--stone);}
+.drawer-note{display:none;margin-top:10px;}
+.drawer-note.open{display:block;}
+.drawer-note textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:0;font-size:.85rem;resize:vertical;background:var(--paper);}
+.drawer-note textarea:focus{border-color:var(--ink);outline:none;}
+
+/* ====================== PRINT / PDF ====================== */
+.print-sheet{display:none;}
+@media print{
+  @page{size:A4;margin:14mm;}
+  body > *:not(.print-sheet){display:none !important;}
+  body{background:#fff;}
+  .print-sheet{display:block;color:#000;font-family:var(--font);}
+  .ps-head{text-align:center;padding-bottom:10mm;margin-bottom:8mm;border-bottom:1px solid #ccc;}
+  .ps-head img{height:18px;width:auto;margin:0 auto 6mm;}
+  .ps-title{font-size:20pt;font-weight:300;}
+  .ps-sub{font-size:9pt;color:#555;margin-top:2mm;}
+  .ps-msg{font-size:10pt;margin-top:4mm;font-style:italic;}
+  .ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8mm 6mm;}
+  .ps-item{break-inside:avoid;font-size:9pt;}
+  .ps-img{aspect-ratio:4/5;background:#f0eeeb;display:flex;align-items:center;justify-content:center;color:#777;margin-bottom:3mm;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .ps-img img{width:100%;height:100%;object-fit:cover;}
+  .ps-name{font-size:10.5pt;font-weight:500;}
+  .ps-meta,.ps-codes{color:#555;}
+  .ps-note{margin-top:2mm;font-style:italic;}
+  .ps-foot{margin-top:10mm;padding-top:4mm;border-top:1px solid #ccc;font-size:8pt;color:#555;text-align:center;word-break:break-all;}
+}
 
 /* ====================== SHARING ====================== */
 .text-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:underline;text-underline-offset:3px;font-size:.9rem;}

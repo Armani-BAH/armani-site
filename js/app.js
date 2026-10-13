@@ -239,6 +239,7 @@ const state = {
   selectedOnly:false, sort:"default",
   selected: new Set(JSON.parse(localStorage.getItem("ea_selection")||"[]")),
   buyer:    JSON.parse(localStorage.getItem("ea_buyer")||"{}"),
+  notes:    JSON.parse(localStorage.getItem("ea_notes")||"{}"),   /* id -> client's note on that piece */
   modalIndex:null, modalPushed:false, visibleCount:PAGE_SIZE, shared:null,
   activeGender:null, activeCategory:null, expandedCategory:null
 };
@@ -843,24 +844,39 @@ function renderDrawer(){
         <div class="name">${esc(p.name)}</div>
         <div class="meta">${esc(genderLabel(p.gender))}, ${esc(sentenceCase(p.category))}</div>
         <div class="codes">Style ${esc(p.styleCode)}<br>Fabric ${esc(p.fabricCode)}<br>Colour ${esc(p.colorCode)}</div>
-        <button type="button" class="drawer-remove" data-remove="${esc(p.id)}">Remove</button>
+        <div class="drawer-note${state.notes[p.id]?" open":""}">
+          <textarea data-note="${esc(p.id)}" rows="2" maxlength="300"
+            placeholder="A note for your Client Advisor, e.g. is this available in my size?">${esc(state.notes[p.id]||"")}</textarea>
+        </div>
+        <div class="drawer-item-actions">
+          ${state.notes[p.id]?"":`<button type="button" class="drawer-link" data-addnote="${esc(p.id)}">Add a note</button>`}
+          <button type="button" class="drawer-link" data-remove="${esc(p.id)}">Remove</button>
+        </div>
       </div>
     </div>`).join("");
 }
-$("#drawerList").addEventListener("click",e=>{ const b=e.target.closest("[data-remove]"); if(b) toggleSelect(b.dataset.remove); });
+$("#drawerList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-remove]"); if(b) return toggleSelect(b.dataset.remove);
+  const a=e.target.closest("[data-addnote]");
+  if(a){ const box=a.closest(".drawer-item").querySelector(".drawer-note"); box.classList.add("open"); box.querySelector("textarea").focus(); a.remove(); }
+});
+$("#drawerList").addEventListener("input",e=>{
+  const t=e.target.closest("[data-note]"); if(!t) return;
+  const v=t.value.trim(); if(v) state.notes[t.dataset.note]=v; else delete state.notes[t.dataset.note];
+  try{ localStorage.setItem("ea_notes",JSON.stringify(state.notes)); }catch(_){}
+});
 
-/* ========================= BUYER FORM + SHARE ========================= */
+/* ========================= CLIENT DETAILS + SHARE ========================= */
 $("#buyerName").value=state.buyer.name||"";
-$("#buyerCompany").value=state.buyer.company||"";
-$("#buyerEmail").value=state.buyer.email||"";
+$("#buyerPhone").value=state.buyer.phone||"";
 $("#buyerNotes").value=state.buyer.notes||"";
 $("#buyerToggleBtn").addEventListener("click",()=>{
   const open=$("#buyerForm").classList.toggle("open");
   $("#buyerToggleBtn").setAttribute("aria-expanded",String(open));
 });
-["buyerName","buyerCompany","buyerEmail","buyerNotes"].forEach(id=>{
+["buyerName","buyerPhone","buyerNotes"].forEach(id=>{
   $("#"+id).addEventListener("input",()=>{
-    state.buyer={name:$("#buyerName").value,company:$("#buyerCompany").value,email:$("#buyerEmail").value,notes:$("#buyerNotes").value};
+    state.buyer={name:$("#buyerName").value.trim(),phone:$("#buyerPhone").value.trim(),notes:$("#buyerNotes").value.trim()};
     localStorage.setItem("ea_buyer",JSON.stringify(state.buyer));
   });
 });
@@ -868,13 +884,52 @@ $("#buyerToggleBtn").addEventListener("click",()=>{
 $("#shareBtn").addEventListener("click",()=>{
   if(!state.selected.size){ toast("Select at least one piece first"); return; }
   const list=PRODUCTS.filter(p=>state.selected.has(p.id));
-  let text="EMPORIO ARMANI — Buyer Selection (FW26)\n";
-  if(state.buyer.name||state.buyer.company){ text+=`\nBuyer: ${state.buyer.name||"—"}${state.buyer.company?", "+state.buyer.company:""}`; if(state.buyer.email) text+=`\nEmail: ${state.buyer.email}`; }
-  if(state.buyer.notes) text+=`\nNotes: ${state.buyer.notes}`;
-  text+=`\n\n${piecesText(list.length)} selected:\n`;
-  list.forEach((p,i)=>{ text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}, ${sentenceCase(p.category)})\n   Style ${p.styleCode}, Fabric ${p.fabricCode}, Colour ${p.colorCode}`; });
+  let text="Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.\n";
+  if(state.buyer.name)  text+=`\nName: ${state.buyer.name}`;
+  if(state.buyer.phone) text+=`\nMobile: ${state.buyer.phone}`;
+  if(state.buyer.notes) text+=`\nMessage: ${state.buyer.notes}`;
+  text+=`\n\nMy selection (${piecesText(list.length)}):\n`;
+  list.forEach((p,i)=>{
+    text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}, ${sentenceCase(p.category)})\n   Style ${p.styleCode}, Fabric ${p.fabricCode}, Colour ${p.colorCode}`;
+    if(state.notes[p.id]) text+=`\n   Note: ${state.notes[p.id]}`;
+  });
   text+=`\n\nView with photos:\n${selectionUrl()}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank","noopener");
+});
+
+/* ---- Save as PDF: a printable page of the selection (the browser's Print → Save as PDF) ---- */
+$("#pdfBtn").addEventListener("click",async()=>{
+  if(!state.selected.size){ toast("Select at least one piece first"); return; }
+  const list=PRODUCTS.filter(p=>state.selected.has(p.id));
+  const date=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const who=[state.buyer.name, state.buyer.phone].filter(Boolean).map(esc).join(" · ");
+  $("#printSheet").innerHTML=`
+    <header class="ps-head">
+      <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
+      <div class="ps-title">My selection</div>
+      <div class="ps-sub">Marassi Mall, Bahrain · FW26 · ${date}${who?` · ${who}`:""}</div>
+      ${state.buyer.notes?`<p class="ps-msg">${esc(state.buyer.notes)}</p>`:""}
+    </header>
+    <div class="ps-grid">${list.map(p=>`
+      <article class="ps-item">
+        <div class="ps-img">${p.images?.length?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="">`:`<span>No photo yet</span>`}</div>
+        <div class="ps-name">${esc(p.name)}</div>
+        <div class="ps-meta">${esc(genderLabel(p.gender))} · ${esc(sentenceCase(p.category))}</div>
+        <div class="ps-codes">Style ${esc(p.styleCode)} · Fabric ${esc(p.fabricCode)} · Colour ${esc(p.colorCode)}</div>
+        ${state.notes[p.id]?`<div class="ps-note">“${esc(state.notes[p.id])}”</div>`:""}
+      </article>`).join("")}
+    </div>
+    <footer class="ps-foot">${piecesText(list.length)} · Emporio Armani, Marassi Mall, Bahrain · View online: ${esc(selectionUrl())}</footer>`;
+  toast("Preparing your PDF…");
+  /* wait for the photos (max 6 s) so they appear in the PDF */
+  const imgs=[...$("#printSheet").querySelectorAll("img")];
+  await Promise.race([
+    Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;}))),
+    new Promise(r=>setTimeout(r,6000))
+  ]);
+  const old=document.title; document.title=`Emporio Armani - My selection - ${date}`;
+  window.print();
+  document.title=old;
 });
 
 $("#copyLinkBtn").addEventListener("click",()=>{

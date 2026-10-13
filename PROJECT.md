@@ -1,6 +1,6 @@
 # Emporio Armani Bahrain — Product Selection Site
 
-Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Buyers browse the FW26 item list, filter it, add pieces to "My Selection", and share the list via WhatsApp.
+Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Clients browse the FW26 collection, add pieces to "My selection", and send it to their Client Advisor on WhatsApp (or save it as a PDF) to start a conversation. No prices, sizes or quantities — on purpose.
 
 - **Repo:** https://github.com/Armani-BAH/armani-site
 - **Live (GitHub Pages):** https://armani-bah.github.io/armani-site/
@@ -80,7 +80,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 2. ✅ Shareable links — every screen has its own address (see §7), browser/phone Back works, "Share this piece" in the product window, "Copy link to this selection" + the link is added to the WhatsApp message, shared selections open with an "Add all" banner.
 3. ✅ Group colours — one card per style (department + style code); small photo swatches switch the colour on the card and in the product window; a dot marks colours already in the selection. Count reads "159 pieces · 332 colours".
 4. ✅ Photo experience — second photo on hover (computer, loaded only on first hover), swipeable gallery with dots (phone) / thumbnails (computer), zoom viewer at 2048px (computer: click + follows the mouse; phone: pan with a finger, pinch works).
-5. Selection export — size + quantity per piece, printable PDF line sheet, Excel.
+5. ✅ Selection for the Client Advisor — no sizes/qty (Jasim's decision: keep it an open conversation). Note per piece (`ea_notes`), client details = name, mobile, message; "Send to your Client Advisor" (WhatsApp), "Save as PDF" (print stylesheet, `#printSheet`), "Copy link". Excel export dropped.
 6. Store info (location, hours, WhatsApp the boutique), Arabic (RTL), install as an app (PWA).
 
 Open: 269 products without photos; CDN hot-linking permission; custom domain.
@@ -97,6 +97,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 |------|----------|
 | 2026-09-21 | Project files shared; goal is to reorganize and make the site look professional. |
 | 2026-10-13 | Agreed 6-phase upgrade plan (see §4). Phase 1 done. |
+| 2026-10-13 | Phase 5: no sizes/quantities — the selection opens a conversation with the Client Advisor. Wording changed from "buyer" to "client". |
 | 2026-10-13 | Claude now pushes directly to `main` (Jasim approved); Jasim should Pull in VS Code before editing locally. |
 | 2026-10-13 | Phase 3: grouping key = display department + style code (fabric can differ inside a group — 72 styles come in two fabrics). Selection stays per colour. |
 | 2026-10-13 | Phase 2: hash-based links (works on GitHub Pages without server setup). Product links use STYLE-FABRIC-COLOUR, not the row-based `id`, so they survive Excel updates. |

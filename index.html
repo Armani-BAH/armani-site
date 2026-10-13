@@ -265,17 +265,25 @@
   </div>
   <div class="drawer-list" id="drawerList"></div>
   <div class="drawer-footer">
-    <button class="buyer-toggle" id="buyerToggleBtn" type="button" aria-expanded="false">Add your name, company and notes (optional)</button>
+    <button class="buyer-toggle" id="buyerToggleBtn" type="button" aria-expanded="false">Add your name and a message (optional)</button>
     <div class="buyer-form" id="buyerForm">
-      <input type="text" id="buyerName" placeholder="Name" autocomplete="name">
-      <input type="text" id="buyerCompany" placeholder="Company" autocomplete="organization">
-      <input type="email" id="buyerEmail" placeholder="Email" autocomplete="email">
-      <textarea id="buyerNotes" placeholder="Notes, for example: interested in these styles for the upcoming season."></textarea>
+      <input type="text" id="buyerName" placeholder="Your name" autocomplete="name">
+      <input type="tel" id="buyerPhone" placeholder="Mobile number" autocomplete="tel" inputmode="tel">
+      <textarea id="buyerNotes" placeholder="A message for your Client Advisor, e.g. I'd like to try these on this weekend."></textarea>
     </div>
-    <button class="share-btn" id="shareBtn" type="button">Send on WhatsApp</button>
-    <button class="text-btn copy-link-btn" id="copyLinkBtn" type="button">Copy link to this selection</button>
+    <button class="share-btn" id="shareBtn" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.2A11 11 0 1 0 20.5 3.5Zm-8.4 17a9 9 0 0 1-4.6-1.3l-.3-.2-3 .7.8-2.9-.2-.3a9 9 0 1 1 7.3 4Zm5-6.7c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-.9-2.1c-.2-.6-.5-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-1 2.3 5.3 5.3 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4.1c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.9-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3Z"/></svg>
+      Send to your Client Advisor
+    </button>
+    <div class="drawer-more">
+      <button class="text-btn" id="pdfBtn" type="button">Save as PDF</button>
+      <button class="text-btn" id="copyLinkBtn" type="button">Copy link</button>
+    </div>
   </div>
 </aside>
+
+<!-- Filled only when the client taps "Save as PDF"; visible only when printing -->
+<div class="print-sheet" id="printSheet" aria-hidden="true"></div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
