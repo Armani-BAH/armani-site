@@ -720,11 +720,7 @@ function cardHTML(group){
           ${group.length>1?`<span>${coloursText(group.length)}</span>`:""}
         </div>
         ${swatchesHTML(group,p,"card")}
-        <dl class="card-codes">
-          <div><dt>${t("Style")}</dt><dd>${esc(p.styleCode)}</dd></div>
-          <div><dt>${t("Fabric")}</dt><dd>${esc(p.fabricCode)}</dd></div>
-          <div><dt>${t("Colour")}</dt><dd>${esc(p.colorCode)}</dd></div>
-        </dl>
+        <!-- codes live in the product window, WhatsApp message and PDF; search still finds them -->
       </div>
     </article>`;
 }
