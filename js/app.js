@@ -24,7 +24,7 @@ const STORE = {
 };
 /* ========================= VISITOR STATISTICS (Google Analytics 4) =========================
    Put your Measurement ID here, e.g. "G-AB12CD34EF". Empty = nothing is measured.   */
-const ANALYTICS_ID = "";
+const ANALYTICS_ID = "G-1098C6F5SS";
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){ dataLayer.push(arguments); }
