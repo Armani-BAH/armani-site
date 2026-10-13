@@ -285,6 +285,25 @@ header.site{
 .card-codes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;}
 .card-codes dt{font-size:.72rem;color:var(--stone);}
 .card-codes dd{font-size:.82rem;overflow-wrap:anywhere;}
+/* Colour swatches (one per colour of the same style) */
+.swatches{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.swatch{position:relative;width:28px;height:28px;border-radius:50%;overflow:visible;background:var(--greige);
+  box-shadow:0 0 0 1px var(--line);transition:box-shadow var(--dur) var(--ease);display:flex;align-items:center;justify-content:center;}
+.sw-face{display:block;width:100%;height:100%;border-radius:50%;overflow:hidden;}
+.sw-face img{width:100%;height:100%;object-fit:cover;object-position:center 45%;transform:scale(1.7);}
+.sw-code{display:flex;align-items:center;justify-content:center;font-size:.5rem;letter-spacing:-.02em;color:var(--stone);}
+.swatch:hover{box-shadow:0 0 0 1px var(--stone);}
+.swatch.on{box-shadow:0 0 0 1px var(--paper),0 0 0 2px var(--ink);}
+.swatch.mine::after{content:"";position:absolute;top:-2px;right:-2px;width:9px;height:9px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px var(--paper);}
+.swatch-more{height:28px;padding:0 6px;font-size:.78rem;color:var(--stone);}
+.swatch-more:hover{color:var(--ink);text-decoration:underline;}
+.modal-colours:empty{display:none;}
+.modal-colours{margin-top:22px;}
+.modal-colours-label{font-size:.85rem;color:var(--stone);margin-bottom:2px;}
+.modal-colours-label strong{color:var(--ink);font-weight:500;}
+.swatches-modal{gap:10px;}
+.swatches-modal .swatch{width:44px;height:44px;}
+.swatches-modal .sw-code{font-size:.62rem;}
 .empty-state{grid-column:1/-1;padding:80px 0;text-align:center;}
 .empty-state h3{font-size:1.25rem;font-weight:400;margin-bottom:6px;}
 .empty-state p{color:var(--stone);margin-bottom:22px;}
@@ -466,6 +485,10 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .card-name{font-size:.95rem;}
   .card-meta{font-size:.8rem;}
   .heart-btn{top:8px;right:8px;width:36px;height:36px;}
+  .card-meta span:nth-child(3){display:none;}   /* "3 colours" — the swatches already show it */
+  .swatches-card{gap:5px;margin-top:8px;}
+  .swatches-card .swatch{width:24px;height:24px;}
+  .swatches-card .swatch-more{height:24px;}
 
   .modal-overlay{padding:0;align-items:stretch;}
   .modal{max-height:none;height:100%;}

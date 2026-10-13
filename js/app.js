@@ -559,23 +559,60 @@ function getFilteredProducts(){
 }
 
 /* ========================= GRID ========================= */
+/* Colours of the same style (same department + style code) share one card.
+   The card shows one colour at a time; the small swatches switch it. */
 let currentFilteredList=[];
+let currentGroups=[];               /* [[variant, variant…], …] in display order */
+let groupByKey=new Map();           /* group key -> variants (filtered) */
+const pick=new Map();               /* group key -> id of the colour on show */
+const gKey = p => displayGender(p.gender)+"|"+p.styleCode;
+
+function groupList(list){
+  const m=new Map();
+  list.forEach(p=>{ const k=gKey(p); if(!m.has(k)) m.set(k,[]); m.get(k).push(p); });
+  return m;
+}
+/* which colour a card / the product window is showing */
+function shownVariant(group){
+  const id=pick.get(gKey(group[0]));
+  return group.find(p=>p.id===id) || group.find(p=>p.images?.length) || group[0];
+}
 
 function render(){
   currentFilteredList=getFilteredProducts();
-  $("#resultCount").textContent=piecesText(currentFilteredList.length);
+  groupByKey=groupList(currentFilteredList);
+  currentGroups=[...groupByKey.values()];
+  const colours=currentFilteredList.length, styles=currentGroups.length;
+  $("#resultCount").textContent = piecesText(styles) + (colours>styles ? ` · ${fmt(colours)} colours` : "");
   renderGrid();
   renderSharedBanner();
   syncUrl();
 }
 
-function cardHTML(p){
+const MAX_SWATCHES = 5;
+function swatchesHTML(group, shown, cls){
+  if(group.length<2) return "";
+  const extra=group.length-MAX_SWATCHES;
+  const list = cls==="modal" ? group : group.slice(0, extra>0 ? MAX_SWATCHES-1 : MAX_SWATCHES);
+  const more = cls==="modal" ? 0 : group.length-list.length;
+  return `<div class="swatches swatches-${cls}" role="group" aria-label="Colours">${list.map(v=>{
+    const on=v.id===shown.id, mine=state.selected.has(v.id);
+    const face=v.images?.length
+      ?`<span class="sw-face"><img src="${esc(sized(v.images[0],IMG_THUMB))}" alt="" loading="lazy"></span>`
+      :`<span class="sw-face sw-code">${esc(v.colorCode.slice(0,5))}</span>`;
+    return `<button type="button" class="swatch${on?" on":""}${mine?" mine":""}" data-pick="${esc(v.id)}"
+      aria-pressed="${on}" aria-label="Colour ${esc(v.colorCode)}${mine?" (in your selection)":""}" title="Colour ${esc(v.colorCode)}">${face}</button>`;
+  }).join("")}${more>0?`<button type="button" class="swatch-more" data-open="${esc(shown.id)}">+${more}</button>`:""}</div>`;
+}
+
+function cardHTML(group){
+  const p=shownVariant(group);
   const selected=state.selected.has(p.id); const name=esc(p.name);
   const media=p.images?.length
     ?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="${name}" loading="lazy" decoding="async">`
     :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
   return `
-    <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}">
+    <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}" data-group="${esc(gKey(p))}">
       <div class="card-media" data-open="${esc(p.id)}">
         ${media}
         <button type="button" class="heart-btn${selected?" selected":""}" data-select="${esc(p.id)}"
@@ -586,7 +623,9 @@ function cardHTML(p){
         <div class="card-meta">
           <span>${esc(genderLabel(p.gender))}</span>
           <span>${esc(sentenceCase(p.category))}</span>
+          ${group.length>1?`<span>${group.length} colours</span>`:""}
         </div>
+        ${swatchesHTML(group,p,"card")}
         <dl class="card-codes">
           <div><dt>Style</dt><dd>${esc(p.styleCode)}</dd></div>
           <div><dt>Fabric</dt><dd>${esc(p.fabricCode)}</dd></div>
@@ -597,7 +636,7 @@ function cardHTML(p){
 }
 
 function renderGrid(){
-  const grid=$("#productGrid"); const list=currentFilteredList;
+  const grid=$("#productGrid"); const list=currentGroups;
   if(!list.length){
     grid.innerHTML=`<div class="empty-state"><h3>No pieces match</h3><p>Try widening your filters or clearing the search.</p><button type="button" class="btn-secondary" data-clear style="display:inline-flex">Clear all filters</button></div>`;
     $("#loadMoreWrap").style.display="none"; return;
@@ -609,8 +648,19 @@ function renderGrid(){
   else wrap.style.display="none";
 }
 
+/* redraw one card in place (after a colour switch or a selection change) */
+function redrawCard(key){
+  const card=$(`.card[data-group="${CSS.escape(key)}"]`); const group=groupByKey.get(key);
+  if(card && group) card.outerHTML=cardHTML(group);
+}
+function choose(id){
+  const p=ID_INDEX.get(id); if(!p) return;
+  pick.set(gKey(p), id); redrawCard(gKey(p));
+}
+
 $("#productGrid").addEventListener("click",e=>{
   if(e.target.closest("[data-clear]")) return clearAllFilters();
+  const sw=e.target.closest("[data-pick]"); if(sw) return choose(sw.dataset.pick);
   const sel=e.target.closest("[data-select]"); if(sel) return toggleSelect(sel.dataset.select);
   const open=e.target.closest("[data-open]"); if(open) openModal(open.dataset.open);
 });
@@ -622,26 +672,27 @@ function updateSelectionBadge(){
   badge.textContent=count; badge.classList.toggle("zero",count===0);
 }
 function paintSelection(id){
-  const on=state.selected.has(id);
-  $$(`.heart-btn[data-select="${id}"]`).forEach(b=>{ b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
-  $$(`.card[data-id="${id}"]`).forEach(c=>c.classList.toggle("is-selected",on));
+  const p=ID_INDEX.get(id); if(p) redrawCard(gKey(p));
 }
 function toggleSelect(id){
   const was=state.selected.has(id); was?state.selected.delete(id):state.selected.add(id);
   persist(); updateSelectionBadge(); renderDrawer();
   if(state.selectedOnly) render(); else paintSelection(id);
-  if(state.modalIndex!==null) syncModalSelectButton();
+  if(state.modalIndex!==null){ syncModalSelectButton(); paintModalColours(); }
   const p=PRODUCTS.find(x=>x.id===id);
   toast(was?`Removed ${p.name}`:`Added ${p.name} to your selection`);
 }
 
 /* ========================= MODAL ========================= */
-let modalList=[]; let lastFocus=null;
+let modalList=[]; let lastFocus=null;       /* list of colour groups */
+const modalCur = () => state.modalIndex!==null && modalList[state.modalIndex] ? shownVariant(modalList[state.modalIndex]) : null;
 
 function openModal(id, fromRoute){
-  modalList=currentFilteredList;
-  let idx=modalList.findIndex(p=>p.id===id);
-  if(idx<0){ const p=ID_INDEX.get(id); if(!p) return; modalList=[p,...modalList]; idx=0; }
+  const target=ID_INDEX.get(id); if(!target) return;
+  modalList=currentGroups;
+  let idx=modalList.findIndex(g=>g.some(p=>p.id===id));
+  if(idx<0){ modalList=[[target],...modalList]; idx=0; }
+  pick.set(gKey(target), id);
   const wasOpen = state.modalIndex!==null;
   state.modalIndex=idx; if(!wasOpen) lastFocus=document.activeElement;
   paintModal(); $("#modalOverlay").classList.add("open"); document.body.style.overflow="hidden"; $("#modalCloseBtn").focus();
@@ -655,7 +706,8 @@ function closeModal(fromRoute){
   if(!fromRoute) syncUrl(true);
 }
 function paintModal(){
-  const p=modalList[state.modalIndex]; if(!p) return;
+  const p=modalCur(); if(!p) return;
+  paintModalColours();
   const name=esc(p.name); const hasImages=p.images?.length>0;
   $("#modalMediaInner").innerHTML=hasImages
     ?`<div class="product-gallery">
@@ -676,16 +728,26 @@ function paintModal(){
   $("#modalDesc").hidden=hasImages;
   syncModalSelectButton();
 }
+function paintModalColours(){
+  const p=modalCur(); if(!p) return; const group=modalList[state.modalIndex];
+  $("#modalColours").innerHTML = group.length>1
+    ? `<div class="modal-colours-label">Colour <strong>${esc(p.colorCode)}</strong> · ${group.length} available</div>${swatchesHTML(group,p,"modal")}`
+    : "";
+}
 function syncModalSelectButton(){
-  const p=modalList[state.modalIndex]; if(!p) return;
+  const p=modalCur(); if(!p) return;
   const btn=$("#modalSelectBtn"); const selected=state.selected.has(p.id);
   btn.textContent=selected?"Selected — remove":"Select this piece";
   btn.classList.toggle("selected",selected);
 }
 
+$("#modalColours").addEventListener("click",e=>{
+  const sw=e.target.closest("[data-pick]"); if(!sw) return;
+  choose(sw.dataset.pick); paintModal(); syncUrl(true);
+});
 $("#modalMediaInner").addEventListener("click",e=>{
   const thumb=e.target.closest("[data-gallery-index]"); if(!thumb) return;
-  const p=modalList[state.modalIndex]; const main=$("#galleryMainImage");
+  const p=modalCur(); const main=$("#galleryMainImage");
   if(main&&p.images[thumb.dataset.galleryIndex]) main.src=p.images[thumb.dataset.galleryIndex];
   $$(".thumb-btn").forEach(b=>b.classList.toggle("active",b===thumb));
 });
@@ -694,10 +756,10 @@ $("#modalOverlay").addEventListener("click",e=>{ if(e.target.id==="modalOverlay"
 $("#modalPrevBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex-1+modalList.length)%modalList.length; paintModal(); syncUrl(true); });
 $("#modalNextBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex+1)%modalList.length; paintModal(); syncUrl(true); });
 $("#modalShareBtn").addEventListener("click",()=>{
-  const p=modalList[state.modalIndex]; if(!p) return;
+  const p=modalCur(); if(!p) return;
   shareLink(productUrl(p), `Emporio Armani — ${p.name} (${p.styleCode})`);
 });
-$("#modalSelectBtn").addEventListener("click",()=>toggleSelect(modalList[state.modalIndex].id));
+$("#modalSelectBtn").addEventListener("click",()=>toggleSelect(modalCur().id));
 $("#modalDrawerBtn").addEventListener("click",()=>{ closeModal(); openDrawer(); });
 
 document.addEventListener("keydown",e=>{
@@ -813,7 +875,7 @@ function stateHash(){
 function syncUrl(replace){
   if(ROUTING) return;
   let h = stateHash();
-  const open = state.modalIndex!==null && modalList[state.modalIndex];
+  const open = state.modalIndex!==null && modalCur();
   if(open) h += (h.includes("?")?"&":"?") + "p=" + encodeURIComponent(pKey(open));
   const now = location.hash || "#/";
   if(h===now) return;

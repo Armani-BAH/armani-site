@@ -78,7 +78,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 
 1. ✅ Quick fixes — categories, pinch-zoom, smaller images, compact phone cards, department landing layout, favicon + WhatsApp preview, cleanup.
 2. ✅ Shareable links — every screen has its own address (see §7), browser/phone Back works, "Share this piece" in the product window, "Copy link to this selection" + the link is added to the WhatsApp message, shared selections open with an "Add all" banner.
-3. Group colours — one card per style with colour dots.
+3. ✅ Group colours — one card per style (department + style code); small photo swatches switch the colour on the card and in the product window; a dot marks colours already in the selection. Count reads "159 pieces · 332 colours".
 4. Photo experience — back view on hover, swipe on phone, tap to zoom.
 5. Selection export — size + quantity per piece, printable PDF line sheet, Excel.
 6. Store info (location, hours, WhatsApp the boutique), Arabic (RTL), install as an app (PWA).
@@ -97,6 +97,8 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 |------|----------|
 | 2026-09-21 | Project files shared; goal is to reorganize and make the site look professional. |
 | 2026-10-13 | Agreed 6-phase upgrade plan (see §4). Phase 1 done. |
+| 2026-10-13 | Claude now pushes directly to `main` (Jasim approved); Jasim should Pull in VS Code before editing locally. |
+| 2026-10-13 | Phase 3: grouping key = display department + style code (fabric can differ inside a group — 72 styles come in two fabrics). Selection stays per colour. |
 | 2026-10-13 | Phase 2: hash-based links (works on GitHub Pages without server setup). Product links use STYLE-FABRIC-COLOUR, not the row-based `id`, so they survive Excel updates. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
