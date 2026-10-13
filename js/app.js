@@ -4,6 +4,8 @@
    styleCode, fabricCode, colorCode, productKey, season, images[]
    ========================================================================= */
 
+translateStaticPage();   /* English or Arabic — see js/i18n.js */
+
 /* ========================= BOUTIQUE SETTINGS =========================
    Put the boutique's WhatsApp number here: country code + number, digits only
    (e.g. "97317123456"). While it is empty, the "Chat with us" button and the
@@ -29,33 +31,33 @@ function storeStatus(){
     .formatToParts(new Date()).reduce((o,x)=>(o[x.type]=x.value,o),{});
   const day=parts.weekday, now=`${parts.hour}:${parts.minute}`;
   const [open,close]=STORE.hours[day];
-  if(now>=open && now<close) return {open:true, day, text:`Open now · until ${showTime(close)}`};
-  if(now<open) return {open:false, day, text:`Closed · opens today at ${open}`};
+  if(now>=open && now<close) return {open:true, day, text:t("Open now · until {time}",{time:showTime(close)})};
+  if(now<open) return {open:false, day, text:t("Closed · opens today at {time}",{time:open})};
   const next=STORE.hours[DAYS[(DAYS.indexOf(day)+1)%7]][0];
-  return {open:false, day, text:`Closed · opens tomorrow at ${next}`};
+  return {open:false, day, text:t("Closed · opens tomorrow at {time}",{time:next})};
 }
 function renderStoreInfo(){
   const st=storeStatus(); const wa=STORE.whatsapp?`https://wa.me/${STORE.whatsapp}`:"";
   const tel="tel:"+STORE.phone.replace(/\s/g,"");
   $("#storeInfo").innerHTML=`
     <div class="store-col">
-      <h2>${esc(STORE.name)}</h2>
-      <p>${esc(STORE.address)}</p>
+      <h2>${esc(t(STORE.name))}</h2>
+      <p>${esc(t(STORE.address))}</p>
       <p class="store-status ${st.open?"is-open":""}">${esc(st.text)}</p>
       <div class="store-links">
-        <a href="${STORE.maps}" target="_blank" rel="noopener">Get directions</a>
-        <a href="${tel}">${esc(STORE.phone)}</a>
-        ${wa?`<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+        <a href="${STORE.maps}" target="_blank" rel="noopener">${t("Get directions")}</a>
+        <a href="${tel}" dir="ltr">${esc(STORE.phone)}</a>
+        ${wa?`<a href="${wa}" target="_blank" rel="noopener">${t("WhatsApp")}</a>`:""}
       </div>
     </div>
     <dl class="store-hours">${DAYS.slice(1).concat(DAYS[0]).map(d=>`
-      <div class="${d===st.day?"today":""}"><dt>${d}</dt><dd>${STORE.hours[d][0]} – ${showTime(STORE.hours[d][1])}</dd></div>`).join("")}
+      <div class="${d===st.day?"today":""}"><dt>${trDay(d)}</dt><dd dir="ltr">${STORE.hours[d][0]} – ${showTime(STORE.hours[d][1])}</dd></div>`).join("")}
     </dl>`;
   $("#landingStore").innerHTML=`
     <span class="store-status ${st.open?"is-open":""}">${esc(st.text)}</span>
-    <a href="${STORE.maps}" target="_blank" rel="noopener">Get directions</a>
-    <a href="${tel}">Call</a>
-    ${wa?`<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}`;
+    <a href="${STORE.maps}" target="_blank" rel="noopener">${t("Get directions")}</a>
+    <a href="${tel}">${t("Call")}</a>
+    ${wa?`<a href="${wa}" target="_blank" rel="noopener">${t("WhatsApp")}</a>`:""}`;
 }
 
 let PRODUCTS = [];
@@ -83,10 +85,15 @@ const MAN_GENDERS = new Set(["MAN","UNISEX"]);
 
 /* ========================= HELPERS ========================= */
 const sentenceCase = s => { const t = String(s).trim().toLowerCase(); return t.charAt(0).toUpperCase()+t.slice(1); };
-const genderLabel  = g => GENDER_LABELS[g] || (MAN_GENDERS.has(g) ? "Men" : sentenceCase(g));
+if(IS_AR) for(const k in GENDER_LABELS) GENDER_LABELS[k]=AR_GENDERS[k]||GENDER_LABELS[k];
+const genderLabel  = g => GENDER_LABELS[g] || (MAN_GENDERS.has(g) ? GENDER_LABELS.MAN : sentenceCase(g));
+const catLabel     = c => trCategory(c) || sentenceCase(c);
+const subLabel     = s => trType(s)     || sentenceCase(s);
+const famLabel     = f => trFamily(f)   || sentenceCase(f);
 const genderRank   = g => { const i = GENDER_ORDER.indexOf(g); return i===-1 ? GENDER_ORDER.length : i; };
 const fmt          = n => n.toLocaleString("en-US");
-const piecesText   = n => `${fmt(n)} ${n===1?"piece":"pieces"}`;
+const piecesText   = n => IS_AR ? arCount(n,"قطعة واحدة","قطعتان","قطع","قطعة") : `${fmt(n)} ${n===1?"piece":"pieces"}`;
+const coloursText  = n => IS_AR ? arCount(n,"لون واحد","لونان","ألوان","لوناً") : `${fmt(n)} colours`;
 const esc          = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 /* ---- Links: every screen has its own web address (after the #) ----
@@ -123,6 +130,7 @@ async function loadProducts(){
     const r = await fetch("data/products.json");
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     PRODUCTS = await r.json();
+    PRODUCTS.forEach(p=>{ p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name; });
 
     /* Build display gender list — deduplicated and ordered */
     const seen = new Set();
@@ -147,7 +155,7 @@ async function loadProducts(){
   }catch(e){
     console.error("Could not load products.json",e);
     document.getElementById("landingGender").innerHTML =
-      '<p style="padding:60px 24px;text-align:center;color:#666">The catalogue could not be loaded. Please refresh.</p>';
+      '<p style="padding:60px 24px;text-align:center;color:#666">'+t("The catalogue could not be loaded. Please refresh.")+'</p>';
   }
 }
 
@@ -205,7 +213,7 @@ function showCategoryLanding(dGender){
       ${imgUrl?`<img class="landing-card-img" src="${esc(sized(imgUrl,IMG_LANDING))}" alt="" loading="lazy" decoding="async">`:""}
       <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       <span class="landing-card-body">
-        <span class="landing-card-label">${esc(sentenceCase(cat))}</span>
+        <span class="landing-card-label">${esc(catLabel(cat))}</span>
       </span>`;
     btn.addEventListener("click",()=>enterCatalogue(dGender,cat));
     grid.appendChild(btn);
@@ -275,14 +283,14 @@ function renderBreadcrumb(){
   }
   if(state.activeCategory){
     const sep=document.createElement("span"); sep.className="breadcrumb-sep"; sep.textContent="›"; bc.appendChild(sep);
-    const cur=document.createElement("span"); cur.className="breadcrumb-current"; cur.textContent=sentenceCase(state.activeCategory); bc.appendChild(cur);
+    const cur=document.createElement("span"); cur.className="breadcrumb-current"; cur.textContent=catLabel(state.activeCategory); bc.appendChild(cur);
   }
   /* page title */
   const parts=[];
   if(state.activeGender) parts.push(GENDER_LABELS[state.activeGender]||state.activeGender);
-  if(state.activeCategory) parts.push(sentenceCase(state.activeCategory));
+  if(state.activeCategory) parts.push(catLabel(state.activeCategory));
   document.getElementById("pageTitle").textContent =
-    state.shared ? "Shared selection" : (parts.length ? parts.join(" · ") : "FW26 selection");
+    state.shared ? t("Shared selection") : (parts.length ? parts.join(" · ") : t("FW26 selection"));
 }
 
 /* ========================= STATE ========================= */
@@ -341,7 +349,7 @@ function renderSubNav(cat){
       state.filters.sub.has(sub) ? " active" : ""
     );
 
-    btn.textContent=sentenceCase(sub);
+    btn.textContent=subLabel(sub);
 
     btn.addEventListener("click",()=>{
 
@@ -386,7 +394,7 @@ const relevantCats = [...new Set(
 
   const allBtn = document.createElement("button");
   allBtn.type="button"; allBtn.className="cat-btn"+(state.filters.category.size===0?" active":"");
-  allBtn.textContent="All categories";
+  allBtn.textContent=t("All categories");
   allBtn.addEventListener("click",()=>{
     state.filters.category.clear(); state.filters.sub.clear();
     state.expandedCategory=null; state.activeCategory=null; state.visibleCount=PAGE_SIZE;
@@ -396,7 +404,7 @@ const relevantCats = [...new Set(
   if(navMobile){
     const allBtnM=document.createElement("button");
     allBtnM.type="button"; allBtnM.className="cat-btn"+(state.filters.category.size===0?" active":"");
-    allBtnM.textContent="All categories";
+    allBtnM.textContent=t("All categories");
     allBtnM.addEventListener("click",()=>{
       state.filters.category.clear(); state.filters.sub.clear();
       state.expandedCategory=null; state.activeCategory=null; state.visibleCount=PAGE_SIZE;
@@ -410,7 +418,7 @@ const relevantCats = [...new Set(
     const btn=document.createElement("button");
     btn.type="button"; 
     btn.className="cat-btn"+(isCatActive?" active":"");
-    btn.textContent=sentenceCase(cat);
+    btn.textContent=catLabel(cat);
 
      btn.addEventListener("click",()=>{
       
@@ -453,7 +461,7 @@ const relevantCats = [...new Set(
         const subBtn=document.createElement("button");
         subBtn.type="button";
         subBtn.className="cat-btn sub-btn"+(state.filters.sub.has(sub)?" active":"");
-        subBtn.textContent=sentenceCase(sub);
+        subBtn.textContent=subLabel(sub);
         subBtn.addEventListener("click",e=>{
           e.stopPropagation();
           if(state.filters.sub.has(sub)){
@@ -479,7 +487,7 @@ const relevantCats = [...new Set(
       const isCatActive = state.expandedCategory === cat;
       const mBtn=document.createElement("button");
       mBtn.type="button"; mBtn.className="cat-btn"+(isCatActive?" active":"");
-      mBtn.textContent=sentenceCase(cat);
+      mBtn.textContent=catLabel(cat);
       mBtn.addEventListener("click",()=>{
   if(state.expandedCategory===cat){
     state.expandedCategory=null;
@@ -533,7 +541,7 @@ function renderFilterPanel(){
   CATEGORIES.forEach(cat=>{
     const b=document.createElement("button");
     b.type="button"; b.className="chip"+(state.filters.category.has(cat)?" active":"");
-    b.textContent=sentenceCase(cat);
+    b.textContent=catLabel(cat);
     b.addEventListener("click",()=>toggleFilter("category",cat));
     catBox.appendChild(b);
   });
@@ -545,7 +553,7 @@ function renderFilterPanel(){
   relevantSubs.forEach(sub=>{
     const b=document.createElement("button");
     b.type="button"; b.className="chip"+(state.filters.sub.has(sub)?" active":"");
-    b.textContent=sentenceCase(sub);
+    b.textContent=subLabel(sub);
     b.addEventListener("click",()=>toggleFilter("sub",sub));
     subBox.appendChild(b);
   });
@@ -599,7 +607,7 @@ function getFilteredProducts(){
     if(state.shared && !state.shared.has(p.id))                                 return false;
     if(state.search){
       const q=state.search.toLowerCase();
-      const hay=[p.name,p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
+      const hay=[p.name,p.nameEn,p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
@@ -638,7 +646,7 @@ function render(){
   groupByKey=groupList(currentFilteredList);
   currentGroups=[...groupByKey.values()];
   const colours=currentFilteredList.length, styles=currentGroups.length;
-  $("#resultCount").textContent = piecesText(styles) + (colours>styles ? ` · ${fmt(colours)} colours` : "");
+  $("#resultCount").textContent = piecesText(styles) + (colours>styles ? ` · ${coloursText(colours)}` : "");
   renderGrid();
   renderSharedBanner();
   syncUrl();
@@ -650,13 +658,13 @@ function swatchesHTML(group, shown, cls){
   const extra=group.length-MAX_SWATCHES;
   const list = cls==="modal" ? group : group.slice(0, extra>0 ? MAX_SWATCHES-1 : MAX_SWATCHES);
   const more = cls==="modal" ? 0 : group.length-list.length;
-  return `<div class="swatches swatches-${cls}" role="group" aria-label="Colours">${list.map(v=>{
+  return `<div class="swatches swatches-${cls}" role="group" aria-label="${t("Colours")}">${list.map(v=>{
     const on=v.id===shown.id, mine=state.selected.has(v.id);
     const face=v.images?.length
       ?`<span class="sw-face"><img src="${esc(sized(v.images[0],IMG_THUMB))}" alt="" loading="lazy"></span>`
       :`<span class="sw-face sw-code">${esc(v.colorCode.slice(0,5))}</span>`;
     return `<button type="button" class="swatch${on?" on":""}${mine?" mine":""}" data-pick="${esc(v.id)}"
-      aria-pressed="${on}" aria-label="Colour ${esc(v.colorCode)}${mine?" (in your selection)":""}" title="Colour ${esc(v.colorCode)}">${face}</button>`;
+      aria-pressed="${on}" aria-label="${t("Colour {code}",{code:esc(v.colorCode)})}${mine?t(" (in your selection)"):""}" title="${t("Colour {code}",{code:esc(v.colorCode)})}">${face}</button>`;
   }).join("")}${more>0?`<button type="button" class="swatch-more" data-open="${esc(shown.id)}">+${more}</button>`:""}</div>`;
 }
 
@@ -665,26 +673,26 @@ function cardHTML(group){
   const selected=state.selected.has(p.id); const name=esc(p.name);
   const media=p.images?.length
     ?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="${name}" loading="lazy" decoding="async">`
-    :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
+    :`<div class="img-pending">${pendingSVG()}<span>${t("No photo yet")}</span></div>`;
   return `
     <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}" data-group="${esc(gKey(p))}">
       <div class="card-media" data-open="${esc(p.id)}"${p.images?.length>1?` data-alt="${esc(sized(p.images[1],IMG_CARD))}"`:""}>
         ${media}
         <button type="button" class="heart-btn${selected?" selected":""}" data-select="${esc(p.id)}"
-                aria-pressed="${selected}" aria-label="Select ${name}">${heartSVG()}</button>
+                aria-pressed="${selected}" aria-label="${t("Select {name}",{name})}">${heartSVG()}</button>
       </div>
       <div class="card-info">
         <button type="button" class="card-name" data-open="${esc(p.id)}">${name}</button>
         <div class="card-meta">
           <span>${esc(genderLabel(p.gender))}</span>
-          <span>${esc(sentenceCase(p.category))}</span>
-          ${group.length>1?`<span>${group.length} colours</span>`:""}
+          <span>${esc(catLabel(p.category))}</span>
+          ${group.length>1?`<span>${coloursText(group.length)}</span>`:""}
         </div>
         ${swatchesHTML(group,p,"card")}
         <dl class="card-codes">
-          <div><dt>Style</dt><dd>${esc(p.styleCode)}</dd></div>
-          <div><dt>Fabric</dt><dd>${esc(p.fabricCode)}</dd></div>
-          <div><dt>Colour</dt><dd>${esc(p.colorCode)}</dd></div>
+          <div><dt>${t("Style")}</dt><dd>${esc(p.styleCode)}</dd></div>
+          <div><dt>${t("Fabric")}</dt><dd>${esc(p.fabricCode)}</dd></div>
+          <div><dt>${t("Colour")}</dt><dd>${esc(p.colorCode)}</dd></div>
         </dl>
       </div>
     </article>`;
@@ -693,13 +701,13 @@ function cardHTML(group){
 function renderGrid(){
   const grid=$("#productGrid"); const list=currentGroups;
   if(!list.length){
-    grid.innerHTML=`<div class="empty-state"><h3>No pieces match</h3><p>Try widening your filters or clearing the search.</p><button type="button" class="btn-secondary" data-clear style="display:inline-flex">Clear all filters</button></div>`;
+    grid.innerHTML=`<div class="empty-state"><h3>${t("No pieces match")}</h3><p>${t("Try widening your filters or clearing the search.")}</p><button type="button" class="btn-secondary" data-clear style="display:inline-flex">${t("Clear all filters")}</button></div>`;
     $("#loadMoreWrap").style.display="none"; return;
   }
   grid.innerHTML=list.slice(0,state.visibleCount).map(cardHTML).join("");
   const remaining=list.length-state.visibleCount;
   const wrap=$("#loadMoreWrap");
-  if(remaining>0){ wrap.style.display="flex"; $("#loadMoreBtn").textContent=`Show more (${fmt(remaining)} left)`; }
+  if(remaining>0){ wrap.style.display="flex"; $("#loadMoreBtn").textContent=t("Show more ({n} left)",{n:fmt(remaining)}); }
   else wrap.style.display="none";
 }
 
@@ -744,7 +752,7 @@ function toggleSelect(id){
   if(state.selectedOnly) render(); else paintSelection(id);
   if(state.modalIndex!==null){ syncModalSelectButton(); paintModalColours(); }
   const p=PRODUCTS.find(x=>x.id===id);
-  toast(was?`Removed ${p.name}`:`Added ${p.name} to your selection`);
+  toast(was?t("Removed {name}",{name:p.name}):t("Added {name} to your selection",{name:p.name}));
 }
 
 /* ========================= MODAL ========================= */
@@ -777,7 +785,7 @@ function paintModal(){
   $("#modalMediaInner").innerHTML=hasImages
     ?`<div class="product-gallery${p.images.length>1?" multi":""}">
         <div class="gallery-track" id="galleryTrack">${p.images.map((img,i)=>`
-          <button type="button" class="gallery-slide" data-zoom="${i}" aria-label="Zoom photo ${i+1}">
+          <button type="button" class="gallery-slide" data-zoom="${i}" aria-label="${t("Zoom photo {n}",{n:i+1})}">
             <img src="${esc(img)}" alt="${i?"":name}"${i?' loading="lazy"':""}>
           </button>`).join("")}
         </div>
@@ -785,37 +793,37 @@ function paintModal(){
         ${p.images.length>1?`
         <div class="gallery-dots" aria-hidden="true">${p.images.map((_,i)=>`<span class="${i===0?"on":""}"></span>`).join("")}</div>
         <div class="gallery-thumbs">${p.images.map((img,i)=>`
-          <button type="button" class="thumb-btn${i===0?" active":""}" data-gallery-index="${i}" aria-label="Show photo ${i+1}">
+          <button type="button" class="thumb-btn${i===0?" active":""}" data-gallery-index="${i}" aria-label="${t("Show photo {n}",{n:i+1})}">
             <img src="${esc(sized(img,IMG_THUMB))}" alt="">
           </button>`).join("")}</div>`:""}
       </div>`
-    :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
+    :`<div class="img-pending">${pendingSVG()}<span>${t("No photo yet")}</span></div>`;
   const track=$("#galleryTrack");
   if(track) track.addEventListener("scroll",()=>{
     const i=Math.round(track.scrollLeft/Math.max(1,track.clientWidth));
     $$(".thumb-btn").forEach((b,j)=>b.classList.toggle("active",j===i));
     $$(".gallery-dots span").forEach((d,j)=>d.classList.toggle("on",j===i));
   },{passive:true});
-  $("#modalCat").textContent=sentenceCase(p.category);
+  $("#modalCat").textContent=catLabel(p.category);
   $("#modalName").textContent=p.name;
   $("#modalGender").textContent=genderLabel(p.gender);
   $("#modalStyle").textContent=p.styleCode;
   $("#modalFabric").textContent=p.fabricCode;
   $("#modalColor").textContent=p.colorCode;
-  $("#modalFamily").textContent=sentenceCase(p.family);
+  $("#modalFamily").textContent=famLabel(p.family);
   $("#modalDesc").hidden=hasImages;
   syncModalSelectButton();
 }
 function paintModalColours(){
   const p=modalCur(); if(!p) return; const group=modalList[state.modalIndex];
   $("#modalColours").innerHTML = group.length>1
-    ? `<div class="modal-colours-label">Colour <strong>${esc(p.colorCode)}</strong> · ${group.length} available</div>${swatchesHTML(group,p,"modal")}`
+    ? `<div class="modal-colours-label">${t("Colour")} <strong>${esc(p.colorCode)}</strong> · ${t("{n} available",{n:group.length})}</div>${swatchesHTML(group,p,"modal")}`
     : "";
 }
 function syncModalSelectButton(){
   const p=modalCur(); if(!p) return;
   const btn=$("#modalSelectBtn"); const selected=state.selected.has(p.id);
-  btn.textContent=selected?"Selected — remove":"Select this piece";
+  btn.textContent=selected?t("Selected — remove"):t("Select this piece");
   btn.classList.toggle("selected",selected);
 }
 
@@ -884,28 +892,28 @@ $("#drawerCloseBtn").addEventListener("click",closeDrawer);
 $("#drawerOverlay").addEventListener("click",closeDrawer);
 $("#drawerClearBtn").addEventListener("click",()=>{
   if(!state.selected.size) return;
-  state.selected.clear(); persist(); updateSelectionBadge(); renderDrawer(); render(); toast("Selection cleared");
+  state.selected.clear(); persist(); updateSelectionBadge(); renderDrawer(); render(); toast(t("Selection cleared"));
 });
 
 function renderDrawer(){
   const list=PRODUCTS.filter(p=>state.selected.has(p.id));
-  $("#drawerCount").textContent=`${piecesText(list.length)} selected`;
+  $("#drawerCount").textContent=t("{pieces} selected",{pieces:piecesText(list.length)});
   const box=$("#drawerList");
-  if(!list.length){ box.innerHTML=`<div class="drawer-empty">Nothing selected yet.<br>Tap the heart on any piece to add it here.</div>`; return; }
+  if(!list.length){ box.innerHTML=`<div class="drawer-empty">${t("Nothing selected yet.")}<br>${t("Tap the heart on any piece to add it here.")}</div>`; return; }
   box.innerHTML=list.map(p=>`
     <div class="drawer-item">
       <div class="thumb">${p.images?.length?`<img src="${esc(sized(p.images[0],IMG_THUMB))}" alt="${esc(p.name)}" loading="lazy">`:pendingSVG()}</div>
       <div class="drawer-item-info">
         <div class="name">${esc(p.name)}</div>
-        <div class="meta">${esc(genderLabel(p.gender))}, ${esc(sentenceCase(p.category))}</div>
-        <div class="codes">Style ${esc(p.styleCode)}<br>Fabric ${esc(p.fabricCode)}<br>Colour ${esc(p.colorCode)}</div>
+        <div class="meta">${esc(genderLabel(p.gender))}${IS_AR?"، ":", "}${esc(catLabel(p.category))}</div>
+        <div class="codes">${t("Style")} ${esc(p.styleCode)}<br>${t("Fabric")} ${esc(p.fabricCode)}<br>${t("Colour")} ${esc(p.colorCode)}</div>
         <div class="drawer-note${state.notes[p.id]?" open":""}">
           <textarea data-note="${esc(p.id)}" rows="2" maxlength="300"
-            placeholder="A note for your Client Advisor, e.g. is this available in my size?">${esc(state.notes[p.id]||"")}</textarea>
+            placeholder="${t("A note for your Client Advisor, e.g. is this available in my size?")}">${esc(state.notes[p.id]||"")}</textarea>
         </div>
         <div class="drawer-item-actions">
-          ${state.notes[p.id]?"":`<button type="button" class="drawer-link" data-addnote="${esc(p.id)}">Add a note</button>`}
-          <button type="button" class="drawer-link" data-remove="${esc(p.id)}">Remove</button>
+          ${state.notes[p.id]?"":`<button type="button" class="drawer-link" data-addnote="${esc(p.id)}">${t("Add a note")}</button>`}
+          <button type="button" class="drawer-link" data-remove="${esc(p.id)}">${t("Remove")}</button>
         </div>
       </div>
     </div>`).join("");
@@ -937,18 +945,19 @@ $("#buyerToggleBtn").addEventListener("click",()=>{
 });
 
 $("#shareBtn").addEventListener("click",()=>{
-  if(!state.selected.size){ toast("Select at least one piece first"); return; }
+  if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
   const list=PRODUCTS.filter(p=>state.selected.has(p.id));
-  let text="Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.\n";
-  if(state.buyer.name)  text+=`\nName: ${state.buyer.name}`;
-  if(state.buyer.phone) text+=`\nMobile: ${state.buyer.phone}`;
-  if(state.buyer.notes) text+=`\nMessage: ${state.buyer.notes}`;
-  text+=`\n\nMy selection (${piecesText(list.length)}):\n`;
+  let text=t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n";
+  if(state.buyer.name)  text+=`\n${t("Name")}: ${state.buyer.name}`;
+  if(state.buyer.phone) text+=`\n${t("Mobile")}: ${state.buyer.phone}`;
+  if(state.buyer.notes) text+=`\n${t("Message")}: ${state.buyer.notes}`;
+  text+=`\n\n${t("My selection ({pieces})",{pieces:piecesText(list.length)})}:\n`;
   list.forEach((p,i)=>{
-    text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}, ${sentenceCase(p.category)})\n   Style ${p.styleCode}, Fabric ${p.fabricCode}, Colour ${p.colorCode}`;
-    if(state.notes[p.id]) text+=`\n   Note: ${state.notes[p.id]}`;
+    const c = IS_AR ? "، " : ", ";
+    text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}${c}${catLabel(p.category)})\n   ${t("Style")} ${p.styleCode}${c}${t("Fabric")} ${p.fabricCode}${c}${t("Colour")} ${p.colorCode}`;
+    if(state.notes[p.id]) text+=`\n   ${t("Note")}: ${state.notes[p.id]}`;
   });
-  text+=`\n\nView with photos:\n${selectionUrl()}`;
+  text+=`\n\n${t("View with photos:")}\n${selectionUrl()}`;
   pendingShareText=text;
   if(STORE.whatsapp) openSendChoice();
   else sendWhatsApp("");
@@ -965,41 +974,48 @@ $("#sendToStoreBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhats
 $("#sendToAnyoneBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(""); });
 $("#sendChoiceCancel").addEventListener("click",closeSendChoice);
 $("#sendChoice").addEventListener("click",e=>{ if(e.target.id==="sendChoice") closeSendChoice(); });
-$("#sendStoreName").textContent=STORE.name;
+$("#sendStoreName").textContent=t(STORE.name);
 
 renderStoreInfo();
 setInterval(renderStoreInfo, 5*60*1000);   /* keep "Open now" correct if the page stays open */
 
+/* English ⇄ العربية */
+$$(".lang-btn").forEach(b=>{
+  b.textContent = IS_AR ? "English" : "العربية";
+  b.lang = IS_AR ? "en" : "ar";
+  b.addEventListener("click",()=>setLang(IS_AR?"en":"ar"));
+});
+
 /* floating "Chat with us" button */
 if(STORE.whatsapp){
   const fab=$("#chatFab"); fab.hidden=false;
-  fab.href=`https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent("Hello, I have a question about the Emporio Armani FW26 collection.")}`;
+  fab.href=`https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(t("Hello, I have a question about the Emporio Armani FW26 collection."))}`;
 }
 
 /* ---- Save as PDF: a printable page of the selection (the browser's Print → Save as PDF) ---- */
 $("#pdfBtn").addEventListener("click",async()=>{
-  if(!state.selected.size){ toast("Select at least one piece first"); return; }
+  if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
   const list=PRODUCTS.filter(p=>state.selected.has(p.id));
-  const date=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const date=new Date().toLocaleDateString(IS_AR?"ar-BH-u-nu-latn":"en-GB",{day:"numeric",month:"long",year:"numeric"});
   const who=[state.buyer.name, state.buyer.phone].filter(Boolean).map(esc).join(" · ");
   $("#printSheet").innerHTML=`
     <header class="ps-head">
       <img src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
-      <div class="ps-title">My selection</div>
-      <div class="ps-sub">Marassi Mall, Bahrain · FW26 · ${date}${who?` · ${who}`:""}</div>
+      <div class="ps-title">${t("My selection")}</div>
+      <div class="ps-sub">${t("Marassi Mall, Bahrain")} · FW26 · ${date}${who?` · ${who}`:""}</div>
       ${state.buyer.notes?`<p class="ps-msg">${esc(state.buyer.notes)}</p>`:""}
     </header>
     <div class="ps-grid">${list.map(p=>`
       <article class="ps-item">
-        <div class="ps-img">${p.images?.length?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="">`:`<span>No photo yet</span>`}</div>
+        <div class="ps-img">${p.images?.length?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="">`:`<span>${t("No photo yet")}</span>`}</div>
         <div class="ps-name">${esc(p.name)}</div>
-        <div class="ps-meta">${esc(genderLabel(p.gender))} · ${esc(sentenceCase(p.category))}</div>
-        <div class="ps-codes">Style ${esc(p.styleCode)} · Fabric ${esc(p.fabricCode)} · Colour ${esc(p.colorCode)}</div>
+        <div class="ps-meta">${esc(genderLabel(p.gender))} · ${esc(catLabel(p.category))}</div>
+        <div class="ps-codes">${t("Style")} ${esc(p.styleCode)} · ${t("Fabric")} ${esc(p.fabricCode)} · ${t("Colour")} ${esc(p.colorCode)}</div>
         ${state.notes[p.id]?`<div class="ps-note">“${esc(state.notes[p.id])}”</div>`:""}
       </article>`).join("")}
     </div>
-    <footer class="ps-foot">${piecesText(list.length)} · Emporio Armani, Marassi Mall, Bahrain · View online: ${esc(selectionUrl())}</footer>`;
-  toast("Preparing your PDF…");
+    <footer class="ps-foot">${piecesText(list.length)} · ${t("Emporio Armani · Marassi Mall")} · ${t("View online")}: <span dir="ltr">${esc(selectionUrl())}</span></footer>`;
+  toast(t("Preparing your PDF…"));
   /* wait for the photos (max 6 s) so they appear in the PDF */
   const imgs=[...$("#printSheet").querySelectorAll("img")];
   await Promise.race([
@@ -1012,8 +1028,8 @@ $("#pdfBtn").addEventListener("click",async()=>{
 });
 
 $("#copyLinkBtn").addEventListener("click",()=>{
-  if(!state.selected.size){ toast("Select at least one piece first"); return; }
-  shareLink(selectionUrl(), "Emporio Armani — my selection");
+  if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
+  shareLink(selectionUrl(), t("Emporio Armani — my selection"));
 });
 
 /* ========================= SHARED SELECTION ========================= */
@@ -1029,14 +1045,14 @@ function renderSharedBanner(){
   if(!state.shared) return;
   const n=state.shared.size, mine=[...state.shared].filter(id=>state.selected.has(id)).length;
   $("#sharedBannerText").textContent = n
-    ? `${piecesText(n)} were shared with you.`
-    : "This link has no pieces that are in the current catalogue.";
+    ? t("{pieces} were shared with you.",{pieces:piecesText(n)})
+    : t("This link has no pieces that are in the current catalogue.");
   $("#sharedAddAllBtn").hidden = !n || mine===n;
 }
 $("#sharedAddAllBtn").addEventListener("click",()=>{
   state.shared.forEach(id=>state.selected.add(id));
   persist(); updateSelectionBadge(); renderDrawer(); render();
-  toast(`Added ${piecesText(state.shared.size)} to your selection`);
+  toast(t("Added {pieces} to your selection",{pieces:piecesText(state.shared.size)}));
 });
 $("#sharedBrowseBtn").addEventListener("click",()=>enterCatalogue(null,null));
 
@@ -1135,7 +1151,7 @@ async function shareLink(url, title){
     try{ document.execCommand("copy"); }catch(_){}
     t.remove();
   }
-  toast("Link copied — paste it anywhere");
+  toast(t("Link copied — paste it anywhere"));
 }
 
 /* ========================= SEARCH / SORT ========================= */
@@ -1205,6 +1221,20 @@ function updateMobileFilterBadge(){
   const badge=$("#mobileFilterBadge");
   badge.textContent=total; badge.style.display=total>0?"inline-flex":"none";
 }
+
+/* ========================= INSTALL AS AN APP ========================= */
+if("serviceWorker" in navigator && location.protocol!=="file:"){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+/* Android / computer Chrome: show our own "Install" button when the browser allows it.
+   (iPhone: Share → Add to Home Screen — Safari has no install button for websites.) */
+let installPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installPrompt=e; $("#installBtn").hidden=false; });
+$("#installBtn").addEventListener("click",async()=>{
+  if(!installPrompt) return; installPrompt.prompt();
+  await installPrompt.userChoice.catch(()=>{}); installPrompt=null; $("#installBtn").hidden=true;
+});
+window.addEventListener("appinstalled",()=>{ $("#installBtn").hidden=true; });
 
 /* ========================= INIT ========================= */
 loadProducts();

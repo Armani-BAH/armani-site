@@ -15,6 +15,8 @@ Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Clients 
 ```
 armani-site/
 ├── index.html                  Page shell (header, filters, grid, modal, drawer)
+├── manifest.webmanifest        "Install as an app" settings (name, icons)
+├── sw.js                       Offline support + photo cache
 ├── PROJECT.md                  This file
 ├── .gitignore / .gitattributes
 ├── assets/
@@ -24,7 +26,8 @@ armani-site/
 │   ├── fonts/                  Jost (self-hosted)
 │   └── images/genders/         Department landing photos
 ├── css/style.css               All styling
-├── js/app.js                   All logic (~19 KB)
+├── js/i18n.js                  English / Arabic text (edit translations here)
+├── js/app.js                   All logic; boutique details (STORE) at the top
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
 │   └── products.json           Generated catalogue used by the site (1,276 items)
@@ -84,7 +87,8 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 6. Store info (location, hours), Arabic (RTL), install as an app (PWA).
    - ✅ Boutique WhatsApp: `STORE.whatsapp` at the top of `js/app.js` (digits only, with 973) = 97317564991 (same as the store phone — **to be confirmed by Jasim**). Floating "Chat with us" + "Send your selection" pop-up (to the boutique / share with someone else). Empty = both hidden.
    - ✅ Store info: footer (address, live Open/Closed in Bahrain time, hours with today highlighted, directions, call, WhatsApp) + a short line on the landing page. All details live in `STORE` in `js/app.js`.
-   - Next: Arabic (RTL), install as an app (PWA).
+   - ✅ Arabic: all text in `js/i18n.js` (English on the left, Arabic on the right — edit there; missing entries stay English). Language button in the header + landing; first visit follows the phone language; choice saved (`ea_lang`). Right-to-left layout via `[dir="rtl"]` rules at the end of `style.css`; Arabic font IBM Plex Sans Arabic (Google Fonts, only loads for Arabic text). Search works with Arabic and English words. Links stay English (`#/men/shoes`) so they work in both languages.
+   - ✅ Install as an app: `manifest.webmanifest` + `sw.js` (offline: newest version when online, saved copy offline; product photos cached on the phone, max 400). "Install the app" button appears in the footer on Android/Chrome; iPhone = Share → Add to Home Screen. Bump `VERSION` in `sw.js` to force every phone to drop old copies.
 
 Open: 269 products without photos; CDN hot-linking permission; custom domain.
 
@@ -100,6 +104,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 |------|----------|
 | 2026-09-21 | Project files shared; goal is to reorganize and make the site look professional. |
 | 2026-10-13 | Agreed 6-phase upgrade plan (see §4). Phase 1 done. |
+| 2026-10-13 | Phase 6 done: store info, boutique WhatsApp, Arabic (RTL), installable app with offline support. |
 | 2026-10-13 | Phase 5: no sizes/quantities — the selection opens a conversation with the Client Advisor. Wording changed from "buyer" to "client". |
 | 2026-10-13 | Claude now pushes directly to `main` (Jasim approved); Jasim should Pull in VS Code before editing locally. |
 | 2026-10-13 | Phase 3: grouping key = display department + style code (fabric can differ inside a group — 72 styles come in two fabrics). Selection stays per colour. |
