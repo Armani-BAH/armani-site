@@ -79,7 +79,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 1. ✅ Quick fixes — categories, pinch-zoom, smaller images, compact phone cards, department landing layout, favicon + WhatsApp preview, cleanup.
 2. ✅ Shareable links — every screen has its own address (see §7), browser/phone Back works, "Share this piece" in the product window, "Copy link to this selection" + the link is added to the WhatsApp message, shared selections open with an "Add all" banner.
 3. ✅ Group colours — one card per style (department + style code); small photo swatches switch the colour on the card and in the product window; a dot marks colours already in the selection. Count reads "159 pieces · 332 colours".
-4. Photo experience — back view on hover, swipe on phone, tap to zoom.
+4. ✅ Photo experience — second photo on hover (computer, loaded only on first hover), swipeable gallery with dots (phone) / thumbnails (computer), zoom viewer at 2048px (computer: click + follows the mouse; phone: pan with a finger, pinch works).
 5. Selection export — size + quantity per piece, printable PDF line sheet, Excel.
 6. Store info (location, hours, WhatsApp the boutique), Arabic (RTL), install as an app (PWA).
 

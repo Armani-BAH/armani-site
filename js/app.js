@@ -58,7 +58,7 @@ const displayGender = g => MAN_GENDERS.has(g) ? "MAN" : g;
 const sized = (url, w) => String(url)
   .replace(/w_\d+/, `w_${w}`)
   .replace("q_auto:best", "q_auto");
-const IMG_CARD = 640, IMG_THUMB = 160, IMG_LANDING = 720;
+const IMG_CARD = 640, IMG_THUMB = 160, IMG_LANDING = 720, IMG_ZOOM = 2048;
 
 /* First image URL for a set of products */
 const firstImage = list => (list.find(p=>p.images?.length)?.images[0]) || null;
@@ -613,7 +613,7 @@ function cardHTML(group){
     :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
   return `
     <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}" data-group="${esc(gKey(p))}">
-      <div class="card-media" data-open="${esc(p.id)}">
+      <div class="card-media" data-open="${esc(p.id)}"${p.images?.length>1?` data-alt="${esc(sized(p.images[1],IMG_CARD))}"`:""}>
         ${media}
         <button type="button" class="heart-btn${selected?" selected":""}" data-select="${esc(p.id)}"
                 aria-pressed="${selected}" aria-label="Select ${name}">${heartSVG()}</button>
@@ -664,6 +664,15 @@ $("#productGrid").addEventListener("click",e=>{
   const sel=e.target.closest("[data-select]"); if(sel) return toggleSelect(sel.dataset.select);
   const open=e.target.closest("[data-open]"); if(open) openModal(open.dataset.open);
 });
+/* Computer: show the second photo (back / detail) when the mouse is over a card */
+if(matchMedia("(hover:hover) and (pointer:fine)").matches){
+  $("#productGrid").addEventListener("mouseover",e=>{
+    const m=e.target.closest(".card-media[data-alt]"); if(!m || m.querySelector(".alt")) return;
+    const img=new Image(); img.className="alt"; img.alt=""; img.decoding="async";
+    img.onload=()=>m.classList.add("has-alt"); img.src=m.dataset.alt;
+    m.insertBefore(img, m.querySelector(".heart-btn"));
+  });
+}
 $("#loadMoreBtn").addEventListener("click",()=>{ state.visibleCount+=PAGE_SIZE; renderGrid(); });
 
 /* ========================= SELECTION ========================= */
@@ -701,6 +710,7 @@ function openModal(id, fromRoute){
 function closeModal(fromRoute){
   if(state.modalIndex===null) return;
   if(!fromRoute && state.modalPushed){ state.modalPushed=false; history.back(); return; }
+  closeZoom();
   $("#modalOverlay").classList.remove("open"); state.modalIndex=null; state.modalPushed=false;
   document.body.style.overflow=""; if(lastFocus&&lastFocus.focus) lastFocus.focus();
   if(!fromRoute) syncUrl(true);
@@ -710,14 +720,27 @@ function paintModal(){
   paintModalColours();
   const name=esc(p.name); const hasImages=p.images?.length>0;
   $("#modalMediaInner").innerHTML=hasImages
-    ?`<div class="product-gallery">
-        <img id="galleryMainImage" src="${esc(p.images[0])}" alt="${name}">
-        ${p.images.length>1?`<div class="gallery-thumbs">${p.images.map((img,i)=>`
+    ?`<div class="product-gallery${p.images.length>1?" multi":""}">
+        <div class="gallery-track" id="galleryTrack">${p.images.map((img,i)=>`
+          <button type="button" class="gallery-slide" data-zoom="${i}" aria-label="Zoom photo ${i+1}">
+            <img src="${esc(img)}" alt="${i?"":name}"${i?' loading="lazy"':""}>
+          </button>`).join("")}
+        </div>
+        <span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+        ${p.images.length>1?`
+        <div class="gallery-dots" aria-hidden="true">${p.images.map((_,i)=>`<span class="${i===0?"on":""}"></span>`).join("")}</div>
+        <div class="gallery-thumbs">${p.images.map((img,i)=>`
           <button type="button" class="thumb-btn${i===0?" active":""}" data-gallery-index="${i}" aria-label="Show photo ${i+1}">
             <img src="${esc(sized(img,IMG_THUMB))}" alt="">
           </button>`).join("")}</div>`:""}
       </div>`
     :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
+  const track=$("#galleryTrack");
+  if(track) track.addEventListener("scroll",()=>{
+    const i=Math.round(track.scrollLeft/Math.max(1,track.clientWidth));
+    $$(".thumb-btn").forEach((b,j)=>b.classList.toggle("active",j===i));
+    $$(".gallery-dots span").forEach((d,j)=>d.classList.toggle("on",j===i));
+  },{passive:true});
   $("#modalCat").textContent=sentenceCase(p.category);
   $("#modalName").textContent=p.name;
   $("#modalGender").textContent=genderLabel(p.gender);
@@ -746,11 +769,37 @@ $("#modalColours").addEventListener("click",e=>{
   choose(sw.dataset.pick); paintModal(); syncUrl(true);
 });
 $("#modalMediaInner").addEventListener("click",e=>{
+  const z=e.target.closest("[data-zoom]"); if(z) return openZoom(+z.dataset.zoom);
   const thumb=e.target.closest("[data-gallery-index]"); if(!thumb) return;
-  const p=modalCur(); const main=$("#galleryMainImage");
-  if(main&&p.images[thumb.dataset.galleryIndex]) main.src=p.images[thumb.dataset.galleryIndex];
-  $$(".thumb-btn").forEach(b=>b.classList.toggle("active",b===thumb));
+  const track=$("#galleryTrack"); const i=+thumb.dataset.galleryIndex;
+  track.scrollTo({left:i*track.clientWidth, behavior:"smooth"});
 });
+/* ---- Zoom: computer = follows the mouse; phone = pan with a finger, pinch works too ---- */
+const FINE_POINTER = matchMedia("(hover:hover) and (pointer:fine)").matches;
+let zoomIndex=0;
+function openZoom(i){
+  const p=modalCur(); if(!p?.images?.[i]) return;
+  zoomIndex=i;
+  const img=$("#zoomImg"); img.src=sized(p.images[i],IMG_ZOOM); img.alt=p.name;
+  $("#zoomStage").classList.toggle("zoomed", !FINE_POINTER);
+  $("#zoomOverlay").hidden=false; $("#zoomCloseBtn").focus();
+  if(!FINE_POINTER) img.onload=()=>{ const st=$("#zoomStage"); st.scrollLeft=(st.scrollWidth-st.clientWidth)/2; st.scrollTop=(st.scrollHeight-st.clientHeight)/3; };
+}
+function closeZoom(){ $("#zoomOverlay").hidden=true; $("#zoomImg").removeAttribute("src"); }
+$("#zoomCloseBtn").addEventListener("click",closeZoom);
+$("#zoomStage").addEventListener("click",e=>{
+  if(!FINE_POINTER) return;
+  const st=$("#zoomStage"); st.classList.toggle("zoomed"); moveZoom(e);
+});
+function moveZoom(e){
+  const st=$("#zoomStage"), img=$("#zoomImg");
+  if(!st.classList.contains("zoomed") || !img.offsetWidth) return;
+  const r=st.getBoundingClientRect();                     /* un-zoomed photo box, so the maths stays steady */
+  const clamp=v=>Math.min(100,Math.max(0,v)).toFixed(1);
+  img.style.transformOrigin=`${clamp((e.clientX-r.left-img.offsetLeft)/img.offsetWidth*100)}% ${clamp((e.clientY-r.top-img.offsetTop)/img.offsetHeight*100)}%`;
+}
+$("#zoomStage").addEventListener("mousemove",e=>{ if(FINE_POINTER) moveZoom(e); });
+
 $("#modalCloseBtn").addEventListener("click",()=>closeModal());
 $("#modalOverlay").addEventListener("click",e=>{ if(e.target.id==="modalOverlay") closeModal(); });
 $("#modalPrevBtn").addEventListener("click",()=>{ state.modalIndex=(state.modalIndex-1+modalList.length)%modalList.length; paintModal(); syncUrl(true); });
@@ -764,6 +813,7 @@ $("#modalDrawerBtn").addEventListener("click",()=>{ closeModal(); openDrawer(); 
 
 document.addEventListener("keydown",e=>{
   const mo=$("#modalOverlay").classList.contains("open");
+  if(!$("#zoomOverlay").hidden){ if(e.key==="Escape") closeZoom(); return; }
   if(e.key==="Escape"){ if(mo) closeModal(); else if($("#drawer").classList.contains("open")) closeDrawer(); return; }
   if(!mo) return;
   if(e.key==="ArrowLeft")  $("#modalPrevBtn").click();

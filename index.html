@@ -242,6 +242,14 @@
   </div>
 </div>
 
+<!-- Photo zoom -->
+<div class="zoom-overlay" id="zoomOverlay" hidden role="dialog" aria-label="Zoomed photo">
+  <button class="zoom-close" id="zoomCloseBtn" type="button" aria-label="Close zoom">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+  </button>
+  <div class="zoom-stage" id="zoomStage"><img id="zoomImg" alt=""></div>
+</div>
+
 <!-- Selection drawer -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <aside class="drawer" id="drawer" aria-label="My selection">
