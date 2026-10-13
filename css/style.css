@@ -106,6 +106,13 @@ h1,h2,h3{font-weight:400;}
 .landing-card-arrow svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .landing-card:hover .landing-card-arrow{background:rgba(255,255,255,.25);border-color:#fff;}
 
+/* Department landing: Women + Men large on top, kids' departments below */
+.landing-grid.gender-landing-grid{grid-template-columns:repeat(6,1fr);max-width:1120px;}
+.gender-landing-grid .landing-card{grid-column:span 2;height:260px;}
+.gender-landing-grid .landing-card:nth-child(-n+2){grid-column:span 3;height:400px;}
+.gender-landing-grid .landing-card:nth-child(-n+2) .landing-card-label{font-size:1.8rem;}
+.landing-header{max-width:1120px;}
+
 /* Category cards — no custom image, greige bg, dark text */
 .landing-card.cat-card{background:var(--greige);height:160px;}
 .landing-card.cat-card::after{display:none;}
@@ -228,12 +235,6 @@ header.site{
   font-weight:500;
   border-left-color:var(--ink);
 }
-.category-nav .cat-btn{padding:8px 0 8px 14px;color:var(--stone);border-left:2px solid transparent;transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease);}
-.category-nav .cat-btn:hover{color:var(--ink);}
-.category-nav .cat-btn.active{color:var(--ink);font-weight:500;border-left-color:var(--ink);}
-.category-nav .sub-btn{padding-left:28px;font-size:.88rem;color:var(--stone);border-left:2px solid var(--line);}
-.category-nav .sub-btn:hover{color:var(--ink);border-left-color:var(--stone);}
-.category-nav .sub-btn.active{color:var(--ink);font-weight:500;border-left-color:var(--ink);}
 
 .page-title{font-weight:300;font-size:1.9rem;line-height:1.15;letter-spacing:-.01em;margin-bottom:20px;}
 
@@ -439,10 +440,14 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .card-name{font-size:1rem;}
   .card-meta{font-size:.85rem;}
   .card-meta span+span{margin-left:8px;padding-left:8px;}
-  .card-codes{grid-template-columns:1fr;gap:9px;margin-top:12px;}
-  .card-codes div{display:flex;flex-direction:column;gap:2px;}
-  .card-codes dt{font-size:.75rem;}
-  .card-codes dd{font-size:.88rem;font-weight:500;color:var(--ink);}
+  /* Codes on one compact line, labels hidden: EW002859  AF19370  MB347 */
+  .card-codes{display:flex;flex-wrap:wrap;gap:2px 10px;margin-top:8px;padding-top:8px;}
+  .card-codes div{display:flex;}
+  .card-codes dt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  .card-codes dd{font-size:.78rem;color:var(--stone);}
+  .card-info{padding-top:10px;}
+  .card-name{font-size:.95rem;}
+  .card-meta{font-size:.8rem;}
   .heart-btn{top:8px;right:8px;width:36px;height:36px;}
 
   .modal-overlay{padding:0;align-items:stretch;}
@@ -456,8 +461,13 @@ footer p:first-child{color:var(--ink);font-weight:500;margin-bottom:2px;}
   .landing{padding:28px 16px 48px;}
   .landing-header{margin-bottom:28px;}
   .landing-logo{height:20px;}
-  .gender-landing-grid{grid-template-columns:1fr 1fr;gap:10px;}
-  .landing-card{height:180px;padding:16px 16px;}
+  .landing-grid.gender-landing-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .gender-landing-grid .landing-card,
+  .gender-landing-grid .landing-card:nth-child(-n+2){grid-column:span 1;height:220px;}
+  .gender-landing-grid .landing-card:nth-child(-n+2){height:280px;}
+  .gender-landing-grid .landing-card:last-child:nth-child(odd){grid-column:1 / -1;}
+  .gender-landing-grid .landing-card:nth-child(-n+2) .landing-card-label{font-size:1.35rem;}
+  .landing-card{padding:16px 16px;}
   .landing-card-label{font-size:1.15rem;}
   .landing-card.cat-card{height:120px;}
   .landing-grid{grid-template-columns:1fr 1fr;gap:10px;}

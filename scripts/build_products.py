@@ -28,6 +28,19 @@ def display_name(text):
     return " ".join(w[:1].upper() + w[1:].lower() for w in words)
 
 
+# Rows the Excel files under "OTHER" get a proper category from their family
+OTHER_BY_FAMILY = {
+    "GLASSES":  "GLASSES",
+    "PERFUMES": "PERFUME",
+}
+
+
+def fix_category(category, family):
+    if category == "OTHER":
+        return OTHER_BY_FAMILY.get(family.upper(), category)
+    return category
+
+
 def make_id(row_index, style, fabric, color):
     return f"{style}-{fabric}-{color}-{row_index}"
 
@@ -86,8 +99,8 @@ def main():
             return clean(row[c]) if c is not None and c < len(row) else ""
 
         gender   = v(c_gender).upper()
-        category = v(c_category).upper()
         family   = v(c_family)
+        category = fix_category(v(c_category).upper(), family)
         sub      = v(c_sub)
         style    = v(c_style)
         fabric   = v(c_fabric_c)

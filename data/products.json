@@ -5839,7 +5839,7 @@
   {
     "id": "SUN GLASSES-SUN GLASSES-SUN GLASSES-377",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5852,7 +5852,7 @@
   {
     "id": "EA2147.L-30017G.L-58.L-378",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5868,7 +5868,7 @@
   {
     "id": "EA2147.L-30027L.L-58.L-379",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5884,7 +5884,7 @@
   {
     "id": "EA2147.L-30157F.L-58.L-380",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5900,7 +5900,7 @@
   {
     "id": "EA2156.L-300673.L-59.L-381",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5916,7 +5916,7 @@
   {
     "id": "EA2159D.L-3011/7.L-57.L-382",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5929,7 +5929,7 @@
   {
     "id": "EA2159D.L-301373.L-57.L-383",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5945,7 +5945,7 @@
   {
     "id": "EA2160.L-301587.L-52.L-384",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5958,7 +5958,7 @@
   {
     "id": "EA2160.L-304580.L-52.L-385",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5974,7 +5974,7 @@
   {
     "id": "EA2163.L-300173.L-56.L-386",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -5990,7 +5990,7 @@
   {
     "id": "EA2173.L-300187.L-59.L-387",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6006,7 +6006,7 @@
   {
     "id": "EA2173.L-303273.L-59.L-388",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6022,7 +6022,7 @@
   {
     "id": "EA2173.L-30458V.L-59.L-389",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6038,7 +6038,7 @@
   {
     "id": "EA2174B.L-301393.L-55.L-390",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6054,7 +6054,7 @@
   {
     "id": "EA2179.L-301373.L-56.L-391",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6070,7 +6070,7 @@
   {
     "id": "EA2182.L-30028E.L-50.L-392",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6086,7 +6086,7 @@
   {
     "id": "EA2182.L-34447Z.L-50.L-393",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6102,7 +6102,7 @@
   {
     "id": "EA2182.L-34448G.L-50.L-394",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6118,7 +6118,7 @@
   {
     "id": "EA2182.L-345513.L-50.L-395",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6134,7 +6134,7 @@
   {
     "id": "EA4203U.L-50178G.L-55.L-396",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6150,7 +6150,7 @@
   {
     "id": "EA4203U.L-502613.L-55.L-397",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6166,7 +6166,7 @@
   {
     "id": "EA4204U.L-534487.L-36.L-398",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6179,7 +6179,7 @@
   {
     "id": "EA4204U.L-601273.L-36.L-399",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6192,7 +6192,7 @@
   {
     "id": "EA4204U.L-601380.L-36.L-400",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6205,7 +6205,7 @@
   {
     "id": "EA4220.L-610611.L-54.L-401",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6218,7 +6218,7 @@
   {
     "id": "EA4220F.L-611179.L-56.L-402",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6231,7 +6231,7 @@
   {
     "id": "EA4221.L-61168E.L-56.L-403",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6244,7 +6244,7 @@
   {
     "id": "EA4223U.L-526187.L-56.L-404",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6257,7 +6257,7 @@
   {
     "id": "EA4224.L-609471.L-57.L-405",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6270,7 +6270,7 @@
   {
     "id": "EA4224.L-609573.L-57.L-406",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6286,7 +6286,7 @@
   {
     "id": "EA4225U.L-610087.L-53.L-407",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6299,7 +6299,7 @@
   {
     "id": "EA4228.L-300213.L-55.L-408",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6312,7 +6312,7 @@
   {
     "id": "EA4230U.L-501787.L-48.L-409",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6328,7 +6328,7 @@
   {
     "id": "EA4230U.L-614973.L-48.L-410",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6344,7 +6344,7 @@
   {
     "id": "EA4231U.L-615487.L-53.L-411",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6357,7 +6357,7 @@
   {
     "id": "EA4232.L-617587.L-57.L-412",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6373,7 +6373,7 @@
   {
     "id": "EA4233U.L-618080.L-53.L-413",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6389,7 +6389,7 @@
   {
     "id": "EA4238.L-61953C.L-54.L-414",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6402,7 +6402,7 @@
   {
     "id": "EA4240U.L-620180.L-53.L-415",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6418,7 +6418,7 @@
   {
     "id": "EA4242U.L-621187.L-56.L-416",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6434,7 +6434,7 @@
   {
     "id": "EA4242U.L-621380.L-56.L-417",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6450,7 +6450,7 @@
   {
     "id": "EA4242U.L-621473.L-56.L-418",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6463,7 +6463,7 @@
   {
     "id": "EA4250U.L-626613.L-54.L-419",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6479,7 +6479,7 @@
   {
     "id": "EA4258.L-54371W.L-54.L-420",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6495,7 +6495,7 @@
   {
     "id": "EA4258.L-54371W.L-56.L-421",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6511,7 +6511,7 @@
   {
     "id": "EA4259U.L-501787.L-55.L-422",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6527,7 +6527,7 @@
   {
     "id": "EA4259U.L-502673.L-55.L-423",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6543,7 +6543,7 @@
   {
     "id": "EA4259U.L-63238H.L-55.L-424",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6559,7 +6559,7 @@
   {
     "id": "EA4261F.L-631373.L-55.L-425",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6575,7 +6575,7 @@
   {
     "id": "EA4263U.L-632787.L-57.L-426",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6591,7 +6591,7 @@
   {
     "id": "EA4263U.L-632873.L-57.L-427",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6607,7 +6607,7 @@
   {
     "id": "EA4263U.L-632973.L-57.L-428",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6623,7 +6623,7 @@
   {
     "id": "EA4265U.L-60398S.L-36.L-429",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6639,7 +6639,7 @@
   {
     "id": "EA4266U.L-500187.L-55.L-430",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6655,7 +6655,7 @@
   {
     "id": "EA4266U.L-618673.L-55.L-431",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6671,7 +6671,7 @@
   {
     "id": "EA4267U.L-618580.L-57.L-432",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6687,7 +6687,7 @@
   {
     "id": "EA4270.L-636393.L-51.L-433",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6703,7 +6703,7 @@
   {
     "id": "EA4270.L-63641.L-51.L-434",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6719,7 +6719,7 @@
   {
     "id": "EA4271F.L-63630A.L-49.L-435",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6735,7 +6735,7 @@
   {
     "id": "EA4271F.L-636480.L-49.L-436",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6751,7 +6751,7 @@
   {
     "id": "EA4273BU.L-637613.L-53.L-437",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6767,7 +6767,7 @@
   {
     "id": "EA4273BU.L-6377A5.L-53.L-438",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6783,7 +6783,7 @@
   {
     "id": "EA4279U.L-50011W.L-51.L-439",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6799,7 +6799,7 @@
   {
     "id": "EA4279U.L-50011W.L-53.L-440",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6815,7 +6815,7 @@
   {
     "id": "EA4281U.L-501787.L-52.L-441",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6831,7 +6831,7 @@
   {
     "id": "EA4282U.L-599371.L-54.L-442",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6847,7 +6847,7 @@
   {
     "id": "EA4286D.L-500187.L-55.L-443",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6863,7 +6863,7 @@
   {
     "id": "EK2001.L-3001T3.L-53.L-444",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6879,7 +6879,7 @@
   {
     "id": "EK2001.L-300387.L-53.L-445",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6895,7 +6895,7 @@
   {
     "id": "EK2001.L-301880.L-53.L-446",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6911,7 +6911,7 @@
   {
     "id": "EK2003.L-300187.L-51.L-447",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6927,7 +6927,7 @@
   {
     "id": "EK2003.L-34343.L-51.L-448",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6943,7 +6943,7 @@
   {
     "id": "EK4001.L-50011W.L-47.L-449",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6959,7 +6959,7 @@
   {
     "id": "EK4001.L-50171W.L-47.L-450",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6975,7 +6975,7 @@
   {
     "id": "EK4001.L-61441W.L-47.L-451",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -6988,7 +6988,7 @@
   {
     "id": "EK4001.L-61451W.L-47.L-452",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7001,7 +7001,7 @@
   {
     "id": "EK4003.L-534480.L-48.L-453",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7014,7 +7014,7 @@
   {
     "id": "EK4004.L-537646.L-50.L-454",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7030,7 +7030,7 @@
   {
     "id": "EK4004.L-613069.L-50.L-455",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7046,7 +7046,7 @@
   {
     "id": "EK4005U.L-50881W.L-48.L-456",
     "gender": "UNISEX JUNIOR",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7062,7 +7062,7 @@
   {
     "id": "EK4005U.L-62751W.L-48.L-457",
     "gender": "UNISEX JUNIOR",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7078,7 +7078,7 @@
   {
     "id": "EK4007U.L-61397N.L-49.L-458",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7094,7 +7094,7 @@
   {
     "id": "EK4008U.L-500187.L-48.L-459",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7110,7 +7110,7 @@
   {
     "id": "EK4008U.L-638280.L-48.L-460",
     "gender": "BOY",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7126,7 +7126,7 @@
   {
     "id": "EK4009U.L-638693.L-49.L-461",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7141,7 +7141,7 @@
   {
     "id": "EK4009U.L-638773.L-49.L-462",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7156,7 +7156,7 @@
   {
     "id": "EK4009U.L-638880.L-49.L-463",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -7171,7 +7171,7 @@
   {
     "id": "EK4009U.L-639080.L-49.L-464",
     "gender": "GIRL",
-    "category": "OTHER",
+    "category": "GLASSES",
     "family": "GLASSES",
     "sub": "SUN GLASSES",
     "name": "Sun Glasses",
@@ -14105,7 +14105,7 @@
   {
     "id": "L5617100-NLP-100ML-911",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE TOILETTE",
     "name": "Eau De Toilette",
@@ -14121,7 +14121,7 @@
   {
     "id": "L5618800-NLP-100ML-912",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14137,7 +14137,7 @@
   {
     "id": "L8004000-NLP-100ML-913",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14153,7 +14153,7 @@
   {
     "id": "L8717500-NLP-100ML-914",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14169,7 +14169,7 @@
   {
     "id": "LB304200-NLP-125ML-915",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14185,7 +14185,7 @@
   {
     "id": "LB402700-NLP-90ML-916",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14201,7 +14201,7 @@
   {
     "id": "LC601900-NLP-100ML-917",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14217,7 +14217,7 @@
   {
     "id": "LC647600-NLP-90ML-918",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14233,7 +14233,7 @@
   {
     "id": "LD342900-NLP-75ML-919",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14249,7 +14249,7 @@
   {
     "id": "LD477800-NLP-100ML-920",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14262,7 +14262,7 @@
   {
     "id": "LD695000-NLP-100ML-921",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14278,7 +14278,7 @@
   {
     "id": "LD801400-NLP-100ML-922",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14293,7 +14293,7 @@
   {
     "id": "LE313300-NLP-100ML-923",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14309,7 +14309,7 @@
   {
     "id": "LE924000-NLP-100ML-924",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14322,7 +14322,7 @@
   {
     "id": "LE961600-NLP-90ML-925",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14338,7 +14338,7 @@
   {
     "id": "LF026800-NLP-100ML-926",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14354,7 +14354,7 @@
   {
     "id": "LF275600-NLP-100ML-927",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14370,7 +14370,7 @@
   {
     "id": "LF617200-NLP-100ML-928",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14386,7 +14386,7 @@
   {
     "id": "LF704500-NLP-100ML-929",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14402,7 +14402,7 @@
   {
     "id": "LG021400-NLP-100ML-930",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14415,7 +14415,7 @@
   {
     "id": "LG082700-NLP-100ML-931",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14431,7 +14431,7 @@
   {
     "id": "LG098100-NLP-90ML-932",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14447,7 +14447,7 @@
   {
     "id": "LG152100-NLP-100ML-933",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14463,7 +14463,7 @@
   {
     "id": "LG206300-NLP-100ML-934",
     "gender": "MAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",
@@ -14479,7 +14479,7 @@
   {
     "id": "LG218700-NLP-90ML-935",
     "gender": "WOMAN",
-    "category": "OTHER",
+    "category": "PERFUME",
     "family": "PERFUMES",
     "sub": "EAU DE PARFUM",
     "name": "Eau De Parfum",

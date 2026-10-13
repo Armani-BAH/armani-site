@@ -22,6 +22,8 @@ const GENDER_IMAGES = {
   "BOY":           "assets/images/genders/gender-boy.jpg",
   "UNISEX JUNIOR": "assets/images/genders/gender-unisex-junior.jpg"
 };
+/* Which part of each landing photo to keep in view when it is cropped */
+const GENDER_FOCUS = { "WOMAN": "22% 20%" };
 /* Raw gender values that belong to "MAN" on screen */
 const MAN_GENDERS = new Set(["MAN","UNISEX"]);
 
@@ -35,6 +37,13 @@ const esc          = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt
 
 /* Map a raw gender to its display key (UNISEX → MAN) */
 const displayGender = g => MAN_GENDERS.has(g) ? "MAN" : g;
+
+/* Armani CDN images come at 1536px. Ask the CDN for a smaller copy where a
+   small picture is enough (grid, drawer, landing) so pages load much faster. */
+const sized = (url, w) => String(url)
+  .replace(/w_\d+/, `w_${w}`)
+  .replace("q_auto:best", "q_auto");
+const IMG_CARD = 640, IMG_THUMB = 160, IMG_LANDING = 720;
 
 /* First image URL for a set of products */
 const firstImage = list => (list.find(p=>p.images?.length)?.images[0]) || null;
@@ -85,7 +94,7 @@ function buildGenderLanding(){
     btn.type    = "button";
     btn.className = "landing-card";
     btn.innerHTML = `
-      ${img?`<img class="landing-card-img" src="${esc(img)}" alt="" loading="lazy">`:""}
+      ${img?`<img class="landing-card-img" src="${esc(img)}" alt=""${GENDER_FOCUS[g]?` style="object-position:${GENDER_FOCUS[g]}"`:""}>`:""}
       <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       <span class="landing-card-body">
         <span class="landing-card-label">${esc(GENDER_LABELS[g])}</span>
@@ -116,7 +125,7 @@ function showCategoryLanding(dGender){
     btn.type       = "button";
     btn.className  = "landing-card cat-card";
     btn.innerHTML  = `
-      ${imgUrl?`<img class="landing-card-img" src="${esc(imgUrl)}" alt="" loading="lazy">`:""}
+      ${imgUrl?`<img class="landing-card-img" src="${esc(sized(imgUrl,IMG_LANDING))}" alt="" loading="lazy" decoding="async">`:""}
       <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       <span class="landing-card-body">
         <span class="landing-card-label">${esc(sentenceCase(cat))}</span>
@@ -335,8 +344,7 @@ function renderCategoryNav(){
   const navMobile = $("#categoryNavMobile");
   if(navMobile) navMobile.innerHTML="";
   const nav = $("#categoryNav"); nav.innerHTML="";
-  console.log("renderCategoryNav called, navMobile:", navMobile, "display:", navMobile ? getComputedStyle(navMobile).display : "not found");
-
+  
   const relevantProds = state.filters.gender.size
   ? PRODUCTS.filter(p => state.filters.gender.has(p.gender))
   : PRODUCTS;
@@ -586,7 +594,7 @@ function render(){
 function cardHTML(p){
   const selected=state.selected.has(p.id); const name=esc(p.name);
   const media=p.images?.length
-    ?`<img src="${esc(p.images[0])}" alt="${name}" loading="lazy">`
+    ?`<img src="${esc(sized(p.images[0],IMG_CARD))}" alt="${name}" loading="lazy" decoding="async">`
     :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
   return `
     <article class="card${selected?" is-selected":""}" data-id="${esc(p.id)}">
@@ -670,7 +678,7 @@ function paintModal(){
         <img id="galleryMainImage" src="${esc(p.images[0])}" alt="${name}">
         ${p.images.length>1?`<div class="gallery-thumbs">${p.images.map((img,i)=>`
           <button type="button" class="thumb-btn${i===0?" active":""}" data-gallery-index="${i}" aria-label="Show photo ${i+1}">
-            <img src="${esc(img)}" alt="">
+            <img src="${esc(sized(img,IMG_THUMB))}" alt="">
           </button>`).join("")}</div>`:""}
       </div>`
     :`<div class="img-pending">${pendingSVG()}<span>No photo yet</span></div>`;
@@ -730,7 +738,7 @@ function renderDrawer(){
   if(!list.length){ box.innerHTML=`<div class="drawer-empty">Nothing selected yet.<br>Tap the heart on any piece to add it here.</div>`; return; }
   box.innerHTML=list.map(p=>`
     <div class="drawer-item">
-      <div class="thumb">${p.images?.length?`<img src="${esc(p.images[0])}" alt="${esc(p.name)}">`:pendingSVG()}</div>
+      <div class="thumb">${p.images?.length?`<img src="${esc(sized(p.images[0],IMG_THUMB))}" alt="${esc(p.name)}" loading="lazy">`:pendingSVG()}</div>
       <div class="drawer-item-info">
         <div class="name">${esc(p.name)}</div>
         <div class="meta">${esc(genderLabel(p.gender))}, ${esc(sentenceCase(p.category))}</div>
