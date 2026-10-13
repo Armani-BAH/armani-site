@@ -1,6 +1,6 @@
 /* Emporio Armani Bahrain — offline support + "install as an app"
    Change VERSION whenever you want every phone to drop its old copy at once. */
-const VERSION = "ea-v4";
+const VERSION = "ea-v5";
 const SHELL = `${VERSION}-shell`, IMAGES = `${VERSION}-img`, MAX_IMAGES = 400;
 const CORE = [
   "./", "index.html", "css/style.css", "js/i18n.js", "js/app.js", "data/products.json",

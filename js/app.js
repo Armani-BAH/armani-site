@@ -1206,6 +1206,12 @@ async function shareLink(url, title){
 }
 
 /* ========================= SEARCH / SORT ========================= */
+/* Phone: search hides behind an icon to keep the products in view */
+$("#searchToggleBtn").addEventListener("click",()=>{
+  const h=$("header.site"); const open=!h.classList.contains("search-open");
+  h.classList.toggle("search-open",open); $("#searchToggleBtn").setAttribute("aria-expanded",String(open));
+  if(open) $("#searchInput").focus();
+});
 let searchTimer;
 $("#searchInput").addEventListener("input",e=>{
   state.search=e.target.value.trim(); state.visibleCount=PAGE_SIZE; render();
