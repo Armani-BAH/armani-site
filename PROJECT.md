@@ -144,7 +144,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 
 - `data/perfume_notes.xlsx` = the team's perfume sheet (fragrance name, top/heart/base notes, description, details/ingredients). Names/notes in blue were filled by Claude from the team's descriptions — to be checked.
 - `python scripts/build_perfumes.py` → `data/perfumes.json` (keyed by style code). The site shows the fragrance name instead of "Eau de parfum", "Eau de parfum · 100 ml", three key notes on the card; Top/Heart/Base, description (Read more) and ingredients in the product window. Notes are translated in `AR_NOTES` (`js/i18n.js`). Search finds notes.
-- Open: LG152100 has no name (its description is a copy of Stronger With You Amber) — waiting for the team.
+- LG152100 and LD801400 are both Stronger With You Amber (two codes for the same fragrance, confirmed by Jasim).
 
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 
