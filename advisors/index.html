@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Advisors | Emporio Armani Marassi</title>
+<meta name="description" content="Chat directly with your client advisor at Emporio Armani Marassi on WhatsApp.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Your Client Advisor — Emporio Armani Marassi">
+<meta property="og:description" content="Chat directly with your client advisor on WhatsApp.">
+<meta property="og:url" content="https://www.eawishlist.com/advisors/">
+<meta property="og:image" content="https://www.eawishlist.com/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap">
+<script>try{var l=localStorage.getItem("ea_lang")||((navigator.language||"").toLowerCase().indexOf("ar")===0?"ar":"en");document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";}catch(e){}</script>
+<style>
+  @font-face{font-family:"Jost";font-weight:300;font-display:swap;src:url("../assets/fonts/jost-latin-300-normal.woff2") format("woff2");}
+  @font-face{font-family:"Jost";font-weight:400;font-display:swap;src:url("../assets/fonts/jost-latin-400-normal.woff2") format("woff2");}
+  @font-face{font-family:"Jost";font-weight:500;font-display:swap;src:url("../assets/fonts/jost-latin-500-normal.woff2") format("woff2");}
+  :root{
+    --ink:#000; --stone:#66615b; --line:#dad6d0; --greige:#f0eeeb; --paper:#fff; --wa:#25D366;
+    --font:"Jost","Helvetica Neue",Arial,sans-serif;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  [dir="rtl"]{--font:"IBM Plex Sans Arabic","Jost","Helvetica Neue",Arial,sans-serif;}
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+  a{color:inherit;}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+
+  /* top bar — same as the catalogue */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:560px;width:100%;margin:0 auto;padding:22px 20px 0;}
+  .top img{height:18px;width:auto;display:block;}
+  .lang-btn{font-size:.9rem;color:var(--stone);}
+  .lang-btn:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+  .lang-btn[lang="ar"]{font-family:"IBM Plex Sans Arabic",var(--font);font-size:.95rem;}
+
+  main{width:100%;max-width:560px;margin:0 auto;padding:56px 20px 40px;flex:1;}
+  header{text-align:center;margin-bottom:36px;}
+  .eyebrow{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--stone);margin:0 0 14px;}
+  h1{font-weight:300;font-size:2rem;line-height:1.15;letter-spacing:-.01em;margin:0 0 12px;}
+  .intro{font-size:1rem;line-height:1.6;color:var(--stone);margin:0 auto;max-width:380px;}
+  [dir="rtl"] .eyebrow{letter-spacing:0;}
+
+  ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);}
+  a.advisor{display:flex;align-items:center;gap:16px;padding:18px 4px;border-bottom:1px solid var(--line);text-decoration:none;
+    transition:background .24s var(--ease),padding .24s var(--ease);}
+  .avatar{flex:none;width:44px;height:44px;border-radius:50%;background:var(--greige);display:flex;align-items:center;justify-content:center;
+    font-size:1rem;font-weight:500;letter-spacing:.02em;transition:background .24s var(--ease),color .24s var(--ease);}
+  .who{flex:1;min-width:0;}
+  .name{display:block;font-size:1.15rem;font-weight:400;line-height:1.25;}
+  .role{display:block;font-size:.82rem;color:var(--stone);margin-top:2px;}
+  .cta{flex:none;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border:1px solid var(--ink);font-size:.85rem;font-weight:500;
+    transition:background .24s var(--ease),color .24s var(--ease);}
+  .cta svg{width:16px;height:16px;fill:currentColor;}
+  a.advisor:hover{background:#faf9f7;}
+  a.advisor:hover .avatar{background:var(--ink);color:var(--paper);}
+  a.advisor:hover .cta{background:var(--ink);color:var(--paper);}
+
+  .note{text-align:center;font-size:.92rem;line-height:1.6;color:var(--stone);margin:28px auto 0;max-width:380px;}
+  .browse{display:block;text-align:center;margin-top:20px;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;}
+  .browse:hover{color:var(--stone);}
+
+  footer{border-top:1px solid var(--line);background:#faf9f7;text-align:center;padding:26px 20px 34px;font-size:.85rem;line-height:1.8;color:var(--stone);}
+  footer .store{color:var(--ink);font-weight:500;}
+
+  @media(max-width:480px){
+    main{padding-top:40px;}
+    h1{font-size:1.65rem;}
+    .cta{padding:0 12px;}
+    .cta span{display:none;}           /* phone: icon only, keeps the name roomy */
+    .cta{width:42px;justify-content:center;padding:0;}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="top">
+  <a href="/" aria-label="Emporio Armani — browse the collection"><img src="../assets/logo/emporio-armani-logo.png" alt="Emporio Armani"></a>
+  <button type="button" class="lang-btn" id="langBtn"></button>
+</div>
+
+<main>
+  <header>
+    <p class="eyebrow" data-en="Marassi Mall · Bahrain" data-ar="مراسي مول · البحرين">Marassi Mall · Bahrain</p>
+    <h1 data-en="Your Client Advisor" data-ar="مستشار العملاء الخاص بك">Your Client Advisor</h1>
+    <p class="intro" data-en="Choose an advisor below to start a private chat with them on WhatsApp." data-ar="اختاروا أحد المستشارين أدناه لبدء محادثة خاصة معه على واتساب.">Choose an advisor below to start a private chat with them on WhatsApp.</p>
+  </header>
+
+  <ul id="advisors"></ul>
+
+  <p class="note" data-en="Prefer not to choose? Simply continue in our main WhatsApp chat and we'll be glad to help." data-ar="تفضلون عدم الاختيار؟ تابعوا المحادثة في واتساب الرئيسي وسنكون سعداء بمساعدتكم.">Prefer not to choose? Simply continue in our main WhatsApp chat and we'll be glad to help.</p>
+  <a class="browse" href="/" data-en="Browse the FW26 collection" data-ar="تصفّح مجموعة خريف وشتاء 2026">Browse the FW26 collection</a>
+</main>
+
+<footer>
+  <div class="store" data-en="Emporio Armani · Marassi Mall, Bahrain" data-ar="Emporio Armani · مراسي مول، البحرين">Emporio Armani · Marassi Mall, Bahrain</div>
+  <div data-en="Sat to Wed 10:00 to 22:00 · Thu and Fri 10:00 to 00:00" data-ar="السبت إلى الأربعاء 10 ص - 10 م · الخميس والجمعة 10 ص - 12 منتصف الليل">Sat to Wed 10:00 to 22:00 · Thu and Fri 10:00 to 00:00</div>
+</footer>
+
+<script>
+/* ---- Advisors: name + WhatsApp number (country code + number, digits only) ---- */
+var ADVISORS = [
+  { name: "Mohammed", nameAr: "محمد",  whatsapp: "97333161154" },
+  { name: "Layla",    nameAr: "ليلى",  whatsapp: "97333161142" },
+  { name: "Mayssa",   nameAr: "ميساء", whatsapp: "97333161076" },
+  { name: "Alaa",     nameAr: "آلاء",  whatsapp: "97333161159" }
+];
+var MESSAGE = {
+  en: "Hello, I'd like to chat with my client advisor at Emporio Armani Marassi.",
+  ar: "مرحباً، أودّ التواصل مع مستشار العملاء الخاص بي في Emporio Armani مراسي."
+};
+var TEXT = {
+  en: { role: "Client Advisor", chat: "Chat" },
+  ar: { role: "مستشار العملاء", chat: "محادثة" }
+};
+var WA_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.2 17.1L2 22l5-1.2A11 11 0 1 0 20.5 3.5Zm-8.4 17a9 9 0 0 1-4.6-1.3l-.3-.2-3 .7.8-2.9-.2-.3a9 9 0 1 1 7.3 4Zm5-6.7c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.9 1.1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-.9-2.1c-.2-.6-.5-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-1 2.3 5.3 5.3 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4.1c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.9-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3Z"/></svg>';
+
+/* ---- visitor statistics (same Google Analytics as the catalogue) ---- */
+var GA = "G-1098C6F5SS";
+window.dataLayer = window.dataLayer || []; function gtag(){ dataLayer.push(arguments); }
+(function(){ var s=document.createElement("script"); s.async=true; s.src="https://www.googletagmanager.com/gtag/js?id="+GA; document.head.appendChild(s); })();
+gtag("js", new Date()); gtag("config", GA);
+
+var lang = document.documentElement.lang === "ar" ? "ar" : "en";
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+function render(){
+  var ar = lang === "ar";
+  document.documentElement.lang = lang; document.documentElement.dir = ar ? "rtl" : "ltr";
+  var nodes = document.querySelectorAll("[data-en]");
+  for (var i = 0; i < nodes.length; i++) nodes[i].textContent = nodes[i].getAttribute(ar ? "data-ar" : "data-en");
+  var btn = document.getElementById("langBtn");
+  btn.textContent = ar ? "English" : "العربية"; btn.lang = ar ? "en" : "ar";
+  document.getElementById("advisors").innerHTML = ADVISORS.map(function(a){
+    var name = ar ? a.nameAr : a.name;
+    var href = "https://wa.me/" + a.whatsapp + "?text=" + encodeURIComponent(MESSAGE[lang]);
+    return '<li><a class="advisor" href="' + href + '" target="_blank" rel="noopener" data-advisor="' + esc(a.name) + '">' +
+      '<span class="avatar" aria-hidden="true">' + esc(name.charAt(0)) + '</span>' +
+      '<span class="who"><span class="name">' + esc(name) + '</span><span class="role">' + TEXT[lang].role + '</span></span>' +
+      '<span class="cta">' + WA_ICON + '<span>' + TEXT[lang].chat + '</span></span></a></li>';
+  }).join("");
+}
+document.getElementById("langBtn").addEventListener("click", function(){
+  lang = lang === "ar" ? "en" : "ar";
+  try { localStorage.setItem("ea_lang", lang); } catch (e) {}     /* same setting as the catalogue */
+  render();
+});
+document.getElementById("advisors").addEventListener("click", function(e){
+  var a = e.target.closest("[data-advisor]");
+  if (a) gtag("event", "contact", { method: "whatsapp_advisor", advisor: a.getAttribute("data-advisor"), site_language: lang });
+});
+render();
+</script>
+</body>
+</html>

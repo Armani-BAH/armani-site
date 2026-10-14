@@ -146,6 +146,11 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 - `python scripts/build_perfumes.py` → `data/perfumes.json` (keyed by style code). The site shows the fragrance name instead of "Eau de parfum", "Eau de parfum · 100 ml", three key notes on the card; Top/Heart/Base, description (Read more) and ingredients in the product window. Notes are translated in `AR_NOTES` (`js/i18n.js`). Search finds notes.
 - LG152100 and LD801400 are both Stronger With You Amber (two codes for the same fragrance, confirmed by Jasim).
 
+## 7d. Client Advisors page — www.eawishlist.com/advisors (2026-10-14)
+
+- `advisors/index.html` (self-contained). Advisors list (name, Arabic name, WhatsApp) in `ADVISORS` at the bottom of the file; opening message in `MESSAGE` (EN/AR).
+- Same look, logo, fonts and language setting (`ea_lang`) as the catalogue; Google Analytics event `contact` / `whatsapp_advisor` with the advisor's name.
+
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 
 1. Check the name with the brand (no "armani" in a self-owned domain without written approval).
