@@ -4,7 +4,7 @@ Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Clients 
 
 - **Repo:** https://github.com/Armani-BAH/armani-site
 - **Live (GitHub Pages):** https://armani-bah.github.io/armani-site/
-- **Planned domain:** wishlist.armani.com
+- **Domain:** https://www.eawishlist.com (Namecheap, bought 2026-10-14; `CNAME` file in the repo). The old github.io address forwards automatically.
 - **Stack:** plain HTML + CSS + vanilla JS. No build step, no framework. Data comes from an Excel file converted to JSON by a Python script.
 - **Run locally:** the site loads `data/products.json` with `fetch()`, so open it through a web server (VS Code "Live Server", or `python -m http.server`), not by double-clicking `index.html`.
 
@@ -137,7 +137,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 - "Recently viewed" strip under the grid (`ea_recent`, last 12, this phone only).
 - More products load automatically when scrolling ("Show more" stays as a fallback).
 
-## 8. Custom domain (to do — Jasim will buy it himself)
+## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 
 1. Check the name with the brand (no "armani" in a self-owned domain without written approval).
 2. Buy on Namecheap (1 year, auto-renew, free Domain Privacy, no extras).
