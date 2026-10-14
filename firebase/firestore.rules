@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Running number for selections: only goes up by exactly 1, together with a new selection
+    match /counters/selections {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['next'])
+                    && request.resource.data.next == 1002
+                    && existsAfter(/databases/$(database)/documents/selections/1001);
+      allow update: if request.resource.data.keys().hasOnly(['next'])
+                    && request.resource.data.next == resource.data.next + 1
+                    && existsAfter(/databases/$(database)/documents/selections/$(string(resource.data.next)));
+      allow delete: if false;
+    }
+
+    // Saved selections: anyone with the number can view; new ones only; never changed or deleted
+    match /selections/{num} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['items', 'lang', 'created'])
+                    && request.resource.data.items is list
+                    && request.resource.data.items.size() > 0
+                    && request.resource.data.items.size() <= 150
+                    && request.resource.data.lang in ['en', 'ar']
+                    && request.resource.data.created == request.time
+                    && getAfter(/databases/$(database)/documents/counters/selections).data.next == int(num) + 1;
+      allow update, delete: if false;
+    }
+  }
+}

@@ -138,6 +138,12 @@ const AR_UI = {
   "Show them": "اعرضها",
   "Hide pieces without photos": "إخفاء القطع التي بلا صور",
 
+  "My selection No. {n}": "اختياراتي رقم {n}",
+  "Selection No. {n}": "الاختيار رقم {n}",
+  "Opening selection No. {n}…": "جارٍ فتح الاختيار رقم {n}…",
+  "This selection could not be found.": "تعذّر العثور على هذا الاختيار.",
+  "Preparing your link…": "جارٍ تجهيز الرابط…",
+
   /* store */
   "Open now · until {time}": "مفتوح الآن · حتى {time}",
   "Closed · opens today at {time}": "مغلق · يفتح اليوم الساعة {time}",

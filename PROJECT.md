@@ -125,7 +125,10 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | `#/all/all` | Every product |
 | `…?p=EM001739-UC001` | Same page with that product open |
 | `#/selection/EB001440-M9136,LF704500-100ML` | A selection someone shared — STYLE-COLOUR, or STYLE-FABRIC-COLOUR where two pieces share style+colour (`buildRefs()` in `js/app.js`) |
+| `#/selection/1042` | A numbered selection saved in Firebase (when `FIREBASE` is set at the top of `js/app.js`) |
 | `#/s/code.code` and full STYLE-FABRIC-COLOUR links | Older forms — still open |
+
+**Numbered selections (Firebase Firestore):** project rules in `firebase/firestore.rules` (paste into Firestore → Rules). Documents: `counters/selections {next}` and `selections/{number} {items[], lang, created}`; numbers start at 1001; only new selections can be written, nothing can be changed or deleted. Saving uses the Firestore REST API (no extra library) and falls back to the long code link if Firebase is unreachable within 6 s. The same selection re-uses its number on that phone (`ea_selnums`).
 
 ## 7b. Shopping improvements (2026-10-14)
 

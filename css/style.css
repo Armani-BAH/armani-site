@@ -863,3 +863,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
   .gallery-thumbs{flex:none;}
   .modal-body{min-height:0;}
 }
+
+/* numbered selections */
+.send-opt:disabled{opacity:.45;cursor:wait;}
+.send-preparing{text-align:center;font-size:.85rem;color:var(--stone);}

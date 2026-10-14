@@ -22,6 +22,12 @@ const STORE = {
     Thursday:["10:00","24:00"], Friday:["10:00","24:00"], Saturday:["10:00","22:00"]
   }
 };
+/* ========================= NUMBERED SELECTIONS (Google Firebase) =========================
+   Paste apiKey and projectId from Firebase here. Empty = links carry the codes instead
+   (…/#/selection/EB001440-M9136,…), exactly as before.                                     */
+const FIREBASE = { apiKey: "", projectId: "" };
+const SAVED_ON = () => !!(FIREBASE.apiKey && FIREBASE.projectId);
+
 /* ========================= VISITOR STATISTICS (Google Analytics 4) =========================
    Put your Measurement ID here, e.g. "G-AB12CD34EF". Empty = nothing is measured.   */
 const ANALYTICS_ID = "G-1098C6F5SS";
@@ -284,6 +290,7 @@ function showCategoryLanding(dGender){
 /* ========================= ENTER CATALOGUE ========================= */
 function enterCatalogue(dGender, category){
   state.shared         = null;
+  state.sharedNumber   = null;
   state.showNoPhoto    = false;
   state.activeGender   = dGender;
   state.activeCategory = category;
@@ -351,7 +358,7 @@ function renderBreadcrumb(){
   if(state.activeGender) parts.push(GENDER_LABELS[state.activeGender]||state.activeGender);
   if(state.activeCategory) parts.push(catLabel(state.activeCategory));
   document.getElementById("pageTitle").textContent =
-    state.shared ? t("Shared selection") : (parts.length ? parts.join(" · ") : t("FW26 selection"));
+    state.shared ? (state.sharedNumber ? t("Selection No. {n}",{n:state.sharedNumber}) : t("Shared selection")) : (parts.length ? parts.join(" · ") : t("FW26 selection"));
 }
 
 /* ========================= STATE ========================= */
@@ -1094,10 +1101,15 @@ $("#shareBtn").addEventListener("click",()=>{
     text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}${c}${catLabel(p.category)})\n   ${t("Style")} ${p.styleCode}${c}${t("Fabric")} ${p.fabricCode}${c}${t("Colour")} ${p.colorCode}`;
     if(state.notes[p.id]) text+=`\n   ${t("Note")}: ${state.notes[p.id]}`;
   });
-  text+=`\n\n${t("View with photos:")}\n${selectionUrl()}`;
-  pendingShareText=text;
-  if(STORE.whatsapp) openSendChoice();
-  else sendWhatsApp("");
+  pendingShareText=null;
+  if(STORE.whatsapp) openSendChoice(true);                     /* buttons wait for the link */
+  shareableSelection().then(({url, number})=>{
+    const head = number ? `${t("My selection No. {n}",{n:number})}\n` : "";
+    pendingShareText = text.replace(t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n",
+                         t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n"+head)
+                       + `\n\n${t("View with photos:")}\n${url}`;
+    if(STORE.whatsapp) setSendReady(true); else sendWhatsApp("");
+  });
 });
 
 /* ---- WhatsApp: to the boutique, or to anyone the client chooses ---- */
@@ -1107,7 +1119,11 @@ function sendWhatsApp(number, text=pendingShareText){
     notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length });
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
-function openSendChoice(){ $("#sendChoice").hidden=false; $("#sendToStoreBtn").focus(); }
+function openSendChoice(waiting){ $("#sendChoice").hidden=false; setSendReady(!waiting); $("#sendToStoreBtn").focus(); }
+function setSendReady(ok){
+  ["#sendToStoreBtn","#sendToAnyoneBtn"].forEach(s=>$(s).disabled=!ok);
+  $("#sendPreparing").hidden=ok;
+}
 function closeSendChoice(){ $("#sendChoice").hidden=true; }
 $("#sendToStoreBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(STORE.whatsapp); });
 $("#sendToAnyoneBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(""); });
@@ -1179,7 +1195,13 @@ $("#pdfBtn").addEventListener("click",async()=>{
 $("#copyLinkBtn").addEventListener("click",()=>{
   if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
   track("share", { method:"copy_link", content_type:"selection", pieces: state.selected.size });
-  shareLink(selectionUrl(), t("Emporio Armani — my selection"));
+  if(!SAVED_ON()){ shareLink(selectionUrl(), t("Emporio Armani — my selection")); return; }
+  const urlP=shareableSelection().then(x=>x.url);
+  if(window.ClipboardItem && navigator.clipboard?.write){
+    navigator.clipboard.write([new ClipboardItem({ "text/plain": urlP.then(u=>new Blob([u],{type:"text/plain"})) })])
+      .then(()=>toast(t("Link copied — paste it anywhere")))
+      .catch(()=>urlP.then(u=>shareLink(u, t("Emporio Armani — my selection"))));
+  } else urlP.then(u=>shareLink(u, t("Emporio Armani — my selection")));
 });
 
 /* ========================= SHARED SELECTION ========================= */
@@ -1219,6 +1241,7 @@ function catalogueHash(gs, cs, ss){
 function stateHash(){
   if(!$("#landingGender").hidden)   return "#/";
   if(!$("#landingCategory").hidden) return "#/" + gSlug(state.activeGender);
+  if(state.shared && state.sharedNumber) return "#/selection/" + state.sharedNumber;
   if(state.shared) return "#/selection/" + [...state.shared].map(id=>ref(ID_INDEX.get(id))).join(",");
   const gs = [...new Set([...state.filters.gender].map(displayGender))].sort((a,b)=>genderRank(a)-genderRank(b));
   return catalogueHash(gs, [...state.filters.category].sort(), [...state.filters.sub].sort());
@@ -1253,7 +1276,16 @@ function route(){
     });
     const parts = path.split("/").filter(Boolean);
 
-    if(parts[0]==="s" || parts[0]==="selection"){        /* #/s/code.code.code  (old: #/selection/KEY,KEY) */
+    if(parts[0]==="selection" && /^\d{3,7}$/.test(parts[1]||"")){   /* #/selection/1042 — a numbered selection */
+      const n=parseInt(parts[1],10);
+      if(!(state.shared && state.sharedNumber===n)){
+        if(!SAVED_ON()){ showScreen("gender"); return; }
+        toast(t("Opening selection No. {n}…",{n}));
+        loadNumbered(n).then(refs=>{ ROUTING=true; try{ openShared(refs); state.sharedNumber=n; renderBreadcrumb(); renderSharedBanner(); } finally{ ROUTING=false; } })
+          .catch(()=>{ toast(t("This selection could not be found.")); enterCatalogue(null,null); });
+      }
+    }
+    else if(parts[0]==="s" || parts[0]==="selection"){        /* #/s/code.code.code  (old: #/selection/KEY,KEY) */
       const keys = (parts.slice(1).join("/")).split(/[.,]/).filter(Boolean);
       const wanted = keys.map(k=>findByToken(k)?.id).filter(Boolean);
       const same = state.shared && $("#landingGender").hidden && $("#landingCategory").hidden &&
@@ -1289,8 +1321,63 @@ function route(){
 function productUrl(p){
   return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${ref(p)}`;
 }
-function selectionUrl(){
-  return `${SITE_URL()}#/selection/${PRODUCTS.filter(p=>state.selected.has(p.id)).map(ref).join(",")}`;
+function selectionRefs(){ return PRODUCTS.filter(p=>state.selected.has(p.id)).map(ref); }
+/* the long form — always works, used when numbering is off or unavailable */
+function selectionUrl(){ return `${SITE_URL()}#/selection/${selectionRefs().join(",")}`; }
+const numberUrl = n => `${SITE_URL()}#/selection/${n}`;
+
+/* ---- Numbered selections: saved in Firestore as selections/1001, 1002, … ---- */
+const FS = () => `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents`;
+const FS_NAME = path => `projects/${FIREBASE.projectId}/databases/(default)/documents/${path}`;
+let NUMBERED={}; try{ NUMBERED=JSON.parse(localStorage.getItem("ea_selnums")||"{}"); }catch(e){}
+
+/* Give the current selection its number (re-uses the number if this exact selection was sent before) */
+async function numberSelection(){
+  const refs=selectionRefs(); const sig=refs.join(",");
+  if(NUMBERED[sig]) return NUMBERED[sig];
+  for(let attempt=0; attempt<5; attempt++){
+    const cr=await fetch(`${FS()}/counters/selections?key=${FIREBASE.apiKey}`);
+    let n, counterWrite;
+    if(cr.status===404){
+      n=1001;
+      counterWrite={ update:{ name:FS_NAME("counters/selections"), fields:{ next:{ integerValue:"1002" } } }, currentDocument:{ exists:false } };
+    } else if(cr.ok){
+      const c=await cr.json(); n=parseInt(c.fields.next.integerValue,10);
+      counterWrite={ update:{ name:FS_NAME("counters/selections"), fields:{ next:{ integerValue:String(n+1) } } }, currentDocument:{ updateTime:c.updateTime } };
+    } else throw new Error("counter "+cr.status);
+    const selWrite={
+      update:{ name:FS_NAME(`selections/${n}`), fields:{
+        items:{ arrayValue:{ values: refs.map(r=>({ stringValue:r })) } },
+        lang:{ stringValue: LANG } } },
+      updateTransforms:[{ fieldPath:"created", setToServerValue:"REQUEST_TIME" }],
+      currentDocument:{ exists:false }
+    };
+    const res=await fetch(`${FS()}:commit?key=${FIREBASE.apiKey}`,{
+      method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ writes:[selWrite, counterWrite] })
+    });
+    if(res.ok){
+      NUMBERED[sig]=n; try{ localStorage.setItem("ea_selnums",JSON.stringify(NUMBERED)); }catch(e){}
+      track("selection_numbered",{ number:n, pieces:refs.length });
+      return n;
+    }
+    if(res.status!==409 && res.status!==400) throw new Error("commit "+res.status);   /* someone took that number: try the next */
+    await new Promise(r=>setTimeout(r, 150+Math.random()*350));
+  }
+  throw new Error("busy");
+}
+/* number if possible (max ~6 s), otherwise fall back to the long link */
+async function shareableSelection(){
+  if(!SAVED_ON()) return { url: selectionUrl(), number: null };
+  try{
+    const n=await Promise.race([ numberSelection(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),6000)) ]);
+    return { url: numberUrl(n), number: n };
+  }catch(e){ console.warn("Numbered link unavailable, using the long link", e); return { url: selectionUrl(), number: null }; }
+}
+async function loadNumbered(n){
+  const r=await fetch(`${FS()}/selections/${n}?key=${FIREBASE.apiKey}`);
+  if(!r.ok) throw new Error("load "+r.status);
+  const d=await r.json();
+  return (d.fields?.items?.arrayValue?.values||[]).map(v=>v.stringValue);
 }
 /* Phone: opens the share sheet. Computer: copies the link. */
 async function shareLink(url, title){
