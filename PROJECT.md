@@ -123,9 +123,9 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | `#/men/ready-to-wear?type=5-pockets-pant` | One type inside a category |
 | `#/women,men/glasses` | Several departments/categories (comma-separated) |
 | `#/all/all` | Every product |
-| `…?p=EM001739-AF14774-UC001` | Same page with that product open |
-| `#/s/code.code.code` | A selection someone shared (code = short 6–7 character code of style-fabric-colour, see `sid()` in `js/app.js`) |
-| `#/selection/KEY,KEY,…` | Older long form — still opens |
+| `…?p=EM001739-UC001` | Same page with that product open |
+| `#/selection/EB001440-M9136,LF704500-100ML` | A selection someone shared — STYLE-COLOUR, or STYLE-FABRIC-COLOUR where two pieces share style+colour (`buildRefs()` in `js/app.js`) |
+| `#/s/code.code` and full STYLE-FABRIC-COLOUR links | Older forms — still open |
 
 ## 7b. Shopping improvements (2026-10-14)
 

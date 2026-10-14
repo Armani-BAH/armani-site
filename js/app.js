@@ -139,7 +139,19 @@ const slug = s => String(s).toLowerCase().trim().replace(/&/g,"and").replace(/[^
 const gSlug = g => G_SLUG[g] || slug(g);
 const pKey = p => `${p.styleCode}-${p.fabricCode}-${p.colorCode}`;
 let KEY_INDEX = new Map();   /* pKey -> product */
-let SID_INDEX = new Map();   /* short link code -> product */
+let SID_INDEX = new Map();   /* short link code -> product (links sent on 14 Oct 2026) */
+let REF_INDEX = new Map();   /* readable link code -> product */
+let REF_OF    = new Map();   /* product id -> readable link code */
+/* Readable code for links: STYLE-COLOUR (e.g. EB001440-M9136); STYLE-FABRIC-COLOUR when two pieces would clash */
+function buildRefs(){
+  const count=new Map();
+  PRODUCTS.forEach(p=>{ const k=`${p.styleCode}-${p.colorCode}`; count.set(k,(count.get(k)||0)+1); });
+  PRODUCTS.forEach(p=>{
+    const short=`${p.styleCode}-${p.colorCode}`, ref=(count.get(short)>1 ? pKey(p) : short).replace(/[\s/]/g,"_");
+    REF_INDEX.set(ref,p); REF_OF.set(p.id,ref);
+  });
+}
+const ref = p => REF_OF.get(p.id) || pKey(p);
 /* Short, stable code for a piece in links (same style+fabric+colour = same code, even after Excel updates) */
 function sid(p){
   let h=0x811c9dc5; const k=pKey(p);
@@ -147,7 +159,7 @@ function sid(p){
   return h.toString(36);
 }
 /* accepts the new short code or the older long STYLE-FABRIC-COLOUR form (links already sent keep working) */
-const findByToken = tok => { if(!tok) return null; let t=tok; try{ t=decodeURIComponent(tok); }catch(e){} return SID_INDEX.get(t) || KEY_INDEX.get(t) || null; };
+const findByToken = tok => { if(!tok) return null; let t=tok; try{ t=decodeURIComponent(tok); }catch(e){} return REF_INDEX.get(t) || KEY_INDEX.get(t) || SID_INDEX.get(t) || null; };
 let ID_INDEX  = new Map();   /* id   -> product */
 const SITE_URL = () => location.origin + location.pathname;
 
@@ -186,6 +198,7 @@ async function loadProducts(){
     CATEGORIES = [...new Set(PRODUCTS.map(p=>p.category))].sort();
     KEY_INDEX  = new Map(PRODUCTS.map(p=>[pKey(p),p]));
     SID_INDEX  = new Map(PRODUCTS.map(p=>[sid(p),p]));
+    buildRefs();
     if(SID_INDEX.size!==PRODUCTS.length) console.warn("Two pieces share a short link code");
     ID_INDEX   = new Map(PRODUCTS.map(p=>[p.id,p]));
 
@@ -1206,7 +1219,7 @@ function catalogueHash(gs, cs, ss){
 function stateHash(){
   if(!$("#landingGender").hidden)   return "#/";
   if(!$("#landingCategory").hidden) return "#/" + gSlug(state.activeGender);
-  if(state.shared) return "#/s/" + [...state.shared].map(id=>sid(ID_INDEX.get(id))).join(".");
+  if(state.shared) return "#/selection/" + [...state.shared].map(id=>ref(ID_INDEX.get(id))).join(",");
   const gs = [...new Set([...state.filters.gender].map(displayGender))].sort((a,b)=>genderRank(a)-genderRank(b));
   return catalogueHash(gs, [...state.filters.category].sort(), [...state.filters.sub].sort());
 }
@@ -1215,7 +1228,7 @@ function syncUrl(replace){
   if(ROUTING) return;
   let h = stateHash();
   const open = state.modalIndex!==null && modalCur();
-  if(open) h += (h.includes("?")?"&":"?") + "p=" + sid(open);
+  if(open) h += (h.includes("?")?"&":"?") + "p=" + ref(open);
   const now = location.hash || "#/";
   if(h===now) return;
   history[replace ? "replaceState" : "pushState"](null, "", h);
@@ -1274,10 +1287,10 @@ function route(){
 }
 
 function productUrl(p){
-  return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${sid(p)}`;
+  return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${ref(p)}`;
 }
 function selectionUrl(){
-  return `${SITE_URL()}#/s/${PRODUCTS.filter(p=>state.selected.has(p.id)).map(sid).join(".")}`;
+  return `${SITE_URL()}#/selection/${PRODUCTS.filter(p=>state.selected.has(p.id)).map(ref).join(",")}`;
 }
 /* Phone: opens the share sheet. Computer: copies the link. */
 async function shareLink(url, title){
