@@ -25,7 +25,7 @@ const STORE = {
 /* ========================= NUMBERED SELECTIONS (Google Firebase) =========================
    Paste apiKey and projectId from Firebase here. Empty = links carry the codes instead
    (…/#/selection/EB001440-M9136,…), exactly as before.                                     */
-const FIREBASE = { apiKey: "", projectId: "" };
+const FIREBASE = { apiKey: "AIzaSyAI2Ya5df_RMPmhHZUhoxX9iXSw_aoUeXg", projectId: "eawishlist" };
 const SAVED_ON = () => !!(FIREBASE.apiKey && FIREBASE.projectId);
 
 /* ========================= VISITOR STATISTICS (Google Analytics 4) =========================
