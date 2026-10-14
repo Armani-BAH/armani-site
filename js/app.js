@@ -139,6 +139,15 @@ const slug = s => String(s).toLowerCase().trim().replace(/&/g,"and").replace(/[^
 const gSlug = g => G_SLUG[g] || slug(g);
 const pKey = p => `${p.styleCode}-${p.fabricCode}-${p.colorCode}`;
 let KEY_INDEX = new Map();   /* pKey -> product */
+let SID_INDEX = new Map();   /* short link code -> product */
+/* Short, stable code for a piece in links (same style+fabric+colour = same code, even after Excel updates) */
+function sid(p){
+  let h=0x811c9dc5; const k=pKey(p);
+  for(let i=0;i<k.length;i++){ h^=k.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; }
+  return h.toString(36);
+}
+/* accepts the new short code or the older long STYLE-FABRIC-COLOUR form (links already sent keep working) */
+const findByToken = tok => { if(!tok) return null; let t=tok; try{ t=decodeURIComponent(tok); }catch(e){} return SID_INDEX.get(t) || KEY_INDEX.get(t) || null; };
 let ID_INDEX  = new Map();   /* id   -> product */
 const SITE_URL = () => location.origin + location.pathname;
 
@@ -176,6 +185,8 @@ async function loadProducts(){
 
     CATEGORIES = [...new Set(PRODUCTS.map(p=>p.category))].sort();
     KEY_INDEX  = new Map(PRODUCTS.map(p=>[pKey(p),p]));
+    SID_INDEX  = new Map(PRODUCTS.map(p=>[sid(p),p]));
+    if(SID_INDEX.size!==PRODUCTS.length) console.warn("Two pieces share a short link code");
     ID_INDEX   = new Map(PRODUCTS.map(p=>[p.id,p]));
 
     /* drop ids that no longer exist in the catalogue */
@@ -1160,7 +1171,7 @@ $("#copyLinkBtn").addEventListener("click",()=>{
 
 /* ========================= SHARED SELECTION ========================= */
 function openShared(keys){
-  const ids = keys.map(k=>KEY_INDEX.get(k)).filter(Boolean).map(p=>p.id);
+  const ids = keys.map(findByToken).filter(Boolean).map(p=>p.id);
   track("open_shared_selection", { pieces: ids.length });
   enterCatalogue(null,null);
   state.shared = new Set(ids);
@@ -1195,7 +1206,7 @@ function catalogueHash(gs, cs, ss){
 function stateHash(){
   if(!$("#landingGender").hidden)   return "#/";
   if(!$("#landingCategory").hidden) return "#/" + gSlug(state.activeGender);
-  if(state.shared) return "#/selection/" + [...state.shared].map(id=>encodeURIComponent(pKey(ID_INDEX.get(id)))).join(",");
+  if(state.shared) return "#/s/" + [...state.shared].map(id=>sid(ID_INDEX.get(id))).join(".");
   const gs = [...new Set([...state.filters.gender].map(displayGender))].sort((a,b)=>genderRank(a)-genderRank(b));
   return catalogueHash(gs, [...state.filters.category].sort(), [...state.filters.sub].sort());
 }
@@ -1204,7 +1215,7 @@ function syncUrl(replace){
   if(ROUTING) return;
   let h = stateHash();
   const open = state.modalIndex!==null && modalCur();
-  if(open) h += (h.includes("?")?"&":"?") + "p=" + encodeURIComponent(pKey(open));
+  if(open) h += (h.includes("?")?"&":"?") + "p=" + sid(open);
   const now = location.hash || "#/";
   if(h===now) return;
   history[replace ? "replaceState" : "pushState"](null, "", h);
@@ -1229,9 +1240,9 @@ function route(){
     });
     const parts = path.split("/").filter(Boolean);
 
-    if(parts[0]==="selection"){
-      const keys = (parts.slice(1).join("/")).split(",").filter(Boolean).map(k=>{ try{return decodeURIComponent(k);}catch(e){return k;} });
-      const wanted = keys.map(k=>KEY_INDEX.get(k)?.id).filter(Boolean);
+    if(parts[0]==="s" || parts[0]==="selection"){        /* #/s/code.code.code  (old: #/selection/KEY,KEY) */
+      const keys = (parts.slice(1).join("/")).split(/[.,]/).filter(Boolean);
+      const wanted = keys.map(k=>findByToken(k)?.id).filter(Boolean);
       const same = state.shared && $("#landingGender").hidden && $("#landingCategory").hidden &&
                    wanted.length===state.shared.size && wanted.every(id=>state.shared.has(id));
       if(!same) openShared(keys);
@@ -1257,17 +1268,16 @@ function route(){
     else { closeModal(true); showScreen("gender"); return; }
 
     /* product open in the modal? */
-    const p = q.p ? KEY_INDEX.get(decodeURIComponent(q.p)) : null;
+    const p = q.p ? findByToken(q.p) : null;
     if(p) openModal(p.id, true); else closeModal(true);
   } finally { ROUTING = false; setTimeout(trackPage, 0); }
 }
 
 function productUrl(p){
-  return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${encodeURIComponent(pKey(p))}`;
+  return `${SITE_URL()}#/${gSlug(displayGender(p.gender))}/${slug(p.category)}?p=${sid(p)}`;
 }
 function selectionUrl(){
-  const keys = PRODUCTS.filter(p=>state.selected.has(p.id)).map(p=>encodeURIComponent(pKey(p)));
-  return `${SITE_URL()}#/selection/${keys.join(",")}`;
+  return `${SITE_URL()}#/s/${PRODUCTS.filter(p=>state.selected.has(p.id)).map(sid).join(".")}`;
 }
 /* Phone: opens the share sheet. Computer: copies the link. */
 async function shareLink(url, title){

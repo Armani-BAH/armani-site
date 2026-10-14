@@ -124,7 +124,8 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | `#/women,men/glasses` | Several departments/categories (comma-separated) |
 | `#/all/all` | Every product |
 | `…?p=EM001739-AF14774-UC001` | Same page with that product open |
-| `#/selection/KEY,KEY,…` | A selection someone shared (KEY = style-fabric-colour) |
+| `#/s/code.code.code` | A selection someone shared (code = short 6–7 character code of style-fabric-colour, see `sid()` in `js/app.js`) |
+| `#/selection/KEY,KEY,…` | Older long form — still opens |
 
 ## 7b. Shopping improvements (2026-10-14)
 
