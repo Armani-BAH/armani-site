@@ -1,6 +1,6 @@
 /* Emporio Armani Bahrain — offline support + "install as an app"
    Change VERSION whenever you want every phone to drop its old copy at once. */
-const VERSION = "ea-v16";
+const VERSION = "ea-v17";
 const SHELL = `${VERSION}-shell`, IMAGES = `${VERSION}-img`, MAX_IMAGES = 400;
 const CORE = [
   "./", "index.html", "css/style.css", "js/i18n.js", "js/app.js", "data/products.json", "data/perfumes.json",
@@ -41,7 +41,7 @@ self.addEventListener("fetch", e => {
 
   /* pages, code and catalogue: always try for the newest version, fall back to the saved copy offline */
   e.respondWith(
-    fetch(req).then(res => {
+    fetch(req, { cache: "no-cache" }).then(res => {       /* always ask GitHub if there is a newer version (cheap check) */
       if (res.ok) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); }
       return res;
     }).catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match("index.html")))
