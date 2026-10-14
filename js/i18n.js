@@ -144,6 +144,15 @@ const AR_UI = {
   "This selection could not be found.": "تعذّر العثور على هذا الاختيار.",
   "Preparing your link…": "جارٍ تجهيز الرابط…",
 
+  "Size": "الحجم",
+  "Fragrance notes": "مكونات العطر",
+  "Top notes": "النفحات العليا",
+  "Heart notes": "نفحات القلب",
+  "Base notes": "النفحات الأساسية",
+  "Read more": "اقرأ المزيد",
+  "Read less": "عرض أقل",
+  "Ingredients": "المكوّنات",
+
   /* store */
   "Open now · until {time}": "مفتوح الآن · حتى {time}",
   "Closed · opens today at {time}": "مغلق · يفتح اليوم الساعة {time}",
@@ -203,6 +212,22 @@ const AR_TYPES = {
   "TRACKSUIT": "بدلة رياضية", "TRENCH": "معطف ترنش", "TROUSER": "بنطال", "UNDERWEAR JUNIOR SET": "طقم ملابس داخلية للأطفال",
   "UNDERWEAR SET": "طقم ملابس داخلية", "WAISTCOAT": "صديري", "WALLET": "محفظة", "WALLET ZIP AROUND": "محفظة بسحّاب"
 };
+
+/* ---------- perfume notes ---------- */
+const AR_NOTES = {
+  "Raspberry":"توت العليق","Neroli":"النيرولي","Rose":"الورد","Vanilla":"الفانيليا","Musk":"المسك","Pink Pepper":"الفلفل الوردي",
+  "Pear":"الكمثرى","Blackcurrant":"الكشمش الأسود","Jasmine":"الياسمين","Heliotrope":"الهليوتروب","Cedarwood":"خشب الأرز",
+  "Bergamot":"البرغموت","Orange Blossom":"زهر البرتقال","Tuberose":"مسك الروم","White Musk":"المسك الأبيض","Sandalwood":"خشب الصندل",
+  "Floral Notes":"نفحات زهرية","Amber":"العنبر","White Flowers":"الزهور البيضاء","Mango":"المانجو","Coconut Water":"ماء جوز الهند",
+  "Ylang-Ylang":"اليلانغ يلانغ","Saffron":"الزعفران","Damask Rose":"الورد الدمشقي","Leather":"الجلد","Patchouli":"الباتشولي",
+  "Strawberry":"الفراولة","Milky Notes":"نفحات حليبية","Blackcurrant Bud":"براعم الكشمش الأسود","Iris":"السوسن","Cashmeran":"الكشميران",
+  "Pineapple":"الأناناس","Creamy Musk":"المسك الكريمي","Cardamom":"الهيل","Violet Leaf":"ورق البنفسج","Sage":"المريمية",
+  "Chestnut":"الكستناء","Lavender":"الخزامى","Amber Wood":"الخشب العنبري","Marine Notes":"نفحات بحرية","Aromatic Notes":"نفحات عطرية",
+  "Woody Notes":"نفحات خشبية","Rum":"الروم","Oud":"العود","Green Mandarin":"اليوسفي الأخضر","Mineral Notes":"نفحات معدنية",
+  "Mandarin":"اليوسفي","Black Pepper":"الفلفل الأسود","Clove":"القرنفل","Cinnamon":"القرفة","Apricot":"المشمش",
+  "Bourbon Vanilla":"فانيليا بوربون","Dates":"التمر"
+};
+const trNote = n => IS_AR && AR_NOTES[n] || n;
 
 /* ---------- helpers used by app.js ---------- */
 const norm = s => String(s || "").toUpperCase().split(/\s+/).join(" ").trim();

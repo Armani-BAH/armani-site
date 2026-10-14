@@ -867,3 +867,19 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 /* numbered selections */
 .send-opt:disabled{opacity:.45;cursor:wait;}
 .send-preparing{text-align:center;font-size:.85rem;color:var(--stone);}
+
+/* ====================== PERFUME NOTES ====================== */
+.card-notes{margin-top:4px;font-size:.8rem;color:var(--stone);font-style:italic;line-height:1.35;}
+.modal-perfume:empty{display:none;}
+.modal-perfume{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);}
+.modal-perfume h3{font-size:.85rem;font-weight:500;margin-bottom:10px;}
+.notes-list div{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem;}
+.notes-list dt{color:var(--stone);}
+.perfume-desc{margin-top:16px;font-size:.88rem;line-height:1.6;color:#333;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.perfume-desc.open{display:block;}
+.perfume-more{margin-top:6px;font-size:.85rem;}
+.perfume-ingr{margin-top:14px;font-size:.8rem;color:var(--stone);}
+.perfume-ingr summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.perfume-ingr p{margin-top:8px;line-height:1.5;}
+#modalFabricRow[hidden]{display:none;}
+[dir="rtl"] .card-notes{font-style:normal;}

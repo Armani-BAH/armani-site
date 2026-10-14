@@ -185,11 +185,14 @@ const firstImage = list => (list.find(p=>p.images?.length)?.images[0]) || null;
 /* ========================= LOAD ========================= */
 async function loadProducts(){
   try{
-    const r = await fetch("data/products.json");
+    const [r, rp] = await Promise.all([ fetch("data/products.json"), fetch("data/perfumes.json").catch(()=>null) ]);
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     PRODUCTS = await r.json();
+    const PERFUMES = rp && rp.ok ? await rp.json().catch(()=>({})) : {};   /* fragrance names + notes (data/perfume_notes.xlsx) */
     PRODUCTS.forEach(p=>{
       p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name;
+      const f=PERFUMES[p.styleCode];
+      if(f && f.name){ p.perfume=f; p.name=p.nameEn=f.name; }
       /* season comes from the photo file name, e.g. …_F_FW2026.jpg */
       const m=(p.images?.[0]||"").match(/_(FW|SS)(\d{4})\./); p.season=m?m[1]+m[2]:"";
       p.isNew = p.season===NEW_SEASON;
@@ -680,7 +683,7 @@ function getFilteredProducts(){
     if(!p.images?.length && !showingNoPhoto())                                   { hiddenSet.add(gKey(p)); return false; }
     if(state.search){
       const q=state.search.toLowerCase();
-      const hay=[p.name,p.nameEn,p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
+      const hay=[p.name,p.nameEn,...(p.perfume?[...p.perfume.top,...p.perfume.heart,...p.perfume.base].map(n=>n+" "+trNote(n)):[]),p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
@@ -761,9 +764,10 @@ function cardHTML(group){
         <button type="button" class="card-name" data-open="${esc(p.id)}">${name}</button>
         <div class="card-meta">
           <span>${esc(genderLabel(p.gender))}</span>
-          <span>${esc(catLabel(p.category))}</span>
+          <span>${p.perfume ? `${esc(subLabel(p.sub))} · ${esc(sizeLabel(p.colorCode))}` : esc(catLabel(p.category))}</span>
           ${group.length>1?`<span>${coloursText(group.length)}</span>`:""}
         </div>
+        ${p.perfume ? keyNotesHTML(p.perfume) : ""}
         ${swatchesHTML(group,p,"card")}
         <!-- codes live in the product window, WhatsApp message and PDF; search still finds them -->
       </div>
@@ -913,10 +917,36 @@ function paintModal(){
   $("#modalFabric").textContent=p.fabricCode;
   $("#modalColor").textContent=p.colorCode;
   $("#modalFamily").textContent=famLabel(p.family);
+  paintPerfume(p);
   $("#modalDesc").hidden=hasImages;
   syncModalSelectButton();
   paintAlsoLike(p);
   rememberViewed(p);
+}
+
+/* ---- Perfumes: fragrance notes on the card and in the product window ---- */
+const sizeLabel = c => String(c).replace(/^(\d+)\s*ML$/i, "$1 ml");
+const noteList = a => a.map(n=>esc(trNote(n))).join(IS_AR ? "، " : ", ");
+function keyNotesHTML(f){
+  const key=[f.top[0],f.heart[0],f.base[0]].filter(Boolean);
+  return key.length ? `<div class="card-notes">${key.map(n=>esc(trNote(n))).join(" · ")}</div>` : "";
+}
+function paintPerfume(p){
+  const box=$("#modalPerfume"), f=p.perfume;
+  $("#modalFabricRow").hidden = !!f;
+  $("#modalColorLabel").textContent = f ? t("Size") : t("Colour code");
+  if(f) $("#modalColor").textContent = sizeLabel(p.colorCode);
+  if(!f){ box.innerHTML=""; return; }
+  const rows=[["Top notes",f.top],["Heart notes",f.heart],["Base notes",f.base]].filter(([,v])=>v.length);
+  box.innerHTML = `
+    ${rows.length?`<h3>${t("Fragrance notes")}</h3><dl class="notes-list">${rows.map(([k,v])=>`<div><dt>${t(k)}</dt><dd>${noteList(v)}</dd></div>`).join("")}</dl>`:""}
+    ${f.description?`<p class="perfume-desc" lang="en" dir="ltr">${esc(f.description)}</p><button type="button" class="text-btn perfume-more">${t("Read more")}</button>`:""}
+    ${f.ingredients?`<details class="perfume-ingr"><summary>${t("Ingredients")}</summary><p lang="en" dir="ltr">${esc(f.ingredients)}</p></details>`:""}`;
+  const d=box.querySelector(".perfume-desc"), more=box.querySelector(".perfume-more");
+  if(d && more){
+    requestAnimationFrame(()=>{ if(d.scrollHeight<=d.clientHeight+2) more.hidden=true; });
+    more.onclick=()=>{ const open=d.classList.toggle("open"); more.textContent=open?t("Read less"):t("Read more"); };
+  }
 }
 
 /* ---- You may also like: same department, same type (then same category), other styles ---- */
