@@ -225,7 +225,11 @@ const AR_NOTES = {
   "Chestnut":"الكستناء","Lavender":"الخزامى","Amber Wood":"الخشب العنبري","Marine Notes":"نفحات بحرية","Aromatic Notes":"نفحات عطرية",
   "Woody Notes":"نفحات خشبية","Rum":"الروم","Oud":"العود","Green Mandarin":"اليوسفي الأخضر","Mineral Notes":"نفحات معدنية",
   "Mandarin":"اليوسفي","Black Pepper":"الفلفل الأسود","Clove":"القرنفل","Cinnamon":"القرفة","Apricot":"المشمش",
-  "Bourbon Vanilla":"فانيليا بوربون","Dates":"التمر"
+  "Bourbon Vanilla":"فانيليا بوربون","Dates":"التمر",
+  "Passionfruit":"فاكهة الباشن","Bitter Orange":"البرتقال المر","Lemon":"الليمون","Frangipani":"الفرانجيباني",
+  "Solar Notes":"نفحات شمسية","Madagascar Vanilla":"فانيليا مدغشقر","Benzoin":"الجاوي","Labdanum":"اللادن",
+  "Bergamot Leaf":"ورق البرغموت","Aldehydes":"الألدهيدات","Clary Sage":"المريمية المخملية","Orris":"جذر السوسن",
+  "Tonka Bean":"حبوب التونكا","Cedar":"الأرز","Warm Spices":"التوابل الدافئة"
 };
 const trNote = n => IS_AR && AR_NOTES[n] || n;
 

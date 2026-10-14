@@ -170,9 +170,20 @@
   },
   "LG218700": {
     "name": "Power of You",
-    "top": [],
-    "heart": [],
-    "base": [],
+    "top": [
+      "Passionfruit",
+      "Bitter Orange",
+      "Lemon"
+    ],
+    "heart": [
+      "Frangipani",
+      "Solar Notes"
+    ],
+    "base": [
+      "Madagascar Vanilla",
+      "Benzoin",
+      "Labdanum"
+    ],
     "description": "Captured in a ruby-toned, jewel-like bottle, POWER OF YOU is a fragrance that instantly inspires you to embrace your power to light up the room. The new exotic addiction that you will crave spraying.",
     "ingredients": "alcohol / parfum / fragrance / aqua / water / eau / tetramethyl acetyloctahydronaphthalenes / vanillin / carvone / limonene / citrus aurantium peel oil / linalool / diethylamino hydroxybenzoyl hexyl benzoate / citrus limon peel oil / pinene / acetyl cedrene / beta-caryophyllene / alpha-isomethyl ionone / citral / geranyl acetate / rose ketones / linalyl acetate / ci 14700 / red 4 / geraniol / terpineol / ci 60730 / ext. violet 2 / alpha-terpinene / ci 19140 / yellow 5"
   },
@@ -243,9 +254,20 @@
   },
   "LD342900": {
     "name": "Armani Code Parfum",
-    "top": [],
-    "heart": [],
-    "base": [],
+    "top": [
+      "Bergamot",
+      "Bergamot Leaf"
+    ],
+    "heart": [
+      "Iris",
+      "Aldehydes",
+      "Clary Sage",
+      "Orris"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Cedar"
+    ],
     "description": "Strong yet sensitive, Armani Code Parfum reinvents the olfactory signature of the original Armani Code fragrance. Retaining its woody aromatic, sensual identity, Armani Code Parfum captures the Armani Code quintessence. This is expressed in the fragrance's aromatic top notes and powerfully masculine base notes, with the heart now infused with an amplified sensitivity. Armani Code Parfum, the new powerful yet sensitive olfactory signature.",
     "ingredients": "alcohol, parfum / fragrance, aqua / water, limonene, coumarin, linalool, ethylhexyl salicylate, butyl methoxydibenzoylmethane, hydroxycitronellal, citronellol, alpha-isomethyl ionone, hexyl cinnamal, geraniol, citral, methyl anthranilate, tris(tetramethylhydroxypiperidinol) citrate, benzyl alcohol"
   },
@@ -266,13 +288,18 @@
   "LD801400": {
     "name": "Stronger With You Amber",
     "top": [
-      "Lavender"
+      "Lavender",
+      "Mandarin",
+      "Warm Spices"
     ],
     "heart": [
       "Amber",
-      "Vanilla"
+      "Warm Spices"
     ],
-    "base": [],
+    "base": [
+      "Bourbon Vanilla",
+      "Tonka Bean"
+    ],
     "description": "Discover Stronger With You eau de parfum amber, the radiant facet of the STRONGER WITH YOU collection. This fougère - ambery fragrance, whose captivating scent lingers on the skin, is inspired by the perpetual luminosity of the amber stone. To create the fragrance’s warm effect, STRONGER WITH YOU AMBER’s composition blends amber accord at the heart with top notes of fresh lavender and warm vanilla at the heart.The fragrance is adorned in a refined bottle, eternally luminous inspired by the radiance of the amber stone.",
     "ingredients": "alcohol, parfum / fragrance, aqua / water / eau, ethylhexyl salicylate, butyl methoxydibenzoylmethane, coumarin, citronellol, linalool, isoeugenol, limonene, benzyl benzoate, eugenol, geraniol, alpha-isomethyl ionone, benzyl cinnamate, cinnamal, benzyl alcohol, tris(tetramethylhydroxypiperidinol) citrate, citral"
   },
@@ -368,13 +395,18 @@
   "LG152100": {
     "name": "Stronger With You Amber",
     "top": [
-      "Lavender"
+      "Lavender",
+      "Mandarin",
+      "Warm Spices"
     ],
     "heart": [
       "Amber",
-      "Vanilla"
+      "Warm Spices"
     ],
-    "base": [],
+    "base": [
+      "Bourbon Vanilla",
+      "Tonka Bean"
+    ],
     "description": "Discover Stronger With You eau de parfum amber, the radiant facet of the STRONGER WITH YOU collection. This fougère - ambery fragrance, whose captivating scent lingers on the skin, is inspired by the perpetual luminosity of the amber stone. To create the fragrance’s warm effect, STRONGER WITH YOU AMBER’s composition blends amber accord at the heart with top notes of fresh lavender and warm vanilla at the heart.The fragrance is adorned in a refined bottle, eternally luminous inspired by the radiance of the amber stone.",
     "ingredients": "alcohol, parfum / fragrance, aqua / water / eau, ethylhexyl salicylate, butyl methoxydibenzoylmethane, coumarin, citronellol, linalool, isoeugenol, limonene, benzyl benzoate, eugenol, geraniol, alpha-isomethyl ionone, benzyl cinnamate, cinnamal, benzyl alcohol, tris(tetramethylhydroxypiperidinol) citrate, citral"
   },
