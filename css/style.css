@@ -883,3 +883,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 .perfume-ingr p{margin-top:8px;line-height:1.5;}
 #modalFabricRow[hidden]{display:none;}
 [dir="rtl"] .card-notes{font-style:normal;}
+
+/* number of pieces on a sub-category chip, e.g. "Shirts 35" */
+.grp-count{font-size:.78em;opacity:.55;margin-inline-start:2px;font-variant-numeric:tabular-nums;}
+.sub-btn.active .grp-count,.chip.active .grp-count{opacity:.75;}

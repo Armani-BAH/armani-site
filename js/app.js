@@ -190,6 +190,9 @@ async function loadProducts(){
     PRODUCTS = await r.json();
     const PERFUMES = rp && rp.ok ? await rp.json().catch(()=>({})) : {};   /* fragrance names + notes (data/perfume_notes.xlsx) */
     PRODUCTS.forEach(p=>{
+      if(p.category==="TEXTILE ACCESSORIES") p.category="SOFT ACCESSORIES";   /* shown together (ties, stoles…) */
+      const g=groupOf(p.category, displayGender(p.gender), p.sub, p.family);
+      p.grp=g.key; p.grpOrder=g.order; p.subOrder=g.subOrder;
       p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name;
       const f=PERFUMES[p.styleCode];
       if(f && f.name){ p.perfume=f; p.name=p.nameEn=f.name; }
@@ -403,16 +406,13 @@ function renderSubNav(cat){
     ? PRODUCTS.filter(p => displayGender(p.gender) === state.activeGender)
     : PRODUCTS;
 
-  const subs = [...new Set(
-    relevantProds
-      .filter(p => p.category === cat)
-      .map(p => p.sub)
-      .filter(Boolean)
-  )].sort();
+  const groups = groupsIn(relevantProds.filter(p => p.category === cat));
+  const subs = groups.length>1 ? groups : [];   /* one group only: no chips */
 
   subNav.innerHTML="";
 
-  subs.forEach(sub=>{
+  subs.forEach(g=>{
+    const sub=g.key;
 
     const btn=document.createElement("button");
 
@@ -421,15 +421,16 @@ function renderSubNav(cat){
       state.filters.sub.has(sub) ? " active" : ""
     );
 
-    btn.textContent=subLabel(sub);
+    chipText(btn,g);
 
     btn.addEventListener("click",()=>{
 
       state.filters.category.clear();
       state.filters.category.add(cat);
 
+      const wasOn=state.filters.sub.has(sub);
       state.filters.sub.clear();
-      state.filters.sub.add(sub);
+      if(!wasOn) state.filters.sub.add(sub);   /* tap again to show the whole category */
 
       state.activeCategory=cat;
       state.expandedCategory=cat;
@@ -526,14 +527,13 @@ const relevantCats = [...new Set(
 
     /* Sub-family dropdown — show when category is expanded */
     if(state.expandedCategory===cat){
-      const subs = [...new Set(
-        relevantProds.filter(p=>p.category===cat).map(p=>p.sub)
-      )].sort();
-      subs.forEach(sub=>{
+      const groups = groupsIn(relevantProds.filter(p=>p.category===cat));
+      (groups.length>1 ? groups : []).forEach(g=>{
+        const sub=g.key;
         const subBtn=document.createElement("button");
         subBtn.type="button";
         subBtn.className="cat-btn sub-btn"+(state.filters.sub.has(sub)?" active":"");
-        subBtn.textContent=subLabel(sub);
+        chipText(subBtn,g);
         subBtn.addEventListener("click",e=>{
           e.stopPropagation();
           if(state.filters.sub.has(sub)){
@@ -618,14 +618,15 @@ function renderFilterPanel(){
     catBox.appendChild(b);
   });
 
-  const relevantSubs=[...new Set(
-    PRODUCTS.filter(p=>state.filters.category.size===0||state.filters.category.has(p.category)).map(p=>p.sub)
-  )].sort();
+  const relevantSubs=groupsIn(PRODUCTS.filter(p=>
+    (state.filters.gender.size===0||state.filters.gender.has(p.gender)) &&
+    (state.filters.category.size===0||state.filters.category.has(p.category))));
   const subBox=$("#filterSub"); subBox.innerHTML="";
-  relevantSubs.forEach(sub=>{
+  relevantSubs.forEach(g=>{
+    const sub=g.key;
     const b=document.createElement("button");
     b.type="button"; b.className="chip"+(state.filters.sub.has(sub)?" active":"");
-    b.textContent=subLabel(sub);
+    chipText(b,g);
     b.addEventListener("click",()=>toggleFilter("sub",sub));
     subBox.appendChild(b);
   });
@@ -677,22 +678,24 @@ function getFilteredProducts(){
   let list=PRODUCTS.filter(p=>{
     if(state.filters.gender.size   && !state.filters.gender.has(p.gender))     return false;
     if(state.filters.category.size && !state.filters.category.has(p.category)) return false;
-    if(state.filters.sub.size      && !state.filters.sub.has(p.sub))           return false;
+    if(state.filters.sub.size      && !state.filters.sub.has(p.grp))           return false;
     if(state.selectedOnly && !state.selected.has(p.id))                         return false;
     if(state.shared && !state.shared.has(p.id))                                 return false;
     if(!p.images?.length && !showingNoPhoto())                                   { hiddenSet.add(gKey(p)); return false; }
     if(state.search){
       const q=state.search.toLowerCase();
-      const hay=[p.name,p.nameEn,...(p.perfume?[...p.perfume.top,...p.perfume.heart,...p.perfume.base].map(n=>n+" "+trNote(n)):[]),p.styleCode,p.fabricCode,p.colorCode,p.sub,p.category,genderLabel(p.gender)].join(" ").toLowerCase();
+      const hay=[p.name,p.nameEn,...(p.perfume?[...p.perfume.top,...p.perfume.heart,...p.perfume.base].map(n=>n+" "+trNote(n)):[]),p.styleCode,p.fabricCode,p.colorCode,p.sub,p.grp,grpLabel(p.grp),p.category,genderLabel(p.gender)].join(" ").toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
   });
   switch(state.sort){
     case "name":     list.sort((a,b)=>a.name.localeCompare(b.name)); break;
-    case "category": list.sort((a,b)=>a.category.localeCompare(b.category)||a.sub.localeCompare(b.sub)); break;
+    case "category": list.sort((a,b)=>a.category.localeCompare(b.category)||a.grpOrder-b.grpOrder||a.subOrder-b.subOrder); break;
     case "style":    list.sort((a,b)=>a.styleCode.localeCompare(b.styleCode)); break;
-    default:         list.sort((a,b)=>(b.isNew-a.isNew) || ((b.images?.length>0)-(a.images?.length>0)));
+    default:         list.sort((a,b)=>(b.isNew-a.isNew) || ((b.images?.length>0)-(a.images?.length>0))
+                       /* inside a group, keep the same type together (all blousons, then coats…) */
+                       || (state.filters.sub.size ? a.subOrder-b.subOrder : 0));
   }
   hiddenNoPhoto=[...hiddenSet].filter(k=>!list.some(p=>gKey(p)===k)).length;
   return list;
@@ -706,6 +709,24 @@ let currentGroups=[];               /* [[variant, variant…], …] in display o
 let groupByKey=new Map();           /* group key -> variants (filtered) */
 const pick=new Map();               /* group key -> id of the colour on show */
 const gKey = p => displayGender(p.gender)+"|"+p.styleCode;
+/* Sub-category groups present in a list of products, in the approved order,
+   with how many cards each would show. */
+function groupsIn(prods){
+  const m=new Map();
+  prods.forEach(p=>{
+    if(!p.grp) return;
+    if(!m.has(p.grp)) m.set(p.grp,{key:p.grp,order:p.grpOrder,cards:new Set()});
+    if(p.images?.length || showingNoPhoto()) m.get(p.grp).cards.add(gKey(p));
+  });
+  return [...m.values()].sort((a,b)=>a.order-b.order||a.key.localeCompare(b.key))
+    .map(g=>({key:g.key,count:g.cards.size}))
+    .filter(g=>g.count>0 || state.filters.sub.has(g.key));   /* no empty chips (pieces without photos are hidden) */
+}
+function chipText(el,g){
+  el.textContent=grpLabel(g.key)+" ";
+  const n=document.createElement("span"); n.className="grp-count"; n.textContent=g.count;
+  el.appendChild(n);
+}
 
 function groupList(list){
   const m=new Map();
@@ -1289,8 +1310,14 @@ function syncUrl(replace){
 }
 
 const findGender = s => GENDERS.find(g=>gSlug(g)===s);
-const findCat    = s => CATEGORIES.find(c=>slug(c)===s);
-const findSub    = s => { for(const p of PRODUCTS) if(slug(p.sub)===s) return p.sub; return null; };
+const findCat    = s => CATEGORIES.find(c=>slug(c)===(s==="textile-accessories" ? "soft-accessories" : s));
+const findSub    = (s, gs=[], cs=[]) => {
+  const fits = p => (!gs.length || gs.includes(displayGender(p.gender))) && (!cs.length || cs.includes(p.category));
+  for(const p of PRODUCTS) if(slug(p.grp)===s && fits(p)) return p.grp;
+  for(const p of PRODUCTS) if(slug(p.sub)===s && fits(p)) return p.grp;   /* old link to a stock sub-family */
+  for(const p of PRODUCTS) if(slug(p.grp)===s || slug(p.sub)===s) return p.grp;
+  return null;
+};
 const rawGenders = d => d==="MAN" ? [...MAN_GENDERS] : [d];
 
 /* Read the address bar and show that screen (page load, back/forward, pasted link) */
@@ -1328,7 +1355,7 @@ function route(){
     else if(parts.length>=1){
       const gs = parts[0]==="all" ? [] : parts[0].split(",").map(findGender).filter(Boolean);
       const cs = (!parts[1]||parts[1]==="all") ? [] : parts[1].split(",").map(findCat).filter(Boolean);
-      const ss = q.type ? q.type.split(",").map(findSub).filter(Boolean) : [];
+      const ss = q.type ? [...new Set(q.type.split(",").map(x=>findSub(x,gs,cs)).filter(Boolean))] : [];
       const target = catalogueHash(gs, cs, ss);
       const onCatalogue = !$("#catalogueWrap").hidden && !state.shared;
       if(!(onCatalogue && stateHash()===target)){
