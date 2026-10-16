@@ -179,6 +179,32 @@ const sized = (url, w) => String(url)
   .replace("q_auto:best", "q_auto");
 const IMG_CARD = 640, IMG_THUMB = 160, IMG_LANDING = 720, IMG_ZOOM = 2048;
 
+/* Our own copies of every photo (kept weekly by .github/workflows/photo-backup.yml).
+   If a photo link stops working (e.g. removed from Armani's site), the picture
+   is swapped for our saved copy automatically. Naming must match scripts/backup_photos.py. */
+const PHOTO_COPIES = "https://raw.githubusercontent.com/Armani-BAH/armani-site/photos/img/";
+function copyName(src){
+  try{
+    const u=new URL(src);
+    const inner=u.searchParams.get("url");          /* shop.com/_next/image?url=<real photo link> */
+    if(inner && /^https?:/.test(inner)) return copyName(inner);
+    const base=decodeURIComponent(u.pathname.split("/").pop()||"").replace(/\.[A-Za-z0-9]{2,5}$/,"");
+    const host=u.hostname.replace(/^www\./,"");
+    const prefix=(host==="armani.com"||host.endsWith(".armani.com")) ? "" : host+"__";
+    return (prefix+base).replace(/[^A-Za-z0-9._-]/g,"_")+".jpg";
+  }catch(e){ return null; }
+}
+document.addEventListener("error", e=>{
+  const img=e.target;
+  if(!(img instanceof HTMLImageElement) || img.dataset.copy) return;
+  const src=img.getAttribute("src")||"";
+  if(!/^https?:/.test(src) || src.startsWith(PHOTO_COPIES)) return;
+  const name=copyName(src); if(!name) return;
+  img.dataset.copy="1";
+  img.removeAttribute("srcset");
+  img.src=PHOTO_COPIES+encodeURIComponent(name);
+}, true);
+
 /* First image URL for a set of products */
 const firstImage = list => (list.find(p=>p.images?.length)?.images[0]) || null;
 

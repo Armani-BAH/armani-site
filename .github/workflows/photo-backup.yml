@@ -1,0 +1,66 @@
+# Weekly copy of every product photo into the "photos" branch of this repository,
+# so the website still has its pictures if a link on Armani's site stops working.
+# Runs every Friday morning (Bahrain time) and can be started by hand from the Actions tab.
+name: Photo backup
+
+on:
+  schedule:
+    - cron: "17 3 * * 5"     # Friday 06:17 Bahrain time
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: photo-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Get the website
+        uses: actions/checkout@v4
+        with:
+          path: site
+
+      - name: Get the saved photos
+        env:
+          REPO: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        run: |
+          if git ls-remote --exit-code --heads "$REPO" photos >/dev/null; then
+            git clone --depth 1 --single-branch --branch photos "$REPO" photos
+          else
+            mkdir photos && cd photos && git init -b photos && git remote add origin "$REPO"
+            printf '# Product photo copies\n\nBackup copies of the website photos, kept by the weekly "Photo backup" job.\nThe website uses them automatically when an original photo link stops working.\nSee REPORT.md for the latest report.\n' > README.md
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Save new photos and check links
+        run: |
+          pip install --quiet pillow
+          python site/scripts/backup_photos.py site/data/products.json photos
+
+      - name: Store the copies
+        working-directory: photos
+        run: |
+          git config user.name "photo-backup"
+          git config user.email "photo-backup@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
+          git commit -q -m "Photo backup $(TZ=Asia/Bahrain date +%Y-%m-%d)"
+          git push -q origin photos
+
+      - name: Post the weekly report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create photo-report --color BFD4F2 --description "Weekly photo backup report" --force >/dev/null
+          for n in $(gh issue list --label photo-report --state open --json number --jq '.[].number'); do gh issue close "$n" >/dev/null; done
+          gh issue create --label photo-report --title "Photo backup report — $(TZ=Asia/Bahrain date '+%d %b %Y')" --body-file photos/REPORT.md
