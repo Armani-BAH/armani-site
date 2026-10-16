@@ -179,10 +179,10 @@ const sized = (url, w) => String(url)
   .replace("q_auto:best", "q_auto");
 const IMG_CARD = 640, IMG_THUMB = 160, IMG_LANDING = 720, IMG_ZOOM = 2048;
 
-/* Our own copies of every photo (kept weekly by .github/workflows/photo-backup.yml).
+/* Our own copies of every photo (repository Armani-BAH/Armani-images, kept weekly by its "Photo backup" job).
    If a photo link stops working (e.g. removed from Armani's site), the picture
-   is swapped for our saved copy automatically. Naming must match scripts/backup_photos.py. */
-const PHOTO_COPIES = "https://raw.githubusercontent.com/Armani-BAH/armani-site/photos/img/";
+   is swapped for our saved copy automatically. Naming must match scripts/backup_photos.py in that repository. */
+const PHOTO_COPIES = "https://raw.githubusercontent.com/Armani-BAH/Armani-images/main/img/";
 function copyName(src){
   try{
     const u=new URL(src);

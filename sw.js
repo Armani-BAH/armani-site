@@ -1,6 +1,6 @@
 /* Emporio Armani Bahrain — offline support + "install as an app"
    Change VERSION whenever you want every phone to drop its old copy at once. */
-const VERSION = "ea-v19";
+const VERSION = "ea-v20";
 const SHELL = `${VERSION}-shell`, IMAGES = `${VERSION}-img`, MAX_IMAGES = 400;
 const CORE = [
   "./", "index.html", "css/style.css", "js/i18n.js", "js/groups.js", "js/app.js", "data/products.json", "data/perfumes.json",
@@ -28,7 +28,7 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
 
   /* product photos: from the phone first (fast), otherwise download and keep */
-  if (url.hostname === "assets-cf.armani.com" || (url.hostname === "raw.githubusercontent.com" && url.pathname.includes("/photos/img/"))) {
+  if (url.hostname === "assets-cf.armani.com" || (url.hostname === "raw.githubusercontent.com" && /^\/Armani-BAH\/Armani-images\/main\/img\//i.test(url.pathname))) {
     e.respondWith(caches.open(IMAGES).then(async c => {
       const hit = await c.match(req); if (hit) return hit;
       const res = await fetch(req);
