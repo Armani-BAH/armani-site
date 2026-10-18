@@ -116,7 +116,7 @@
       txt('dw="true" dh="true" em="true"', (tk.t || '') + '\n');
       txt('dw="false" dh="false" reverse="true" em="true"', ' READY BY ' + (tk.d || 'to be confirmed') + ' \n');
       x += '<text reverse="false" em="false"/><text align="left"/>';
-      txt('', '\nClient:   ' + (tk.c || '') + '\nPhone:    ' + (tk.p || '') + '\nAdvisor:  ' + (tk.a || '') + '\nReceived: ' + (tk.r || '') + '\n\n');
+      txt('', '\nClient name:    ' + (tk.c || '') + '\nClient number:  ' + (tk.p || '') + '\nClient advisor: ' + (tk.a || '') + '\nReceived:       ' + (tk.r || '') + '\n\n');
       txt('em="true"', 'ITEMS & WORK REQUIRED\n');
       x += '<text em="false"/>';
       var items = (tk.i || []).filter(function (it) { return it && (it.n || it.y || it.w); });
