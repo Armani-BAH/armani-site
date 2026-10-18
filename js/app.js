@@ -47,6 +47,19 @@ function track(name, params={}){
   if(ANALYTICS_ID) gtag("event", name, params);
   if(window.EA_DEBUG) console.log("[track]", name, params);
 }
+
+/* Printed QR codes open  /qr/  which forwards here with ?utm_medium=qr&utm_source=<where it was printed>.
+   "qr_scan"        = every scan
+   "qr_scan_unique" = first scan from that phone only (a second scan on the same phone isn't counted again) */
+(function countQrScan(){
+  const qs = new URLSearchParams(location.search);
+  if(qs.get("utm_medium")!=="qr") return;
+  const where = (qs.get("utm_source")||"qr").slice(0,40);
+  track("qr_scan", { qr_source: where });
+  let first = true;
+  try{ const k="ea_qr_"+where; first=!localStorage.getItem(k); if(first) localStorage.setItem(k, new Date().toISOString()); }catch(e){}
+  if(first) track("qr_scan_unique", { qr_source: where });
+})();
 /* what we record about a piece (always the English names, so reports read the same in both languages) */
 const itemInfo = p => ({
   item_id: `${p.styleCode}-${p.fabricCode}-${p.colorCode}`, item_name: p.nameEn || p.name,

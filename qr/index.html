@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Emporio Armani Marassi</title>
+<!-- The QR code at the cash counter opens this address. It forwards to the home page with a tag,
+     so Google Analytics can count scans (see "qr_scan" / "qr_scan_unique" in js/app.js).
+     For a QR printed somewhere else, use /qr/?at=<place>, e.g. /qr/?at=fitting_room -->
+<script>
+  var at = (new URLSearchParams(location.search).get("at") || "cash_counter").replace(/[^a-z0-9_-]/gi, "").slice(0, 40) || "cash_counter";
+  location.replace("/?utm_source=" + at + "&utm_medium=qr&utm_campaign=store_qr");
+</script>
+<meta http-equiv="refresh" content="0; url=/?utm_source=cash_counter&utm_medium=qr&utm_campaign=store_qr">
+</head>
+<body style="font-family:Arial,sans-serif;text-align:center;padding:40px">
+  <a href="/?utm_source=cash_counter&utm_medium=qr&utm_campaign=store_qr">Emporio Armani Marassi</a>
+</body>
+</html>
