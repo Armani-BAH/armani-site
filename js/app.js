@@ -290,6 +290,65 @@ function buildGenderLanding(){
 }
 
 /* ========================= CATEGORY LANDING ========================= */
+/* Cover photo for each category card.
+   To choose a cover yourself, add  "GENDER|CATEGORY": "STYLE CODE"  below
+   (gender as shown on the site: MAN, WOMAN, BOY, GIRL…; category as in the Excel), e.g.
+   "MAN|SHOES": "X4X635",
+   Otherwise the site picks a product automatically and skips white / very light ones. */
+const CATEGORY_COVERS = {
+};
+const coverCache = new Map();          /* "gender|category" -> image URL */
+
+/* How light the product itself is (0 = black, 255 = white): average of the middle of the photo,
+   where the item sits. Resolves null if the photo can't be measured. */
+function itemLightness(url){
+  return new Promise(resolve=>{
+    const im = new Image();
+    im.crossOrigin = "anonymous";
+    im.decoding = "async";
+    const done = v => { clearTimeout(timer); resolve(v); };
+    const timer = setTimeout(()=>done(null), 5000);
+    im.onload = ()=>{
+      try{
+        const W=40, H=50, c=document.createElement("canvas"); c.width=W; c.height=H;
+        const x=c.getContext("2d", {willReadFrequently:true}); x.drawImage(im,0,0,W,H);
+        const d=x.getImageData(W*.25|0, H*.2|0, W*.5|0, H*.6|0).data;
+        let sum=0,n=0;
+        for(let i=0;i<d.length;i+=4){ const l=.299*d[i]+.587*d[i+1]+.114*d[i+2]; if(l<246){ sum+=l; n++; } }
+        /* almost every pixel matches the white backdrop -> it's a white item */
+        done(n < d.length/4*.25 ? 255 : sum/n);
+      }catch(e){ done(null); }
+    };
+    /* Armani's server may refuse to let the page measure its photo -> measure our own copy instead */
+    const copy = copyName(url);
+    im.onerror = ()=>{ if(copy && !im.src.startsWith(PHOTO_COPIES)) im.src = PHOTO_COPIES+encodeURIComponent(copy); else done(null); };
+    im.src = sized(url, 96);           /* tiny version, only used for measuring */
+  });
+}
+
+async function pickCover(dGender, cat, prods){
+  const key = dGender+"|"+cat;
+  if(coverCache.has(key)) return coverCache.get(key);
+  const withImg = prods.filter(p=>p.images?.length);
+  const fixed = CATEGORY_COVERS[key] && withImg.find(p=>p.styleCode===CATEGORY_COVERS[key]);
+  let url = fixed ? fixed.images[0] : null;
+  if(!url && withImg.length){
+    /* look at up to 6 products spread across the category, keep the first that isn't white/light */
+    const step = Math.max(1, Math.floor(withImg.length/6));
+    const cands = withImg.filter((_,i)=>i%step===0).slice(0,6);
+    let best=null, bestL=256;
+    for(const p of cands){
+      const l = await itemLightness(p.images[0]);
+      if(l===null){ if(!best) best=p; break; }        /* can't measure -> use what we have */
+      if(l < 175){ best=p; break; }                   /* clearly not white: take it */
+      if(l < bestL){ best=p; bestL=l; }               /* otherwise remember the darkest so far */
+    }
+    url = (best||withImg[0]).images[0];
+  }
+  coverCache.set(key, url);
+  return url;
+}
+
 function showCategoryLanding(dGender){
   state.activeGender = dGender;
   document.getElementById("landingDeptLabel").textContent = GENDER_LABELS[dGender];
@@ -302,19 +361,25 @@ function showCategoryLanding(dGender){
   grid.innerHTML = "";
   cats.forEach(cat=>{
     const catProds = relevantProducts.filter(p=>p.category===cat);
-    const count    = catProds.length;
-    const imgUrl   = firstImage(catProds);
     const btn      = document.createElement("button");
     btn.type       = "button";
     btn.className  = "landing-card cat-card";
     btn.innerHTML  = `
-      ${imgUrl?`<img class="landing-card-img" src="${esc(sized(imgUrl,IMG_LANDING))}" alt="" loading="lazy" decoding="async">`:""}
-      <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
+      <span class="cat-card-media"></span>
       <span class="landing-card-body">
         <span class="landing-card-label">${esc(catLabel(cat))}</span>
+        <span class="landing-card-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg></span>
       </span>`;
     btn.addEventListener("click",()=>enterCatalogue(dGender,cat));
     grid.appendChild(btn);
+    pickCover(dGender, cat, catProds).then(url=>{
+      if(!url) return;
+      const img = document.createElement("img");
+      img.className = "landing-card-img"; img.alt = ""; img.decoding = "async";
+      img.addEventListener("load", ()=>img.classList.add("is-loaded"));
+      img.src = sized(url, IMG_LANDING);
+      btn.querySelector(".cat-card-media").appendChild(img);
+    });
   });
   showScreen("category");
 }
