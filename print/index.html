@@ -116,6 +116,7 @@
   }
 
   var STORE_PHONE = ''; // store number shown on the client copy, e.g. '+973 1700 0000'
+  var CONTACT_URL = 'https://www.eawishlist.com/contact/'; // page the client-copy QR code opens
 
   function buildXml(tk) {
     var line = '------------------------------------------\n';
@@ -161,7 +162,12 @@
       x += '<text align="center"/>';
       txt('', '\n' + line + 'Please bring this receipt\nwhen collecting your items.\n\n' +
         (STORE_PHONE ? 'WhatsApp / Tel: ' + STORE_PHONE + '\n' : '') +
-        'Sat-Wed 10:00-22:00\nThu-Fri 10:00-00:00\nwww.eawishlist.com\n');
+        'Sat-Wed 10:00-22:00\nThu-Fri 10:00-00:00\n');
+      if (STORE_PHONE) {
+        txt('', '\nScan to save our contact\nor chat with us on WhatsApp\n');
+        x += '<symbol type="qrcode_model_2" level="level_m" width="6">' + esc(CONTACT_URL) + '</symbol>';
+        txt('', '\n');
+      }
       x += '<feed line="3"/><cut type="feed"/>';
     }
     return '<?xml version="1.0" encoding="utf-8"?>' +
