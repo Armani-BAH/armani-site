@@ -297,6 +297,10 @@ function buildGenderLanding(){
    Otherwise the site picks a product automatically and skips white / very light ones. */
 const CATEGORY_COVERS = {
 };
+/* Which kind of product a category's cover should show first (checked in order, by Sub-Family). */
+const CATEGORY_COVER_PREFER = {
+  "READY TO WEAR": [/BLAZER/, /^(?!.*WAISTCOAT).*(JACKET|COAT)/],
+};
 const coverCache = new Map();          /* "gender|category" -> image URL */
 
 /* How light the product itself is (0 = black, 255 = white): average of the middle of the photo,
@@ -333,9 +337,13 @@ async function pickCover(dGender, cat, prods){
   const fixed = CATEGORY_COVERS[key] && withImg.find(p=>p.styleCode===CATEGORY_COVERS[key]);
   let url = fixed ? fixed.images[0] : null;
   if(!url && withImg.length){
-    /* look at up to 6 products spread across the category, keep the first that isn't white/light */
-    const step = Math.max(1, Math.floor(withImg.length/6));
-    const cands = withImg.filter((_,i)=>i%step===0).slice(0,6);
+    /* preferred kinds first (e.g. blazers, then jackets), then up to 6 others spread across the category;
+       keep the first that isn't white/light */
+    const tiers = (CATEGORY_COVER_PREFER[cat]||[]).map(re=>withImg.filter(p=>re.test(p.sub||"")));
+    const preferred = [...new Set(tiers.flat())];
+    const rest = withImg.filter(p=>!preferred.includes(p));
+    const step = Math.max(1, Math.floor(rest.length/6));
+    const cands = [...preferred.slice(0,8), ...rest.filter((_,i)=>i%step===0).slice(0,6)];
     let best=null, bestL=256;
     for(const p of cands){
       const l = await itemLightness(p.images[0]);
