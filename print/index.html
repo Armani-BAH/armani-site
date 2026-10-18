@@ -183,6 +183,10 @@
           if (ticket) {
             markDone();
             btn.textContent = 'Print again';
+            setStatus('Printed ✓  Going back to the app…', 'ok');
+            setTimeout(function () {
+              location.href = 'ms-apps:///providers/Microsoft.PowerApps/apps/a49cef16-25c3-4178-a823-2a1dbf175b9c?tenantId=f73b84d8-27ae-4c31-a606-000b08cc2fa4';
+            }, 1200);
           }
         }
         else setStatus('Printer answered but did not print' + (code ? ' (' + code + ')' : '') + '. Send a screenshot to Claude.', 'bad');
