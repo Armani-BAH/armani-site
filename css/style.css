@@ -113,36 +113,33 @@ h1,h2,h3{font-weight:400;}
 .gender-landing-grid .landing-card:nth-child(-n+2) .landing-card-label{font-size:1.8rem;}
 .landing-header{max-width:1120px;}
 
-/* Category cards — the whole product, sharp, on a soft greige panel; name underneath */
+/* Category cards — whole product, softened, with the category name large in the middle */
 #categoryCards{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
 .landing-card.cat-card{
-  height:auto;padding:0;background:var(--paper);
-  justify-content:flex-start;align-items:stretch;
+  height:auto;aspect-ratio:4/5;padding:0;background:var(--paper);
+  align-items:center;justify-content:center;
   border:1px solid var(--line);
   transition:border-color var(--dur) var(--ease);
 }
 .landing-card.cat-card::after{display:none;}
 .landing-card.cat-card:hover{border-color:var(--ink);}
-.cat-card-media{
-  position:relative;display:block;width:100%;
-  aspect-ratio:4/5;background:var(--paper);overflow:hidden;
-}
+.cat-card-media{position:absolute;inset:0;display:block;overflow:hidden;}
 .landing-card.cat-card .landing-card-img{
-  object-fit:contain;object-position:center;   /* photos are 4:5 like the panel: whole item, nothing cut */
+  object-fit:contain;object-position:center;   /* photos are 4:5 like the card: whole item, nothing cut */
   opacity:0;transition:opacity .4s var(--ease),transform .5s var(--ease);
 }
-.landing-card.cat-card .landing-card-img.is-loaded{opacity:1;}
-.landing-card.cat-card:hover .landing-card-img{transform:scale(1.04);}
+.landing-card.cat-card .landing-card-img.is-loaded{opacity:.45;}          /* soft, so the name reads first */
+.landing-card.cat-card:hover .landing-card-img.is-loaded{opacity:.7;transform:scale(1.04);}
 .landing-card.cat-card .landing-card-body{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  width:100%;padding:14px 16px;color:var(--ink);
+  position:relative;z-index:1;width:100%;padding:0 12px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  text-align:center;color:var(--ink);
 }
-.landing-card.cat-card .landing-card-label{font-size:1.05rem;font-weight:400;margin:0;}
-.landing-card.cat-card .landing-card-arrow{
-  position:static;flex:none;width:30px;height:30px;
-  border-color:var(--line);color:var(--ink);
+.landing-card.cat-card .landing-card-label{
+  font-size:1.9rem;font-weight:400;line-height:1.15;margin:0;
+  text-shadow:0 0 18px rgba(255,255,255,.9),0 0 4px rgba(255,255,255,.9);
 }
-.landing-card.cat-card:hover .landing-card-arrow{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+.landing-card.cat-card .landing-card-arrow{display:none;}   /* whole card is the link; keep the middle clean */
 
 .landing-skip{
   margin-top:32px;color:var(--stone);font-size:.9rem;
@@ -628,9 +625,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
   .landing-card{padding:16px 16px;}
   .landing-card-label{font-size:1.15rem;}
   .landing-card.cat-card{padding:0;}
-  .landing-card.cat-card .landing-card-body{padding:10px 12px;}
-  .landing-card.cat-card .landing-card-label{font-size:.95rem;}
-  .landing-card.cat-card .landing-card-arrow{width:26px;height:26px;}
+  .landing-card.cat-card .landing-card-body{gap:10px;padding:0 8px;}
+  .landing-card.cat-card .landing-card-label{font-size:1.3rem;}
   #categoryCards{grid-template-columns:1fr 1fr;}
   .landing-grid{grid-template-columns:1fr 1fr;gap:10px;}
   .landing-dept{font-size:1.2rem;margin-bottom:18px;}
