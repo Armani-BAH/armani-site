@@ -115,6 +115,8 @@
     } catch (e) {}
   }
 
+  var STORE_PHONE = ''; // store number shown on the client copy, e.g. '+973 1700 0000'
+
   function buildXml(tk) {
     var line = '------------------------------------------\n';
     var x = '';
@@ -142,6 +144,26 @@
       txt('', line + 'Keep this ticket attached to the item\n');
     }
     x += '<feed line="3"/><cut type="feed"/>';
+    if (tk) {
+      // Client copy: second slip the client takes home.
+      x += '<text align="center"/>';
+      txt('dw="true" dh="true" em="true"', 'EMPORIO ARMANI\n');
+      txt('dw="false" dh="false" em="false"', 'Marassi Mall\n' + line);
+      txt('em="true"', 'CLIENT COPY\n');
+      txt('dw="true" dh="true" em="true"', (tk.t || '') + '\n');
+      txt('dw="false" dh="false" reverse="true" em="true"', ' READY BY ' + (tk.d || 'to be confirmed') + ' \n');
+      x += '<text reverse="false" em="false"/><text align="left"/>';
+      txt('', '\nClient name: ' + (tk.c || '') + '\nReceived:    ' + (tk.r || '') + '\n\n');
+      var citems = (tk.i || []).filter(function (it) { return it && (it.n || it.y || it.w); });
+      citems.forEach(function (it, n) {
+        txt('', (n + 1) + '/' + citems.length + '  ' + (it.n || '') + (it.y ? ' - ' + it.y : '') + '\n');
+      });
+      x += '<text align="center"/>';
+      txt('', '\n' + line + 'Please bring this receipt\nwhen collecting your items.\n\n' +
+        (STORE_PHONE ? 'WhatsApp / Tel: ' + STORE_PHONE + '\n' : '') +
+        'Sat-Wed 10:00-22:00\nThu-Fri 10:00-00:00\nwww.eawishlist.com\n');
+      x += '<feed line="3"/><cut type="feed"/>';
+    }
     return '<?xml version="1.0" encoding="utf-8"?>' +
       '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>' +
       '<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">' + x + '</epos-print>' +
