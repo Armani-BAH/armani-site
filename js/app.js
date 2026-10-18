@@ -48,13 +48,17 @@ function track(name, params={}){
   if(window.EA_DEBUG) console.log("[track]", name, params);
 }
 
-/* Printed QR codes open  /qr/  which forwards here with ?utm_medium=qr&utm_source=<where it was printed>.
+/* Printed QR codes open  /qr/  which forwards here with ?utm_medium=qr&utm_source=<where it was printed>
+   (the first counter card links here directly with ?utm_source=qr&utm_medium=store — counted as cash_counter).
    "qr_scan"        = every scan
    "qr_scan_unique" = first scan from that phone only (a second scan on the same phone isn't counted again) */
 (function countQrScan(){
   const qs = new URLSearchParams(location.search);
-  if(qs.get("utm_medium")!=="qr") return;
-  const where = (qs.get("utm_source")||"qr").slice(0,40);
+  const medium = qs.get("utm_medium"), source = qs.get("utm_source");
+  let where;
+  if(medium==="qr") where = (source||"qr").slice(0,40);
+  else if(medium==="store" && source==="qr") where = "cash_counter";   /* first counter card (Oct 2026): ?utm_source=qr&utm_medium=store */
+  else return;
   track("qr_scan", { qr_source: where });
   let first = true;
   try{ const k="ea_qr_"+where; first=!localStorage.getItem(k); if(first) localStorage.setItem(k, new Date().toISOString()); }catch(e){}
