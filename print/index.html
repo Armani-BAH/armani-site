@@ -102,6 +102,19 @@
     btn.textContent = 'Print ' + (ticket.t || 'ticket');
   }
 
+  // Each print request from the app carries a unique stamp (z). Remember stamps already printed,
+  // so a reopened old tab never prints the same request twice.
+  var stamp = ticket ? (ticket.t || '') + '|' + (ticket.z || '') : '';
+  function seen() {
+    try { return (JSON.parse(localStorage.getItem('printedStamps') || '[]')).indexOf(stamp) !== -1; } catch (e) { return false; }
+  }
+  function markDone() {
+    try {
+      var a = JSON.parse(localStorage.getItem('printedStamps') || '[]');
+      a.push(stamp); localStorage.setItem('printedStamps', JSON.stringify(a.slice(-200)));
+    } catch (e) {}
+  }
+
   function buildXml(tk) {
     var line = '------------------------------------------\n';
     var x = '';
@@ -165,7 +178,13 @@
         log('HTTP ' + res.http + ': ' + res.text.slice(0, 300));
         var ok = /success="true"/.test(res.text);
         var code = (res.text.match(/code="([^"]*)"/) || [])[1];
-        if (ok) setStatus(ticket ? 'Printed ✓  You can go back to the app.' : 'Printed ✓', 'ok');
+        if (ok) {
+          setStatus(ticket ? 'Printed ✓  Tap "◀ Power Apps" at the top left to go back.' : 'Printed ✓', 'ok');
+          if (ticket) {
+            markDone();
+            btn.textContent = 'Print again';
+          }
+        }
         else setStatus('Printer answered but did not print' + (code ? ' (' + code + ')' : '') + '. Send a screenshot to Claude.', 'bad');
         btn.disabled = false;
       }).catch(function (e) {
@@ -178,6 +197,16 @@
   document.getElementById('certBtn').addEventListener('click', function () {
     window.location.href = 'https://' + ipEl.value.trim() + '/';
   });
+
+  // Opened from the app: print straight away, once.
+  if (ticket && ticket.z) {
+    if (seen()) {
+      setStatus('This ticket was already printed. Tap "Print again" only if you need another copy.');
+      btn.textContent = 'Print again';
+    } else {
+      btn.click();
+    }
+  }
 })();
 </script>
 </body>
