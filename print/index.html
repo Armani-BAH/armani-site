@@ -83,6 +83,10 @@
     var h = location.hash.replace(/^#/, '');
     if (!h) return null;
     try {
+      var plain = decodeURIComponent(h);
+      if (plain.charAt(0) === '{') return JSON.parse(plain);
+    } catch (e) {}
+    try {
       var b64 = h.replace(/-/g, '+').replace(/_/g, '/');
       var bin = atob(b64);
       var bytes = new Uint8Array(bin.length);
@@ -115,7 +119,7 @@
       txt('', '\nClient:   ' + (tk.c || '') + '\nPhone:    ' + (tk.p || '') + '\nAdvisor:  ' + (tk.a || '') + '\nReceived: ' + (tk.r || '') + '\n\n');
       txt('em="true"', 'ITEMS & WORK REQUIRED\n');
       x += '<text em="false"/>';
-      var items = tk.i || [];
+      var items = (tk.i || []).filter(function (it) { return it && (it.n || it.y || it.w); });
       items.forEach(function (it, n) {
         txt('', line + (n + 1) + '/' + items.length + '  ' + (it.n || '') + (it.s ? '  (' + it.s + ')' : '') + '\n' +
           (it.y ? '    ' + it.y + '\n' : '') + (it.w ? '    ' + it.w + '\n' : ''));
@@ -161,7 +165,7 @@
         log('HTTP ' + res.http + ': ' + res.text.slice(0, 300));
         var ok = /success="true"/.test(res.text);
         var code = (res.text.match(/code="([^"]*)"/) || [])[1];
-        if (ok) setStatus('Printed ✓', 'ok');
+        if (ok) setStatus(ticket ? 'Printed ✓  You can go back to the app.' : 'Printed ✓', 'ok');
         else setStatus('Printer answered but did not print' + (code ? ' (' + code + ')' : '') + '. Send a screenshot to Claude.', 'bad');
         btn.disabled = false;
       }).catch(function (e) {
