@@ -481,6 +481,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
   .send-choice-box{width:100%;padding:24px 20px calc(16px + env(safe-area-inset-bottom));}
   .chat-fab{right:14px;bottom:14px;width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;}
   .chat-fab span{display:none;}
+  .chat-fab svg{width:26px;height:26px;}
 }
 
 /* ====================== PRINT / PDF ====================== */
