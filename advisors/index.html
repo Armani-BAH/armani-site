@@ -111,8 +111,9 @@
 /* ---- Advisors: the shared list in js/advisors-data.js (name, Arabic name, WhatsApp, store management) ---- */
 var ADVISORS = window.EA_ADVISORS;
 var MESSAGE = {
-  en: "Hello, I'd like to chat with my client advisor at Emporio Armani Marassi.",
-  ar: "مرحباً، أودّ التواصل مع مستشار العملاء الخاص بي في Emporio Armani مراسي."
+  /* {name} = the advisor's first name (Arabic name in Arabic) */
+  en: "Hello {name}, I have a question about the Emporio Armani FW26 collection.",
+  ar: "مرحباً {name}، لدي استفسار عن مجموعة Emporio Armani لخريف وشتاء 2026."
 };
 var TEXT = {
   en: { role: "Client Advisor", chat: "Chat", management: "Store management" },
@@ -142,7 +143,7 @@ function render(){
     var role = ar ? (a.roleAr || TEXT[lang].role) : (a.role || TEXT[lang].role);
     var heading = (a.group && a.group !== lastGroup) ? '<li class="group-title">' + TEXT[lang][a.group] + '</li>' : "";
     lastGroup = a.group || "";
-    var href = "https://wa.me/" + a.whatsapp + "?text=" + encodeURIComponent(MESSAGE[lang]);
+    var href = "https://wa.me/" + a.whatsapp + "?text=" + encodeURIComponent(MESSAGE[lang].split("{name}").join(name.split(" ")[0]));
     return heading + '<li><a class="advisor" href="' + href + '" target="_blank" rel="noopener" data-advisor="' + esc(a.name) + '">' +
       '<span class="avatar" aria-hidden="true">' + esc(name.charAt(0)) + '</span>' +
       '<span class="who"><span class="name">' + esc(name) + '</span><span class="role">' + esc(role) + '</span></span>' +

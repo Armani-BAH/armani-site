@@ -122,8 +122,10 @@ const AR_UI = {
   "The catalogue could not be loaded. Please refresh.": "تعذّر تحميل المجموعة. يرجى تحديث الصفحة.",
 
   /* WhatsApp message & PDF */
-  "Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.": "مرحباً، أودّ الاستفسار عن هذه القطع من مجموعة Emporio Armani لخريف وشتاء 2026.",
+  "Hello, I'm interested in these pieces from the Emporio Armani FW26 collection.": "مرحباً، تهمّني هذه القطع من مجموعة Emporio Armani لخريف وشتاء 2026.",
   "Hello, I have a question about the Emporio Armani FW26 collection.": "مرحباً، لدي استفسار عن مجموعة Emporio Armani لخريف وشتاء 2026.",
+  "Hello {name}, I'm interested in these pieces from the Emporio Armani FW26 collection.": "مرحباً {name}، تهمّني هذه القطع من مجموعة Emporio Armani لخريف وشتاء 2026.",
+  "Hello {name}, I have a question about the Emporio Armani FW26 collection.": "مرحباً {name}، لدي استفسار عن مجموعة Emporio Armani لخريف وشتاء 2026.",
   "Name": "الاسم",
   "Mobile": "الهاتف",
   "Message": "الرسالة",

@@ -66,19 +66,23 @@
     var MAIN = STORE.whatsapp, TARGET = adv.whatsapp;
     STORE.whatsapp = TARGET;                                  /* "Send to ..." reads this when tapped */
 
+    var ar = document.documentElement.lang === "ar";
+    var first = ((ar && adv.nameAr) ? adv.nameAr : adv.name).split(" ")[0];   /* first name only */
+
     var fab = document.getElementById("chatFab");             /* floating "Chat with us": href was built at start-up */
     if (fab && fab.getAttribute("href")) {
-      fab.setAttribute("href", fab.getAttribute("href").split("wa.me/" + MAIN).join("wa.me/" + TARGET));
+      /* new number AND a greeting with the advisor's first name: "Hello Mohammed, I have a question about …" */
+      var hello = typeof t === "function" ? t("Hello {name}, I have a question about the Emporio Armani FW26 collection.", { name: first }) : "";
+      fab.setAttribute("href", hello ? "https://wa.me/" + TARGET + "?text=" + encodeURIComponent(hello)
+                                     : fab.getAttribute("href").split("wa.me/" + MAIN).join("wa.me/" + TARGET));
     }
 
     var nm = document.getElementById("sendStoreName");        /* "Send to <name>" in the pop-up */
-    var ar = document.documentElement.lang === "ar";
     if (nm) nm.textContent = (ar && adv.nameAr) ? adv.nameAr : adv.name;
 
     /* drawer button: "Send to your Client Advisor" -> "Send to Mohammed" (one tap, see prepareAdvisorLink in app.js) */
     var sb = document.getElementById("shareBtn");
     if (sb) {
-      var first = ((ar && adv.nameAr) ? adv.nameAr : adv.name).split(" ")[0];
       var label = typeof t === "function" ? t("Send to {name}", { name: first }) : "Send to " + first;
       for (var n = sb.firstChild; n; n = n.nextSibling) if (n.nodeType === 3 && n.nodeValue.trim()) { n.nodeValue = " " + label + " "; break; }
     }
