@@ -1,9 +1,9 @@
 /* Emporio Armani Bahrain — offline support + "install as an app"
    Change VERSION whenever you want every phone to drop its old copy at once. */
-const VERSION = "ea-v23";
+const VERSION = "ea-v24";
 const SHELL = `${VERSION}-shell`, IMAGES = `${VERSION}-img`, MAX_IMAGES = 400;
 const CORE = [
-  "./", "index.html", "css/style.css", "js/i18n.js", "js/groups.js", "js/app.js", "data/products.json", "data/perfumes.json",
+  "./", "index.html", "css/style.css", "js/i18n.js", "js/groups.js", "js/app.js", "js/advisors-data.js", "js/advisor.js", "data/products.json", "data/perfumes.json",
   "assets/logo/emporio-armani-logo.png", "assets/icons/favicon-32.png", "assets/icons/icon-192.png",
   "assets/fonts/jost-latin-300-normal.woff2", "assets/fonts/jost-latin-400-normal.woff2", "assets/fonts/jost-latin-500-normal.woff2"
 ];

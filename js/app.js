@@ -44,6 +44,7 @@ if(ANALYTICS_ID){
 /* one place for every measured action */
 function track(name, params={}){
   params.site_language = LANG;
+  if(window.EA_ADVISOR) params.advisor = window.EA_ADVISOR.id;     /* personal advisor link (js/advisor.js) */
   if(ANALYTICS_ID) gtag("event", name, params);
   if(window.EA_DEBUG) console.log("[track]", name, params);
 }
@@ -184,7 +185,8 @@ function sid(p){
 /* accepts the new short code or the older long STYLE-FABRIC-COLOUR form (links already sent keep working) */
 const findByToken = tok => { if(!tok) return null; let t=tok; try{ t=decodeURIComponent(tok); }catch(e){} return REF_INDEX.get(t) || KEY_INDEX.get(t) || SID_INDEX.get(t) || null; };
 let ID_INDEX  = new Map();   /* id   -> product */
-const SITE_URL = () => location.origin + location.pathname;
+/* shared links keep the client's advisor (?a=<id>, set by js/advisor.js) so a friend who opens one reaches the same advisor */
+const SITE_URL = () => location.origin + location.pathname + (window.EA_ADVISOR ? "?a=" + window.EA_ADVISOR.id : "");
 
 /* Map a raw gender to its display key (UNISEX → MAN) */
 const displayGender = g => MAN_GENDERS.has(g) ? "MAN" : g;

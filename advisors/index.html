@@ -106,17 +106,10 @@
   <div data-en="Sat to Wed 10:00 to 22:00 · Thu and Fri 10:00 to 00:00" data-ar="السبت إلى الأربعاء 10 ص - 10 م · الخميس والجمعة 10 ص - 12 منتصف الليل">Sat to Wed 10:00 to 22:00 · Thu and Fri 10:00 to 00:00</div>
 </footer>
 
+<script src="../js/advisors-data.js"></script>
 <script>
-/* ---- Advisors: name + WhatsApp number (country code + number, digits only) ---- */
-var ADVISORS = [
-  { name: "Mohammed Ghuloom", nameAr: "محمد غلوم",  whatsapp: "97333161154" },
-  { name: "Layla Alqaidoom",  nameAr: "ليلى القيدوم",  whatsapp: "97333161142" },
-  { name: "Mayssa Aloui",     nameAr: "ميساء علوي", whatsapp: "97333161076" },
-  { name: "Alaa Faisal",      nameAr: "آلاء فيصل",  whatsapp: "97333161159" },
-  /* store management — shown under their own small heading */
-  { name: "Jasim Almudaweb", nameAr: "جاسم المدوب", whatsapp: "97335581881", role: "Store Manager", roleAr: "مدير المتجر", group: "management" },
-  { name: "Ahmed Kuwaitan",  nameAr: "أحمد كويتان", whatsapp: "97333480808", role: "Assistant Store Manager", roleAr: "مساعد مدير المتجر", group: "management" }
-];
+/* ---- Advisors: the shared list in js/advisors-data.js (name, Arabic name, WhatsApp, store management) ---- */
+var ADVISORS = window.EA_ADVISORS;
 var MESSAGE = {
   en: "Hello, I'd like to chat with my client advisor at Emporio Armani Marassi.",
   ar: "مرحباً، أودّ التواصل مع مستشار العملاء الخاص بي في Emporio Armani مراسي."

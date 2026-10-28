@@ -28,6 +28,8 @@ armani-site/
 ├── css/style.css               All styling
 ├── js/i18n.js                  English / Arabic text (edit translations here)
 ├── js/app.js                   All logic; boutique details (STORE) at the top
+├── js/advisors-data.js         The ONE list of Client Advisors (catalogue personal links + /advisors/ page) — see §7e
+├── js/advisor.js               Personal advisor links (?a=<id>): WhatsApp goes to that advisor — see §7e
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
 │   └── products.json           Generated catalogue used by the site (1,276 items)
@@ -35,7 +37,8 @@ armani-site/
     ├── build_products.py       Excel -> products.json (+ image lookup on Armani CDN)
     ├── check_missing.py        Lists products with no image
     ├── export_missing.py       Writes products with no image to data/missing_images.xlsx (git-ignored)
-    └── test_images.py          Tests image URL patterns for one style
+    ├── test_images.py          Tests image URL patterns for one style
+    └── make_advisor_links.py   Personal links: <id>/index.html forwarding pages + 404.html (committed) and QR codes -> advisor-qr/ (git-ignored)
 ```
 
 ## 2. How it works
@@ -90,7 +93,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
    - ✅ Arabic: all text in `js/i18n.js` (English on the left, Arabic on the right — edit there; missing entries stay English). Language button in the header + landing; first visit follows the phone language; choice saved (`ea_lang`). Right-to-left layout via `[dir="rtl"]` rules at the end of `style.css`; Arabic font IBM Plex Sans Arabic (Google Fonts, only loads for Arabic text). Search works with Arabic and English words. Links stay English (`#/men/shoes`) so they work in both languages.
    - ✅ Install as an app: `manifest.webmanifest` + `sw.js` (offline: newest version when online, saved copy offline; product photos cached on the phone, max 400). "Install the app" button appears in the footer on Android/Chrome; iPhone = Share → Add to Home Screen. Bump `VERSION` in `sw.js` to force every phone to drop old copies.
 
-7. Visitor statistics (Google Analytics 4) — code ready, ON — `ANALYTICS_ID = "G-1098C6F5SS"` at the top of `js/app.js`. Events: page_view, view_item, select_colour, add_to_wishlist / remove_from_selection, send_selection (whatsapp_boutique / whatsapp_other), save_pdf, share (copy_link / share_piece), search, contact (whatsapp_chat / call / directions), open_shared_selection, add_all_shared, language_change, install_app. Product info is always sent in English (item_id = style-fabric-colour). Debug: `window.EA_DEBUG=true` in the browser console prints every event.
+7. Visitor statistics (Google Analytics 4) — code ready, ON — `ANALYTICS_ID = "G-1098C6F5SS"` at the top of `js/app.js`. Events: page_view, view_item, select_colour, add_to_wishlist / remove_from_selection, send_selection (whatsapp_boutique / whatsapp_other), save_pdf, share (copy_link / share_piece), search, contact (whatsapp_chat / call / directions), open_shared_selection, add_all_shared, language_change, install_app, advisor_link_open (see §7e). Product info is always sent in English (item_id = style-fabric-colour). Debug: `window.EA_DEBUG=true` in the browser console prints every event.
 
 Open: 269 products without photos; CDN hot-linking permission; custom domain.
 
@@ -111,6 +114,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-13 | Claude now pushes directly to `main` (Jasim approved); Jasim should Pull in VS Code before editing locally. |
 | 2026-10-13 | Phase 3: grouping key = display department + style code (fabric can differ inside a group — 72 styles come in two fabrics). Selection stays per colour. |
 | 2026-10-13 | Phase 2: hash-based links (works on GitHub Pages without server setup). Product links use STYLE-FABRIC-COLOUR, not the row-based `id`, so they survive Excel updates. |
+| 2026-10-28 | Personal advisor links (§7e): `?a=<id>`, saved 30 days, replaced by another advisor's link, cleared by the shop QR; shared links keep the advisor; one shared advisors list for the catalogue and `/advisors/`; campaign name `personal-link`; clean client link `eawishlist.com/<id>` (forwarding page per advisor + `404.html` for capital letters); QR images go to `advisor-qr/` (not committed). |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)
@@ -148,8 +152,27 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 
 ## 7d. Client Advisors page — www.eawishlist.com/advisors (2026-10-14)
 
-- `advisors/index.html` (self-contained). Advisors list (name, Arabic name, WhatsApp) in `ADVISORS` at the bottom of the file; opening message in `MESSAGE` (EN/AR).
+- `advisors/index.html` (self-contained). Advisors list (name, Arabic name, WhatsApp, store management) is the shared `js/advisors-data.js` (`var ADVISORS = window.EA_ADVISORS`) — edit the list THERE (§7e); opening message in `MESSAGE` (EN/AR).
+- Its `contact` / `whatsapp_advisor` event sends `advisor` = the advisor's full name, while personal links send `advisor` = the id (e.g. `mohammed`). Filter on the event name when reporting.
 - Same look, logo, fonts and language setting (`ea_lang`) as the catalogue; Google Analytics event `contact` / `whatsapp_advisor` with the advisor's name.
+
+## 7e. Personal advisor links (2026-10-28)
+
+Each Client Advisor has a personal link + QR code. A client who opens it sends their selection / chat to **that advisor's** WhatsApp instead of the boutique number. Everyone else (Google, shop QR) still gets the boutique number — no change for them.
+
+**What the client gets — a clean link:** `https://www.eawishlist.com/mohammed` (also on the advisor's QR code). `/mohammed/index.html` is a tiny forwarding page (same idea as `/qr/`) that sends the visitor to the tracked link (query string BEFORE the `#`, otherwise the hash routes break):
+`https://www.eawishlist.com/?a=mohammed&utm_source=advisor&utm_medium=whatsapp&utm_campaign=personal-link&utm_content=mohammed#/`
+The forwarding pages carry the site's WhatsApp preview tags (picture + title). `404.html` forwards `/Mohammed`, `/MOHAMMED` (GitHub Pages is case-sensitive) and shows "Page not found" for any other unknown address. The pages are generated — never edit by hand; an advisor id must be lowercase letters/numbers and must not clash with a site folder (`advisors`, `qr`, `contact`, `print`, `assets`, `css`, `data`, `js`, …; the script refuses).
+
+- **List:** `js/advisors-data.js` → `window.EA_ADVISORS` (`id`, `name`, `nameAr`, `whatsapp`; managers also `role`, `roleAr`, `group`). Every key in quotes, no trailing comma (the Python script reads it). To add/remove an advisor: edit this file, bump `?v=` of `advisors-data.js` in `index.html`, run `scripts/make_advisor_links.py`.
+- **Security:** an advisor is accepted only if the id exists in the list; a phone number is never read from the URL; unknown `?a=` values are ignored (boutique number). Advisor numbers are public in the site code — each advisor agreed.
+- **How it works** (`js/advisor.js`, loaded after `app.js`): sets `STORE.whatsapp` to the advisor's number (the "Send to …" button reads it when tapped), rewrites the `#chatFab` link, shows the advisor's name (Arabic name in Arabic) in the pop-up, refreshes the footer WhatsApp link, sets `window.EA_ADVISOR`.
+- **Memory:** `localStorage` key `ea_advisor` = `{id, t}`, kept **30 days** on that phone. Opening another advisor's link replaces it. A printed shop QR code (`utm_medium=qr`, or the first counter card `utm_source=qr&utm_medium=store`) **clears** it, so a client who scans the shop QR gets the boutique number. No reprint needed.
+- **Shared links:** `SITE_URL()` in `app.js` adds `?a=<id>` to "Copy link", product links and the link in the WhatsApp message / PDF, so a friend who opens a shared link reaches the same advisor.
+- **Analytics:** `track()` in `app.js` adds `advisor=<id>` to every event once an advisor is active; `advisor_link_open` is sent once per link open per browser tab-session (reloads / language switch are not counted again). GA4 setup (done by the owner): Admin → Data display → Custom definitions → Create custom dimension → name `Advisor`, scope `Event`, event parameter `advisor`; mark `send_selection` as a key event. Report in Explore: dimension `Advisor`, metric `Event count`, filter event name = `send_selection`. Normally even the first `page_view` carries `advisor`, but on a slow connection it can be sent before `advisor.js` has run; it then has no `advisor` parameter (its `page_location` still contains `?a=` and the UTM tags). For per-advisor numbers use `advisor_link_open` and `send_selection`.
+- **Staff page:** `/advisors/links.html` (not linked anywhere, `noindex`) — each advisor taps "Copy link" and gets their clean link.
+- **Generate (links, QR codes, forwarding pages):** `pip install "qrcode[pil]"` then `python scripts/make_advisor_links.py` → `advisor-qr/<id>.png` + `advisor-qr/links.csv` (git-ignored; `/qr/` is the shop QR page, so a different folder) AND the forwarding pages `<id>/index.html` + `404.html` (**commit and push these** — they are what makes the clean link work). The QR code holds the clean link. After adding/removing an advisor, run it again. Change `CAMPAIGN` in the script if the campaign name changes (the script rewrites the pages).
+- **Footer / home-page "WhatsApp" link** also goes to the advisor while one is active ("Call" stays the boutique).
 
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 
