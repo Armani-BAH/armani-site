@@ -6,7 +6,9 @@ Run from the repo root:
 
 What the client sees:   https://www.eawishlist.com/mohammed
 It forwards to:         https://www.eawishlist.com/?a=mohammed&utm_source=advisor&utm_medium=whatsapp
-                        &utm_campaign=personal-link&utm_content=mohammed#/      (the tags feed Google Analytics)
+                        &utm_campaign=personal-link&utm_content=mohammed#/      (the tags feed Google Analytics;
+                        js/advisor.js then shows just www.eawishlist.com/#/ in the address bar)
+A #/… part is kept: eawishlist.com/mohammed#/selection/1042 (shared links) opens that selection.
 
 Output
   <id>/index.html    one small forwarding page per advisor  (COMMIT these - they are published)
@@ -59,7 +61,7 @@ HEAD = """<!doctype html>
 <meta name="twitter:card" content="summary_large_image">
 """
 
-PAGE = HEAD + """<script>location.replace(%(js)s);</script>
+PAGE = HEAD + """<script>location.replace(%(js)s + (location.hash.length > 1 ? location.hash : "#/"));</script>
 <meta http-equiv="refresh" content="0; url=%(target)s">
 </head>
 <body style="font-family:Arial,sans-serif;text-align:center;padding:40px">
@@ -76,7 +78,7 @@ NOT_FOUND = HEAD + """<script src="/js/advisors-data.js"></script>
   var list = window.EA_ADVISORS || [];
   for (var i = 0; i < list.length; i++) {
     if (list[i].id === seg) {
-      location.replace("/?a=" + seg + "&utm_source=advisor&utm_medium=whatsapp&utm_campaign=%(campaign)s&utm_content=" + seg + "#/");
+      location.replace("/?a=" + seg + "&utm_source=advisor&utm_medium=whatsapp&utm_campaign=%(campaign)s&utm_content=" + seg + (location.hash.length > 1 ? location.hash : "#/"));
       return;
     }
   }
@@ -99,7 +101,7 @@ for a in advisors:
     folder = root / a["id"]
     folder.mkdir(exist_ok=True)
     (folder / "index.html").write_text(
-        PAGE % {"url": clean, "js": json.dumps(target(a)), "target": target(a).replace("&", "&amp;")}, encoding="utf-8")
+        PAGE % {"url": clean, "js": json.dumps(target(a)[:-2]), "target": target(a).replace("&", "&amp;")}, encoding="utf-8")
 
     qr = qrcode.QRCode(error_correction=ERROR_CORRECT_M, box_size=12, border=4)
     qr.add_data(clean)

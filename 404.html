@@ -22,7 +22,7 @@
   var list = window.EA_ADVISORS || [];
   for (var i = 0; i < list.length; i++) {
     if (list[i].id === seg) {
-      location.replace("/?a=" + seg + "&utm_source=advisor&utm_medium=whatsapp&utm_campaign=personal-link&utm_content=" + seg + "#/");
+      location.replace("/?a=" + seg + "&utm_source=advisor&utm_medium=whatsapp&utm_campaign=personal-link&utm_content=" + seg + (location.hash.length > 1 ? location.hash : "#/"));
       return;
     }
   }

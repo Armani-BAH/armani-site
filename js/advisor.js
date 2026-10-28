@@ -10,7 +10,9 @@
       (app.js reads STORE.whatsapp when the button is tapped, so changing it here is enough.)
    4. Analytics: window.EA_ADVISOR is read by track() in app.js, so every event carries advisor=<id>;
       one "advisor_link_open" event is sent when the link is opened.
-   5. Shared links keep ?a=<id> (SITE_URL() in app.js reads window.EA_ADVISOR).
+   5. Shared links keep the advisor: eawishlist.com/<id>#/… (SITE_URL() in app.js reads window.EA_ADVISOR).
+   6. The address bar is cleaned to www.eawishlist.com/#/ (the tags still reach Google Analytics, see EA_LANDING).
+   7. The drawer button reads "Send to <first name>" and sends in one tap (app.js).
 
    Visitors without an advisor: this file does nothing and the boutique number is used. */
 (function () {
@@ -52,6 +54,13 @@
   /* app.js (shared links, analytics) reads this */
   window.EA_ADVISOR = adv;
 
+  /* Clean address bar: www.eawishlist.com/#/ instead of the long ?a=…&utm_… link (so a copied address stays short).
+     Google Analytics still gets the campaign tags: app.js sends them with the first page_view (window.EA_LANDING). */
+  if (fromLink) {
+    window.EA_LANDING = location.href;
+    try { history.replaceState(history.state, "", location.pathname + location.hash); } catch (e) {}
+  }
+
   /* 3. Point the WhatsApp buttons at the advisor. */
   if (typeof STORE !== "undefined" && STORE && STORE.whatsapp) {
     var MAIN = STORE.whatsapp, TARGET = adv.whatsapp;
@@ -63,7 +72,16 @@
     }
 
     var nm = document.getElementById("sendStoreName");        /* "Send to <name>" in the pop-up */
-    if (nm) nm.textContent = (document.documentElement.lang === "ar" && adv.nameAr) ? adv.nameAr : adv.name;
+    var ar = document.documentElement.lang === "ar";
+    if (nm) nm.textContent = (ar && adv.nameAr) ? adv.nameAr : adv.name;
+
+    /* drawer button: "Send to your Client Advisor" -> "Send to Mohammed" (one tap, see prepareAdvisorLink in app.js) */
+    var sb = document.getElementById("shareBtn");
+    if (sb) {
+      var first = ((ar && adv.nameAr) ? adv.nameAr : adv.name).split(" ")[0];
+      var label = typeof t === "function" ? t("Send to {name}", { name: first }) : "Send to " + first;
+      for (var n = sb.firstChild; n; n = n.nextSibling) if (n.nodeType === 3 && n.nodeValue.trim()) { n.nodeValue = " " + label + " "; break; }
+    }
 
     if (typeof renderStoreInfo === "function") renderStoreInfo();   /* footer + home-page WhatsApp link */
   }
@@ -75,6 +93,6 @@
       seen = sessionStorage.getItem("ea_adv_open") === adv.id;
       sessionStorage.setItem("ea_adv_open", adv.id);
     } catch (e) {}
-    if (!seen) track("advisor_link_open", {});
+    if (!seen) track("advisor_link_open", { page_location: window.EA_LANDING || location.href });
   }
 })();

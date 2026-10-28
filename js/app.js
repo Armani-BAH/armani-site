@@ -74,7 +74,8 @@ let lastTrackedPage="";
 function trackPage(){
   const where = location.pathname + location.hash;
   if(where===lastTrackedPage) return; lastTrackedPage=where;
-  track("page_view", { page_location: location.href, page_path: where, page_title: document.getElementById("pageTitle")?.textContent || document.title });
+  const landing=window.EA_LANDING; window.EA_LANDING=null;      /* advisor link: the tags advisor.js removed from the address bar */
+  track("page_view", { page_location: landing || location.href, page_path: where, page_title: document.getElementById("pageTitle")?.textContent || document.title });
 }
 
 const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -185,8 +186,9 @@ function sid(p){
 /* accepts the new short code or the older long STYLE-FABRIC-COLOUR form (links already sent keep working) */
 const findByToken = tok => { if(!tok) return null; let t=tok; try{ t=decodeURIComponent(tok); }catch(e){} return REF_INDEX.get(t) || KEY_INDEX.get(t) || SID_INDEX.get(t) || null; };
 let ID_INDEX  = new Map();   /* id   -> product */
-/* shared links keep the client's advisor (?a=<id>, set by js/advisor.js) so a friend who opens one reaches the same advisor */
-const SITE_URL = () => location.origin + location.pathname + (window.EA_ADVISOR ? "?a=" + window.EA_ADVISOR.id : "");
+/* shared links keep the client's advisor (set by js/advisor.js): eawishlist.com/mohammed#/selection/1042 — the
+   /mohammed page forwards with the #/... part, so a friend who opens it reaches the same advisor */
+const SITE_URL = () => location.origin + (window.EA_ADVISOR ? "/" + window.EA_ADVISOR.id : location.pathname);
 
 /* Map a raw gender to its display key (UNISEX → MAN) */
 const displayGender = g => MAN_GENDERS.has(g) ? "MAN" : g;
@@ -988,7 +990,7 @@ function paintSelection(id){
 function toggleSelect(id){
   const was=state.selected.has(id); was?state.selected.delete(id):state.selected.add(id);
   { const pp=ID_INDEX.get(id); if(pp) track(was?"remove_from_selection":"add_to_wishlist", { items:[itemInfo(pp)], selection_size: state.selected.size }); }
-  persist(); updateSelectionBadge(); renderDrawer();
+  persist(); updateSelectionBadge(); renderDrawer(); prepareAdvisorLink();
   if(state.selectedOnly) render(); else paintSelection(id);
   if(state.modalIndex!==null){ syncModalSelectButton(); paintModalColours(); }
   const p=PRODUCTS.find(x=>x.id===id);
@@ -1198,7 +1200,7 @@ document.addEventListener("keydown",e=>{
 });
 
 /* ========================= DRAWER ========================= */
-function openDrawer(){ $("#drawer").classList.add("open"); $("#drawerOverlay").classList.add("open"); document.body.style.overflow="hidden"; }
+function openDrawer(){ $("#drawer").classList.add("open"); $("#drawerOverlay").classList.add("open"); document.body.style.overflow="hidden"; prepareAdvisorLink(); }
 function closeDrawer(){ $("#drawer").classList.remove("open"); $("#drawerOverlay").classList.remove("open"); document.body.style.overflow=""; }
 $("#openDrawerBtn").addEventListener("click",openDrawer);
 $("#drawerCloseBtn").addEventListener("click",closeDrawer);
@@ -1257,10 +1259,11 @@ $("#buyerToggleBtn").addEventListener("click",()=>{
   });
 });
 
-$("#shareBtn").addEventListener("click",()=>{
-  if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
+/* the WhatsApp message; url/number = the link to the selection */
+function selectionText({url, number}){
   const list=PRODUCTS.filter(p=>state.selected.has(p.id));
   let text=t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n";
+  if(number) text+=`${t("My selection No. {n}",{n:number})}\n`;
   if(state.buyer.name)  text+=`\n${t("Name")}: ${state.buyer.name}`;
   if(state.buyer.phone) text+=`\n${t("Mobile")}: ${state.buyer.phone}`;
   if(state.buyer.notes) text+=`\n${t("Message")}: ${state.buyer.notes}`;
@@ -1270,29 +1273,74 @@ $("#shareBtn").addEventListener("click",()=>{
     text+=`\n${i+1}. ${p.name} (${genderLabel(p.gender)}${c}${catLabel(p.category)})\n   ${t("Style")} ${p.styleCode}${c}${t("Fabric")} ${p.fabricCode}${c}${t("Colour")} ${p.colorCode}`;
     if(state.notes[p.id]) text+=`\n   ${t("Note")}: ${state.notes[p.id]}`;
   });
+  return text + `\n\n${t("View with photos:")}\n${url}`;
+}
+
+/* Client from an advisor's personal link: "Send to Mohammed" goes straight to that advisor in ONE tap.
+   WhatsApp must open in the same tap (phones block it otherwise), so the selection link is prepared
+   while the drawer is open. If it isn't ready yet, the usual pop-up waits for it.                    */
+let PREPARED=null;
+function prepareAdvisorLink(){
+  if(!window.EA_ADVISOR || !state.selected.size || !$("#drawer").classList.contains("open")) return;
+  const key=selectionRefs().join(",");
+  if(PREPARED && PREPARED.key===key) return;
+  const job={key}; PREPARED=job;
+  shareableSelection().then(r=>Object.assign(job, r, {ready:true}));
+}
+
+$("#shareBtn").addEventListener("click",()=>{
+  if(!state.selected.size){ toast(t("Select at least one piece first")); return; }
+  if(window.EA_ADVISOR && PREPARED && PREPARED.ready && PREPARED.key===selectionRefs().join(",")){
+    sendWhatsApp(STORE.whatsapp, selectionText(PREPARED)); return;
+  }
   pendingShareText=null;
   if(STORE.whatsapp) openSendChoice(true);                     /* buttons wait for the link */
-  shareableSelection().then(({url, number})=>{
-    const head = number ? `${t("My selection No. {n}",{n:number})}\n` : "";
-    pendingShareText = text.replace(t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n",
-                         t("Hello, I'd like to talk about these pieces from the Emporio Armani FW26 collection.")+"\n"+head)
-                       + `\n\n${t("View with photos:")}\n${url}`;
+  shareableSelection().then(r=>{
+    pendingShareText=selectionText(r);
     if(STORE.whatsapp) setSendReady(true); else sendWhatsApp("");
   });
 });
 
-/* ---- WhatsApp: to the boutique, or to anyone the client chooses ---- */
+/* ---- WhatsApp: to the client's advisor / an advisor they choose / the boutique, or to anyone ---- */
 let pendingShareText="";
-function sendWhatsApp(number, text=pendingShareText){
-  track("send_selection", { method: number ? "whatsapp_boutique" : "whatsapp_other", pieces: state.selected.size,
-    notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length });
-  /* the message goes TO the advisor, so its "View with photos" link doesn't need ?a=<id> (kept for "Share with someone else") */
-  if(number && window.EA_ADVISOR) text = text.split("?a="+window.EA_ADVISOR.id+"#/").join("#/");
+function sendWhatsApp(number, text=pendingShareText, chosen=null){
+  const params={ method: chosen ? "whatsapp_advisor" : number ? "whatsapp_boutique" : "whatsapp_other", pieces: state.selected.size,
+    notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length };
+  if(chosen) params.advisor=chosen.id;
+  track("send_selection", params);
+  /* the message goes TO the advisor, so its "View with photos" link doesn't need the advisor in it (kept for "Share with someone else") */
+  if(number && window.EA_ADVISOR) text = text.split(SITE_URL()+"#/").join(location.origin+"/#/");
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
-function openSendChoice(waiting){ $("#sendChoice").hidden=false; setSendReady(!waiting); $("#sendToStoreBtn").focus(); }
+
+/* Visitors WITHOUT an advisor link (Google, shop QR...) choose their Client Advisor in the pop-up.
+   The list is js/advisors-data.js (loaded after this file, so it is read when the pop-up opens). */
+function renderAdvisorChoice(){
+  const list=window.EA_ADVISORS||[];
+  const choose=!window.EA_ADVISOR && list.length>0;
+  $("#sendAdvisors").hidden=!choose; $("#sendToBoutiqueBtn").hidden=!choose; $("#sendToStoreBtn").hidden=choose;
+  $("#sendChoiceTitle").textContent = choose ? t("Choose your Client Advisor") : t("Send your selection");
+  if(!choose || $("#sendAdvisors").childElementCount) return;
+  const icon=$("#sendToStoreBtn svg").outerHTML; let last="";
+  $("#sendAdvisors").innerHTML=list.map((a,i)=>{
+    const head=(a.group && a.group!==last) ? `<div class="send-group">${t("Store management")}</div>` : "";
+    last=a.group||"";
+    const name=IS_AR&&a.nameAr ? a.nameAr : a.name, role=a.role ? (IS_AR&&a.roleAr ? a.roleAr : a.role) : "";
+    return head+`<button type="button" class="btn-secondary send-opt send-adv" data-adv="${i}">${icon}<span>${esc(name)}${role?`<small>${esc(role)}</small>`:""}</span></button>`;
+  }).join("");
+}
+$("#sendAdvisors").addEventListener("click",e=>{
+  const b=e.target.closest("[data-adv]"); if(!b||b.disabled) return;
+  const a=(window.EA_ADVISORS||[])[+b.dataset.adv]; if(!a) return;
+  closeSendChoice(); sendWhatsApp(a.whatsapp, pendingShareText, a);
+});
+$("#sendToBoutiqueBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(STORE.whatsapp); });
+function openSendChoice(waiting){
+  renderAdvisorChoice(); $("#sendChoice").hidden=false; setSendReady(!waiting);
+  ($$("#sendChoice .send-opt").find(b=>!b.hidden && b.offsetParent) || $("#sendChoiceCancel")).focus();
+}
 function setSendReady(ok){
-  ["#sendToStoreBtn","#sendToAnyoneBtn"].forEach(s=>$(s).disabled=!ok);
+  $$("#sendChoice .send-opt, #sendToBoutiqueBtn").forEach(b=>b.disabled=!ok);
   $("#sendPreparing").hidden=ok;
 }
 function closeSendChoice(){ $("#sendChoice").hidden=true; }

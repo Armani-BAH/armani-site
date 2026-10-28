@@ -893,6 +893,17 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 /* numbered selections */
 .send-opt:disabled{opacity:.45;cursor:wait;}
 .send-preparing{text-align:center;font-size:.85rem;color:var(--stone);}
+/* choose your Client Advisor (visitors without an advisor link) */
+.send-advisors{display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 250px);overflow-y:auto;margin:0 -2px;padding:0 2px;}
+.send-advisors[hidden]{display:none;}
+.send-adv{justify-content:flex-start;text-align:start;min-height:46px;flex:none;}
+.send-adv span{display:flex;flex-direction:column;line-height:1.25;}
+.send-adv small{font-size:.75rem;color:var(--stone);font-weight:400;}
+.send-adv:hover small{color:inherit;}
+.send-group{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);padding:8px 2px 0;}
+[dir="rtl"] .send-group{letter-spacing:0;font-size:.82rem;}
+.send-boutique{align-self:center;font-size:.9rem;}
+@media(max-width:600px){ .send-advisors{gap:6px;} .send-adv{height:44px;} .send-group{padding-top:4px;} }
 
 /* ====================== PERFUME NOTES ====================== */
 .card-notes{margin-top:4px;font-size:.8rem;color:var(--stone);font-style:italic;line-height:1.35;}
