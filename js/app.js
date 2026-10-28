@@ -1286,6 +1286,8 @@ let pendingShareText="";
 function sendWhatsApp(number, text=pendingShareText){
   track("send_selection", { method: number ? "whatsapp_boutique" : "whatsapp_other", pieces: state.selected.size,
     notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length });
+  /* the message goes TO the advisor, so its "View with photos" link doesn't need ?a=<id> (kept for "Share with someone else") */
+  if(number && window.EA_ADVISOR) text = text.split("?a="+window.EA_ADVISOR.id+"#/").join("#/");
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
 function openSendChoice(waiting){ $("#sendChoice").hidden=false; setSendReady(!waiting); $("#sendToStoreBtn").focus(); }
