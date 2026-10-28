@@ -1345,7 +1345,6 @@ function setSendReady(ok){
 }
 function closeSendChoice(){ $("#sendChoice").hidden=true; }
 $("#sendToStoreBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(STORE.whatsapp); });
-$("#sendToAnyoneBtn").addEventListener("click",()=>{ closeSendChoice(); sendWhatsApp(""); });
 $("#sendChoiceCancel").addEventListener("click",closeSendChoice);
 $("#sendChoice").addEventListener("click",e=>{ if(e.target.id==="sendChoice") closeSendChoice(); });
 $("#sendStoreName").textContent=t(STORE.name);

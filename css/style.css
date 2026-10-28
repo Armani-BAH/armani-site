@@ -902,7 +902,6 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 .send-adv:hover small{color:inherit;}
 .send-group{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);padding:8px 2px 0;}
 [dir="rtl"] .send-group{letter-spacing:0;font-size:.82rem;}
-.send-boutique{align-self:center;font-size:.9rem;}
 @media(max-width:600px){ .send-advisors{gap:6px;} .send-adv{height:44px;} .send-group{padding-top:4px;} }
 
 /* ====================== PERFUME NOTES ====================== */
