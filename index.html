@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap">
-<link rel="stylesheet" href="css/style.css?v=25">
+<link rel="stylesheet" href="css/style.css?v=26">
 <!-- set the reading direction before the page is drawn (no flicker) -->
 <script>try{var l=localStorage.getItem("ea_lang")||((navigator.language||"").toLowerCase().indexOf("ar")===0?"ar":"en");document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";}catch(e){}</script>
 </head>
@@ -53,6 +53,7 @@
     <small>Marassi Mall, Bahrain · FW26 selection</small>
     <button class="lang-btn landing-lang" type="button"></button>
   </div>
+  <div class="story-strip" id="storyStrip" hidden aria-label="Selected pieces"></div>
   <div class="landing-grid gender-landing-grid" id="genderCards"></div>
   <button class="landing-skip" id="skipToAll" type="button">Browse all departments →</button>
   <div class="landing-store" id="landingStore"></div>
@@ -342,5 +343,6 @@
 <script src="js/app.js?v=28"></script>
 <script src="js/advisors-data.js?v=1"></script>
 <script src="js/advisor.js?v=3"></script>
+<script src="js/stories.js?v=1"></script>
 </body>
 </html>

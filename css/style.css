@@ -923,3 +923,55 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 /* number of pieces on a sub-category chip, e.g. "Shirts 35" */
 .grp-count{font-size:.78em;opacity:.55;margin-inline-start:2px;font-variant-numeric:tabular-nums;}
 .sub-btn.active .grp-count,.chip.active .grp-count{opacity:.75;}
+
+/* ================= Stories (home page) ================= */
+.story-strip{display:flex;gap:12px;width:100%;max-width:960px;margin:-10px 0 26px;padding:4px 2px 8px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;}
+.story-strip::-webkit-scrollbar{display:none;}
+.story-ring{flex:0 0 auto;width:70px;display:flex;flex-direction:column;align-items:center;gap:8px;scroll-snap-align:start;}
+.story-ring-pic{width:66px;height:66px;border-radius:50%;padding:3px;border:1.5px solid var(--ink);background:var(--paper);display:block;transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease);}
+.story-ring-pic img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 20%;background:var(--greige);display:block;}
+.story-ring.seen .story-ring-pic{border-color:var(--line);}
+.story-ring:hover .story-ring-pic{transform:scale(1.04);}
+.story-ring-label{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);text-align:center;line-height:1.25;max-width:70px;}
+[dir="rtl"] .story-ring-label{letter-spacing:0;text-transform:none;font-size:.8rem;}
+
+.story{position:fixed;inset:0;z-index:58;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;}
+.story-stage{position:relative;width:min(440px,100vw);height:min(860px,100dvh);background:var(--paper);display:flex;flex-direction:column;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;}
+.story-bars{display:flex;gap:4px;padding:12px 12px 0;}
+.story-bars i{flex:1;height:2px;background:var(--line);display:block;overflow:hidden;}
+.story-bars u{display:block;height:100%;width:0;background:var(--ink);text-decoration:none;}
+.story-head{display:flex;align-items:center;gap:10px;padding:12px 12px 6px;position:relative;z-index:3;}
+.story-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--greige);flex:0 0 auto;}
+.story-avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;}
+.story-title{display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1;}
+.story-title b{font-weight:500;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;}
+.story-title small{font-size:.75rem;color:var(--stone);}
+[dir="rtl"] .story-title b{letter-spacing:0;text-transform:none;}
+.story-x{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.story-x svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;}
+.story-media{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#fafafa;}
+.story-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .25s var(--ease);}
+.story-media img.show{opacity:1;}
+.story-zone{position:absolute;top:96px;bottom:150px;z-index:2;width:50%;}
+.story-zone.prev{left:0;width:32%;}
+.story-zone.next{right:0;width:68%;}
+.story-foot{padding:14px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;position:relative;z-index:3;background:var(--paper);}
+.story-info{display:flex;flex-direction:column;line-height:1.3;}
+.story-info b{font-weight:400;font-size:1.05rem;}
+.story-info small{font-size:.8rem;color:var(--stone);}
+.story-actions{display:flex;gap:10px;}
+.story-add,.story-view{height:46px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:.9rem;letter-spacing:.04em;}
+.story-add{flex:1;background:var(--ink);color:var(--paper);}
+.story-add svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;}
+.story-add.on{background:var(--paper);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);}
+.story-add.on svg{fill:currentColor;}
+.story-view{padding:0 18px;box-shadow:inset 0 0 0 1px var(--ink);}
+.story-sel{align-self:center;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);text-decoration:underline;text-underline-offset:3px;}
+[dir="rtl"] .story-sel{letter-spacing:0;text-transform:none;}
+@media (max-width:520px){
+  .story-strip{margin:-18px 0 18px;}
+  .story-stage{width:100vw;height:100dvh;}
+}
+/* the "Added …" message sits at the top while a story is open, so it does not cover the buttons */
+body.story-open .toast{bottom:auto;top:86px;transform:translate(-50%,-12px);}
+body.story-open .toast.show{transform:translate(-50%,0);}

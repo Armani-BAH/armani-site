@@ -27,6 +27,15 @@ const AR_UI = {
   "Search": "بحث",
   "Search style, fabric or colour code": "ابحث برمز الموديل أو القماش أو اللون",
   "My selection": "اختياراتي",
+
+  /* stories on the home page */
+  "{name}'s picks": "اختيارات {name}",
+  "Our picks": "اختياراتنا",
+  "Add to my selection": "أضف إلى اختياراتي",
+  "In your selection": "ضمن اختياراتك",
+  "View piece": "عرض القطعة",
+  "Previous": "السابق",
+  "Next": "التالي",
   "Department": "القسم",
   "Category": "الفئة",
   "Type": "النوع",
