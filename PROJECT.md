@@ -120,6 +120,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-28 | Removed "Share with someone else" (pop-up now: advisor list + "No preference — send to the boutique"); personal title/description + extra image tags on the forwarding pages (no meta refresh). |
 | 2026-10-28 | Advisor clients send in one tap ("Send to Mohammed"); other visitors choose their Client Advisor in the pop-up (+ "No preference — boutique"); address bar cleaned after an advisor link; shared links `eawishlist.com/<id>#/…`. |
 | 2026-10-28 | Personal advisor links (§7e): `?a=<id>`, saved 30 days, replaced by another advisor's link, cleared by the shop QR; shared links keep the advisor; one shared advisors list for the catalogue and `/advisors/`; campaign name `personal-link`; clean client link `eawishlist.com/<id>` (forwarding page per advisor + `404.html` for capital letters); QR images go to `advisor-qr/` (not committed). |
+| 2026-10-31 | Advisors edit their own story on /story-editor/ (Firebase login per advisor, saved in Firebase) — no need to send picks to Claude (§7f). |
 | 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Each Client Advisor can have their own story; without one the boutique's default story is shown. Placed on the home page only, so the catalogue stays straight to the products. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
@@ -192,6 +193,12 @@ A row of round "sections" (Women, Men, Bags & leather, …) sits above the depar
 - **Code:** `js/stories.js` (waits for `app.js` to load the catalogue, then fills `#storyStrip` in `index.html`), styles at the end of `css/style.css`, Arabic texts in `js/i18n.js`. Photos use the same fallback copies as the rest of the site.
 - **Analytics:** `story_open` (`story_section`, `story_owner`), `story_add`, `story_view_piece`; plus the usual `add_to_wishlist`. All carry `advisor=<id>` when a personal link is active.
 - After editing `data/stories.json` nothing else is needed (the site always asks for the newest copy). After changing `js/stories.js` / CSS bump the `?v=` numbers in `index.html` and `VERSION` in `sw.js`.
+
+**Advisors edit their own story (2026-10-31):** page `www.eawishlist.com/story-editor/` (not linked from the catalogue; linked from `/advisors/links.html`, `noindex`). The advisor picks their name, types their password, then adds/renames/reorders sections and taps pieces in the catalogue (search + department/category filters, up to 8 sections × 12 pieces) and presses **Publish**. Saved in Firebase (`stories/<advisor id>`, one text field `data` = JSON of the sections + `updated`); the home page reads it first, then `data/stories.json`, then the boutique story (`stories/default`, then the file). "Remove my story" deletes it (clients see the boutique story again). Store management (`jasim`, `ahmed`) can also edit the boutique story and any advisor's story.
+- **Logins:** Firebase Authentication, Email/Password. One user per person: email `<advisor id>@stories.eawishlist.com` (not a real mailbox — just a name), password chosen by Jasim; the advisor can change it on the page ("Change password"). Passwords live only in Firebase, never in the code.
+- **Rules:** `firebase/firestore.rules` (`stories/{id}`): anyone can read; only that advisor (or jasim / ahmed) can write or delete; the document may only contain `data` + `updated`, max 20,000 characters. Paste the whole file into Firestore → Rules → Publish (needed once after this change).
+- **New advisor:** add to `js/advisors-data.js` (§7e) and create their Firebase user. **Removed advisor:** delete their Firebase user.
+- Code: `story-editor/index.html` (self-contained). Reading side: `remote()` in `js/stories.js`.
 
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 

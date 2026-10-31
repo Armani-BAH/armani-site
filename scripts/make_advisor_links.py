@@ -25,7 +25,7 @@ from qrcode.constants import ERROR_CORRECT_M
 
 BASE = "https://www.eawishlist.com/"
 CAMPAIGN = "personal-link"  # utm_campaign: shows in Google Analytics (also set in advisors/links.html)
-RESERVED = {"advisors", "advisor-qr", "assets", "contact", "css", "data", "firebase", "js", "print", "qr", "scripts", "index", "404"}
+RESERVED = {"advisors", "advisor-qr", "assets", "contact", "css", "data", "firebase", "js", "print", "qr", "scripts", "story-editor", "index", "404"}
 
 root = pathlib.Path(__file__).resolve().parent.parent
 src = (root / "js" / "advisors-data.js").read_text(encoding="utf-8")

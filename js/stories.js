@@ -27,12 +27,27 @@
     if (++tries < 150) setTimeout(wait, 100);
   })();
 
+  /* A story saved by an advisor on the editor page (stories/<id> in Firebase). Nothing found / offline = null. */
+  function remote(id) {
+    if (typeof SAVED_ON !== "function" || !SAVED_ON()) return Promise.resolve(null);
+    var ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var to = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
+    return fetch(FS() + "/stories/" + id + "?key=" + FIREBASE.apiKey, { cache: "no-store", signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { clearTimeout(to); try { return JSON.parse(d.fields.data.stringValue).sections || null; } catch (e) { return null; } })
+      .catch(function () { clearTimeout(to); return null; });
+  }
+
   function start() {
-    fetch("data/stories.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
-      if (!data) return;
-      var adv = window.EA_ADVISOR || null;
-      var own = adv && data.advisors && data.advisors[adv.id] && data.advisors[adv.id].sections;
-      var raw = own || (data.default && data.default.sections) || [];
+    var adv = window.EA_ADVISOR || null;
+    Promise.all([
+      fetch("data/stories.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+      adv ? remote(adv.id) : null,
+      remote("default")
+    ]).then(function (res) {
+      var data = res[0] || {};
+      var own = (adv && (res[1] || (data.advisors && data.advisors[adv.id] && data.advisors[adv.id].sections))) || null;
+      var raw = own || res[2] || (data.default && data.default.sections) || [];
       var sections = [];
       raw.forEach(function (s, i) {
         var items = [], used = {};
