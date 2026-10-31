@@ -26,20 +26,5 @@ service cloud.firestore {
                     && getAfter(/databases/$(database)/documents/counters/selections).data.next == int(num) + 1;
       allow update, delete: if false;
     }
-
-    // Home-page stories: anyone can read. A Client Advisor can save/delete only their OWN story (document name = advisor id,
-    // login = <id>@stories.eawishlist.com). Store management (jasim, ahmed) can also edit the boutique story ("default").
-    match /stories/{id} {
-      allow read: if true;
-      allow create, update: if request.auth != null
-                            && (request.auth.token.email == id + '@stories.eawishlist.com'
-                                || request.auth.token.email in ['jasim@stories.eawishlist.com', 'ahmed@stories.eawishlist.com'])
-                            && request.resource.data.keys().hasOnly(['data', 'updated'])
-                            && request.resource.data.data is string
-                            && request.resource.data.data.size() < 20000;
-      allow delete: if request.auth != null
-                    && (request.auth.token.email == id + '@stories.eawishlist.com'
-                        || request.auth.token.email in ['jasim@stories.eawishlist.com', 'ahmed@stories.eawishlist.com']);
-    }
   }
 }

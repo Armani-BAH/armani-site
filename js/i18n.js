@@ -29,8 +29,7 @@ const AR_UI = {
   "My selection": "اختياراتي",
 
   /* stories on the home page */
-  "{name}'s picks": "اختيارات {name}",
-  "Our picks": "اختياراتنا",
+  "New this season": "جديد هذا الموسم",
   "Add to my selection": "أضف إلى اختياراتي",
   "In your selection": "ضمن اختياراتك",
   "View piece": "عرض القطعة",

@@ -34,7 +34,6 @@ armani-site/
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
 │   ├── products.json           Generated catalogue used by the site (1,276 items)
-│   └── stories.json            Pieces shown in the home-page stories (default + one optional story per advisor) — see §7f
 └── scripts/
     ├── build_products.py       Excel -> products.json (+ image lookup on Armani CDN)
     ├── check_missing.py        Lists products with no image
@@ -120,8 +119,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-28 | Removed "Share with someone else" (pop-up now: advisor list + "No preference — send to the boutique"); personal title/description + extra image tags on the forwarding pages (no meta refresh). |
 | 2026-10-28 | Advisor clients send in one tap ("Send to Mohammed"); other visitors choose their Client Advisor in the pop-up (+ "No preference — boutique"); address bar cleaned after an advisor link; shared links `eawishlist.com/<id>#/…`. |
 | 2026-10-28 | Personal advisor links (§7e): `?a=<id>`, saved 30 days, replaced by another advisor's link, cleared by the shop QR; shared links keep the advisor; one shared advisors list for the catalogue and `/advisors/`; campaign name `personal-link`; clean client link `eawishlist.com/<id>` (forwarding page per advisor + `404.html` for capital letters); QR images go to `advisor-qr/` (not committed). |
-| 2026-10-31 | Advisors edit their own story on /story-editor/ (Firebase login per advisor, saved in Firebase) — no need to send picks to Claude (§7f). |
-| 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Each Client Advisor can have their own story; without one the boutique's default story is shown. Placed on the home page only, so the catalogue stays straight to the products. |
+| 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Pieces are chosen automatically and rotate weekly. Placed on the home page only, so the catalogue stays straight to the products. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)
@@ -185,20 +183,14 @@ The forwarding pages carry the WhatsApp/social preview tags: the site picture (`
 - **Generate (links, QR codes, forwarding pages):** `pip install "qrcode[pil]"` then `python scripts/make_advisor_links.py` → `advisor-qr/<id>.png` + `advisor-qr/links.csv` (git-ignored; `/qr/` is the shop QR page, so a different folder) AND the forwarding pages `<id>/index.html` + `404.html` (**commit and push these** — they are what makes the clean link work). The QR code holds the clean link. After adding/removing an advisor, run it again. Change `CAMPAIGN` in the script if the campaign name changes (the script rewrites the pages).
 - **Footer / home-page "WhatsApp" link** also goes to the advisor while one is active ("Call" stays the boutique).
 
-## 7f. Stories on the home page (2026-10-31)
+## 7f. Stories on the home page (2026-10-31) — fully automatic
 
-A row of round "sections" (Women, Men, Bags & leather, …) sits above the department cards on the home page. Tapping one opens full-screen pieces, Instagram-style: tap the right side = next piece, left side = previous, hold = pause, swipe sideways = next/previous section, swipe down or ✕ = close. Each piece has **Add to my selection** (heart) and **View piece** (opens the normal product window); "My selection · n" opens the selection panel. Rings turn grey once a section was opened on that phone (`ea_story_seen`; a changed section shows as new again). Works in Arabic (right-to-left) and on computer (arrow keys, Esc).
+A row of round "sections" (Women, Men, Bags & leather, Shoes, Kids, Accessories) sits above the department cards on the home page. Tapping one opens full-screen pieces, Instagram-style: tap the right side = next, left = previous, hold = pause, swipe sideways = next/previous section, swipe down or ✕ = close. Each piece has **Add to my selection** and **View piece**; "My selection · n" opens the selection panel. Rings turn grey once opened on that phone (`ea_story_seen`; new pieces make a ring dark again). Works in Arabic (right-to-left) and on computer (arrow keys, Esc).
 
-- **Pieces:** `data/stories.json`. `default` = what everyone sees (starter picks of FW26 pieces, chosen automatically on 2026-10-31 — replace with real picks). `advisors.<id>` = that Client Advisor's own story (same id as in `js/advisors-data.js`); a visitor who came through the advisor's personal link sees it, labelled "<First name>'s picks". Advisors without an entry show the default, labelled "Our picks". Items are style codes (`EB001440`, first colour with a photo), `STYLE-COLOUR` or `STYLE-FABRIC-COLOUR`. Each section needs a `title` and `titleAr`. About 6–10 pieces per section; pieces without a photo are skipped.
-- **Code:** `js/stories.js` (waits for `app.js` to load the catalogue, then fills `#storyStrip` in `index.html`), styles at the end of `css/style.css`, Arabic texts in `js/i18n.js`. Photos use the same fallback copies as the rest of the site.
-- **Analytics:** `story_open` (`story_section`, `story_owner`), `story_add`, `story_view_piece`; plus the usual `add_to_wishlist`. All carry `advisor=<id>` when a personal link is active.
-- After editing `data/stories.json` nothing else is needed (the site always asks for the newest copy). After changing `js/stories.js` / CSS bump the `?v=` numbers in `index.html` and `VERSION` in `sw.js`.
-
-**Advisors edit their own story (2026-10-31):** page `www.eawishlist.com/story-editor/` (not linked from the catalogue; linked from `/advisors/links.html`, `noindex`). The advisor picks their name, types their password, then adds/renames/reorders sections and taps pieces in the catalogue (search + department/category filters, up to 8 sections × 12 pieces) and presses **Publish**. Saved in Firebase (`stories/<advisor id>`, one text field `data` = JSON of the sections + `updated`); the home page reads it first, then `data/stories.json`, then the boutique story (`stories/default`, then the file). "Remove my story" deletes it (clients see the boutique story again). Store management (`jasim`, `ahmed`) can also edit the boutique story and any advisor's story.
-- **Logins:** Firebase Authentication, Email/Password. One user per person: email `<advisor id>@stories.eawishlist.com` (not a real mailbox — just a name), password chosen by Jasim; the advisor can change it on the page ("Change password"). Passwords live only in Firebase, never in the code.
-- **Rules:** `firebase/firestore.rules` (`stories/{id}`): anyone can read; only that advisor (or jasim / ahmed) can write or delete; the document may only contain `data` + `updated`, max 20,000 characters. Paste the whole file into Firestore → Rules → Publish (needed once after this change).
-- **New advisor:** add to `js/advisors-data.js` (§7e) and create their Firebase user. **Removed advisor:** delete their Firebase user.
-- Code: `story-editor/index.html` (self-contained). Reading side: `remote()` in `js/stories.js`.
+- **Nothing to maintain:** `js/stories.js` chooses the pieces itself — FW26 ("new season") pieces with a photo, one per style, mixed across types, and the mix changes every week (Bahrain time). Same story for every visitor (advisor links included). Sections and how many pieces each takes: `SECTIONS` at the top of `js/stories.js`.
+- **Code:** `js/stories.js`, styles at the end of `css/style.css`, `<div id="storyStrip">` in `index.html`, Arabic texts in `js/i18n.js`. After changing them bump the `?v=` numbers in `index.html` and `VERSION` in `sw.js`.
+- **Analytics:** `story_open` (`story_section`), `story_add`, `story_view_piece`; plus the usual `add_to_wishlist`; all carry `advisor=<id>` when a personal link is active.
+- **Decision:** hand-picked stories per advisor (sign-in editor page + Firebase logins) were built and then removed the same day — too much set-up and upkeep. Can be added back later if wanted.
 
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 

@@ -1,10 +1,7 @@
-/* Stories on the home page — a row of round "sections"; tap one to flip through selected pieces.
+/* Stories on the home page — a row of round "sections"; tap one to flip through new pieces (chosen automatically).
    Load AFTER js/app.js and js/advisor.js (see index.html).
 
-   Where the pieces come from: data/stories.json
-     "default"              = the story every visitor sees
-     "advisors": { "layla": { "sections": [...] } }  = a Client Advisor's own story
-   An advisor without an entry shows the default story. Open the file for the full explanation ("_help").
+   Where the pieces come from: chosen by the site itself from the FW26 pieces (SECTIONS below); the mix changes weekly.
 
    Uses from app.js: PRODUCTS, ID_INDEX, findByToken, state, toggleSelect, openDrawer, sized, esc, t, IS_AR,
    genderLabel, catLabel, displayGender, gSlug, slug, ref, track. */
@@ -27,61 +24,50 @@
     if (++tries < 150) setTimeout(wait, 100);
   })();
 
-  /* A story saved by an advisor on the editor page (stories/<id> in Firebase). Nothing found / offline = null. */
-  function remote(id) {
-    if (typeof SAVED_ON !== "function" || !SAVED_ON()) return Promise.resolve(null);
-    var ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
-    var to = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
-    return fetch(FS() + "/stories/" + id + "?key=" + FIREBASE.apiKey, { cache: "no-store", signal: ctl ? ctl.signal : undefined })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { clearTimeout(to); try { return JSON.parse(d.fields.data.stringValue).sections || null; } catch (e) { return null; } })
-      .catch(function () { clearTimeout(to); return null; });
+  /* The pieces are chosen by the site itself — nothing to maintain.
+     Each section takes FW26 pieces that have a photo, mixes departments/types, and the mix changes every week. */
+  var SECTIONS = [
+    { title: "Women",          titleAr: "نساء",                parts: [[["WOMAN"], ["READY TO WEAR"], 8]] },
+    { title: "Men",            titleAr: "رجال",                parts: [[["MAN", "UNISEX"], ["READY TO WEAR"], 8]] },
+    { title: "Bags & leather", titleAr: "حقائب ومنتجات جلدية", parts: [[["WOMAN"], ["LEATHER GOODS"], 4], [["MAN", "UNISEX"], ["LEATHER GOODS"], 4]] },
+    { title: "Shoes",          titleAr: "أحذية",               parts: [[["WOMAN"], ["SHOES"], 4], [["MAN", "UNISEX"], ["SHOES"], 4]] },
+    { title: "Kids",           titleAr: "أطفال",               parts: [[["GIRL"], ["READY TO WEAR"], 3], [["BOY"], ["READY TO WEAR"], 3]] },
+    { title: "Accessories",    titleAr: "إكسسوارات",           parts: [[["WOMAN"], ["SOFT ACCESSORIES", "TEXTILE ACCESSORIES"], 3], [["MAN", "UNISEX"], ["SOFT ACCESSORIES", "TEXTILE ACCESSORIES"], 3]] }
+  ];
+  var week = Math.floor((Date.now() + 3 * 36e5) / 6048e5);        /* changes every 7 days (Bahrain time) */
+  function rng(seed) { return function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+
+  function choose(genders, cats, n, seed) {
+    var pool = PRODUCTS.filter(function (p) {
+      return p.isNew && p.images && p.images.length && genders.indexOf(p.gender) >= 0 && cats.indexOf(p.category) >= 0;
+    });
+    var rand = rng(seed), i, j, tmp;
+    for (i = pool.length - 1; i > 0; i--) { j = Math.floor(rand() * (i + 1)); tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp; }
+    var out = [], styles = {}, kinds = {};
+    for (var cap = 1; cap <= 3 && out.length < n; cap++) {
+      pool.forEach(function (p) {
+        if (out.length >= n || styles[p.styleCode] || (kinds[p.sub] || 0) >= cap) return;
+        styles[p.styleCode] = 1; kinds[p.sub] = (kinds[p.sub] || 0) + 1; out.push(p);
+      });
+    }
+    return out;
   }
 
   function start() {
-    var adv = window.EA_ADVISOR || null;
-    Promise.all([
-      fetch("data/stories.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-      adv ? remote(adv.id) : null,
-      remote("default")
-    ]).then(function (res) {
-      var data = res[0] || {};
-      var own = (adv && (res[1] || (data.advisors && data.advisors[adv.id] && data.advisors[adv.id].sections))) || null;
-      var raw = own || res[2] || (data.default && data.default.sections) || [];
-      var sections = [];
-      raw.forEach(function (s, i) {
-        var items = [], used = {};
-        (s.items || []).forEach(function (tok) {
-          var p = resolve(tok);
-          if (p && !used[p.id]) { used[p.id] = 1; items.push(p); }
-        });
-        if (!items.length) return;
-        sections.push({ id: i, title: s.title || "", titleAr: s.titleAr || "", items: items });
-      });
-      if (!sections.length) return;
-      cfg = { owner: own ? adv : null, sections: sections };
-      renderStrip();
-    }).catch(function () {});
-  }
-
-  /* a code from the file -> a product that has a photo */
-  function resolve(tok) {
-    tok = String(tok || "").trim(); if (!tok) return null;
-    var p = findByToken(tok);
-    if (p && p.images && p.images.length) return p;
-    var best = null;
-    PRODUCTS.forEach(function (x) {
-      if (x.styleCode !== tok || !(x.images && x.images.length)) return;
-      if (!best || (x.isNew && !best.isNew)) best = x;
+    var sections = [];
+    SECTIONS.forEach(function (def, i) {
+      var lists = def.parts.map(function (pt, k) { return choose(pt[0], pt[1], pt[2], week * 97 + i * 13 + k); });
+      var items = [];
+      for (var r = 0; r < 12; r++) lists.forEach(function (l) { if (l[r]) items.push(l[r]); });   /* alternate between the lists */
+      if (items.length) sections.push({ id: i, title: def.title, titleAr: def.titleAr, items: items });
     });
-    return best;
+    if (!sections.length) return;
+    cfg = { owner: null, sections: sections };
+    renderStrip();
   }
 
   var titleOf = function (s) { return (IS_AR && s.titleAr) ? s.titleAr : s.title; };
-  var first = function (a) { return ((IS_AR && a.nameAr) ? a.nameAr : a.name).split(" ")[0]; };
-  var ownerLine = function () {
-    return cfg.owner ? t("{name}'s picks", { name: first(cfg.owner) }) : t("Our picks");
-  };
+  var ownerLine = function () { return t("New this season"); };
   /* changes when the pieces change, so a refreshed section shows as new again */
   var sig = function (s) { return (cfg.owner ? cfg.owner.id : "boutique") + ":" + s.id + ":" + s.items.length + ":" + s.items[0].id; };
   var isSeen = function (s) { return seen[(cfg.owner ? cfg.owner.id : "boutique") + ":" + s.id] === sig(s); };
