@@ -46,7 +46,7 @@ armani-site/
 
 1. `scripts/build_products.py` reads `data/armani_styles.xlsx` (columns: Gender, Category, Family, Sub-Family, Style Code, Fabric Code, Color Code).
 2. For each row it probes the Armani image CDN (`assets-cf.armani.com`) for `F`, `D`, `L` views, newest season first (FW2026 → SS2023), and records the first season that has images.
-3. Output is `data/products.json` (each product has `id, gender, category, family, sub, name, styleCode, fabricCode, colorCode, productKey, season, images[]`). `name` is the Sub-Family in Title Case.
+3. Output is `data/products.json` (each product has `id, gender, category, family, sub, name, styleCode, fabricCode, colorCode, images[]`). `name` is the Sub-Family in Title Case.
 4. `js/app.js` loads the JSON and renders the gender nav, category sidebar, filter chips, grid (60 per page + "Load more"), product modal with gallery, and the selection drawer.
 5. Selection and buyer details persist in `localStorage` (`ea_selection`, `ea_buyer`). Sharing opens `wa.me` with a text summary plus a link to the selection.
 6. The build script writes a resume checkpoint `data/products_progress.json` (git-ignored). Delete it to re-crawl everything.
@@ -71,7 +71,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 | 10 | Implicit globals, duplicate comments, CRLF/LF mix | **Fixed** — `GENDERS`/`CATEGORIES` declared, LF everywhere, `.gitattributes` added |
 | 11 | Catalogue failing to load left a blank page | **Fixed** — visible message shown |
 | 12 | Product cards show the raw Sub-Family in caps ("SUN GLASSES") while the modal shows the Title Case `name` | **Open** — polish |
-| 13 | `assets/images/products/EB001426-F.jpg` is not referenced anywhere | **Open** — use it or delete it |
+| 13 | `assets/images/products/EB001426-F.jpg` was not referenced anywhere | **Fixed** — deleted (2026-11-01) |
 | 14 | 88 sunglasses + 25 perfumes sat in category "OTHER" | **Fixed** — re-filed by family (data + build script) |
 | 15 | Pinch-zoom disabled on phones (`maximum-scale=1.0`) | **Fixed** |
 | 16 | Grid/drawer/landing loaded full 1536px images | **Fixed** — `sized()` asks the CDN for 640px (grid), 160px (thumbs), 720px (landing) |
@@ -120,6 +120,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-28 | Advisor clients send in one tap ("Send to Mohammed"); other visitors choose their Client Advisor in the pop-up (+ "No preference — boutique"); address bar cleaned after an advisor link; shared links `eawishlist.com/<id>#/…`. |
 | 2026-10-28 | Personal advisor links (§7e): `?a=<id>`, saved 30 days, replaced by another advisor's link, cleared by the shop QR; shared links keep the advisor; one shared advisors list for the catalogue and `/advisors/`; campaign name `personal-link`; clean client link `eawishlist.com/<id>` (forwarding page per advisor + `404.html` for capital letters); QR images go to `advisor-qr/` (not committed). |
 | 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Pieces are chosen automatically and rotate weekly. Placed on the home page only, so the catalogue stays straight to the products. |
+| 2026-11-01 | Clean-up of unused items: unused photo, 8 old CSS rules, `firstImage` / `trGender` helpers, outdated `README.md` (PROJECT.md is the description), empty `model` field in `products.json` / `build_products.py`. Kept: `/print/` ticket page, `scripts/check_missing.py`, `export_missing.py`, `test_images.py`, products without photos (decision pending). |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)

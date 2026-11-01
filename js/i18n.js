@@ -267,7 +267,6 @@ function arCount(n, one, two, few, many) {
 const trType     = s => IS_AR && AR_TYPES[norm(s)] || null;
 const trCategory = s => IS_AR && AR_CATEGORIES[norm(s)] || null;
 const trFamily   = s => IS_AR && AR_FAMILIES[norm(s)] || null;
-const trGender   = g => IS_AR && AR_GENDERS[norm(g)] || null;
 const trDay      = d => IS_AR && AR_DAYS[d] || d;
 
 /* Translate the fixed text already in index.html (runs once, before anything else is drawn) */

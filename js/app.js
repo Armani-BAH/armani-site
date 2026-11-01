@@ -226,9 +226,6 @@ document.addEventListener("error", e=>{
   img.src=PHOTO_COPIES+encodeURIComponent(name);
 }, true);
 
-/* First image URL for a set of products */
-const firstImage = list => (list.find(p=>p.images?.length)?.images[0]) || null;
-
 /* ========================= LOAD ========================= */
 async function loadProducts(){
   try{

@@ -71,7 +71,6 @@ def main():
     c_category = col("category")
     c_family   = col("family")
     c_sub      = col("sub-family")
-    c_model    = col("model")
     c_fabric_n = col("fabric")
     c_color_n  = col("color")
     c_style    = col("style code")
@@ -137,7 +136,6 @@ def main():
             "family":      family,
             "sub":         sub,
             "name":        display_name(sub),
-            "model":       v(c_model),
             "styleCode":   style,
             "fabricCode":  fabric,
             "colorCode":   color,
