@@ -36,9 +36,6 @@ armani-site/
 │   ├── products.json           Generated catalogue used by the site (1,276 items)
 └── scripts/
     ├── build_products.py       Excel -> products.json (+ image lookup on Armani CDN)
-    ├── check_missing.py        Lists products with no image
-    ├── export_missing.py       Writes products with no image to data/missing_images.xlsx (git-ignored)
-    ├── test_images.py          Tests image URL patterns for one style
     └── make_advisor_links.py   Personal links: <id>/index.html forwarding pages + 404.html (committed) and QR codes -> advisor-qr/ (git-ignored)
 ```
 
@@ -120,7 +117,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-28 | Advisor clients send in one tap ("Send to Mohammed"); other visitors choose their Client Advisor in the pop-up (+ "No preference — boutique"); address bar cleaned after an advisor link; shared links `eawishlist.com/<id>#/…`. |
 | 2026-10-28 | Personal advisor links (§7e): `?a=<id>`, saved 30 days, replaced by another advisor's link, cleared by the shop QR; shared links keep the advisor; one shared advisors list for the catalogue and `/advisors/`; campaign name `personal-link`; clean client link `eawishlist.com/<id>` (forwarding page per advisor + `404.html` for capital letters); QR images go to `advisor-qr/` (not committed). |
 | 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Pieces are chosen automatically and rotate weekly. Placed on the home page only, so the catalogue stays straight to the products. |
-| 2026-11-01 | Clean-up of unused items: unused photo, 8 old CSS rules, `firstImage` / `trGender` helpers, outdated `README.md` (PROJECT.md is the description), empty `model` field in `products.json` / `build_products.py`. Kept: `/print/` ticket page, `scripts/check_missing.py`, `export_missing.py`, `test_images.py`, products without photos (decision pending). |
+| 2026-11-01 | Clean-up of unused items: unused photo, 8 old CSS rules, `firstImage` / `trGender` helpers, outdated `README.md` (PROJECT.md is the description), empty `model` field in `products.json` / `build_products.py`. Also removed (same day): `scripts/check_missing.py`, `export_missing.py`, `test_images.py`. Kept on purpose: `/print/` ticket page (used in store), products without photos. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)
