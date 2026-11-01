@@ -1,7 +1,7 @@
 /* Stories on the home page — a row of round "sections"; tap one to flip through new pieces (chosen automatically).
    Load AFTER js/app.js and js/advisor.js (see index.html).
 
-   Where the pieces come from: chosen by the site itself from the FW26 pieces (SECTIONS below); the mix changes weekly.
+   Where the pieces come from: chosen by the site itself from the FW26 pieces (SECTIONS below); the mix changes daily.
 
    Uses from app.js: PRODUCTS, ID_INDEX, findByToken, state, toggleSelect, openDrawer, sized, esc, t, IS_AR,
    genderLabel, catLabel, displayGender, gSlug, slug, ref, track. */
@@ -25,7 +25,7 @@
   })();
 
   /* The pieces are chosen by the site itself — nothing to maintain.
-     Each section takes FW26 pieces that have a photo, mixes departments/types, and the mix changes every week. */
+     Each section takes FW26 pieces that have a photo, mixes departments/types, and the mix changes every day. */
   var SECTIONS = [
     { title: "Women",          titleAr: "نساء",                parts: [[["WOMAN"], ["READY TO WEAR"], 8]] },
     { title: "Men",            titleAr: "رجال",                parts: [[["MAN", "UNISEX"], ["READY TO WEAR"], 8]] },
@@ -34,7 +34,7 @@
     { title: "Kids",           titleAr: "أطفال",               parts: [[["GIRL"], ["READY TO WEAR"], 3], [["BOY"], ["READY TO WEAR"], 3]] },
     { title: "Accessories",    titleAr: "إكسسوارات",           parts: [[["WOMAN"], ["SOFT ACCESSORIES", "TEXTILE ACCESSORIES"], 3], [["MAN", "UNISEX"], ["SOFT ACCESSORIES", "TEXTILE ACCESSORIES"], 3]] }
   ];
-  var week = Math.floor((Date.now() + 3 * 36e5) / 6048e5);        /* changes every 7 days (Bahrain time) */
+  var week = Math.floor((Date.now() + 3 * 36e5) / 864e5);         /* changes every day at midnight (Bahrain time) */
   function rng(seed) { return function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
 
   function choose(genders, cats, n, seed) {
