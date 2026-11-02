@@ -1305,8 +1305,7 @@ function sendWhatsApp(number, text, chosen=null){
     notes: Object.keys(state.notes).filter(id=>state.selected.has(id)).length };
   if(chosen) params.advisor=chosen.id;
   track("send_selection", params);
-  /* the message goes TO the advisor, so its "View with photos" link doesn't need the advisor in it (kept for "Share with someone else") */
-  if(number && window.EA_ADVISOR) text = text.split(SITE_URL()+"#/").join(location.origin+"/#/");
+  /* the "View with photos" link keeps the advisor (eawishlist.com/ahmed#/selection/…), so whoever opens it from the chat lands on the same advisor */
   window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,"_blank","noopener");
 }
 
