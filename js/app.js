@@ -840,9 +840,7 @@ function groupsIn(prods){
     .filter(g=>g.count>0 || state.filters.sub.has(g.key));   /* no empty chips (pieces without photos are hidden) */
 }
 function chipText(el,g){
-  el.textContent=grpLabel(g.key)+" ";
-  const n=document.createElement("span"); n.className="grp-count"; n.textContent=g.count;
-  el.appendChild(n);
+  el.textContent=grpLabel(g.key);      /* no piece counts on the buttons (Nov 2026) */
 }
 
 function groupList(list){
@@ -860,8 +858,8 @@ function render(){
   currentFilteredList=getFilteredProducts();
   groupByKey=groupList(currentFilteredList);
   currentGroups=[...groupByKey.values()];
-  const colours=currentFilteredList.length, styles=currentGroups.length;
-  $("#resultCount").textContent = piecesText(styles) + (colours>styles ? ` · ${coloursText(colours)}` : "");
+  // counts no longer shown
+  /* piece count line removed from the page (Nov 2026) */
   renderGrid();
   renderRecent();
   renderSharedBanner();
@@ -903,7 +901,6 @@ function cardHTML(group){
         <div class="card-meta">
           <span>${esc(genderLabel(p.gender))}</span>
           <span>${p.perfume ? `${esc(subLabel(p.sub))} · ${esc(sizeLabel(p.colorCode))}` : esc(catLabel(p.category))}</span>
-          ${group.length>1?`<span>${coloursText(group.length)}</span>`:""}
         </div>
         ${p.perfume ? keyNotesHTML(p.perfume) : ""}
         ${swatchesHTML(group,p,"card")}

@@ -889,8 +889,6 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 [dir="rtl"] .card-notes{font-style:normal;}
 
 /* number of pieces on a sub-category chip, e.g. "Shirts 35" */
-.grp-count{font-size:.78em;opacity:.55;margin-inline-start:2px;font-variant-numeric:tabular-nums;}
-.sub-btn.active .grp-count,.chip.active .grp-count{opacity:.75;}
 
 /* ================= Stories (home page) ================= */
 .story-strip{display:flex;gap:12px;width:100%;max-width:960px;margin:-10px 0 26px;padding:4px 2px 8px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;}

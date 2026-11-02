@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<title>Make a catalogue · Emporio Armani Marassi</title>
+<!--
+  Mini-catalogue maker for Client Advisors (staff page, not linked from the site).
+  Address: https://www.eawishlist.com/catalogue/
+  1. The advisor picks their name, who it is for, the categories and the types.
+  2. "Create PDF" builds the catalogue (cover + one section per type) and opens the phone's
+     Print screen -> Save as PDF / Share -> WhatsApp to the client.
+  3. Every page ends with "Your Client Advisor <name> · Chat on WhatsApp" (clickable link to that advisor).
+  Reads ../data/products.json and ../js/advisors-data.js — nothing to update by hand.
+  Pieces without a photo are always left out.
+-->
+<style>
+  @font-face{font-family:"Jost";font-weight:300;font-display:swap;src:url("../assets/fonts/jost-latin-300-normal.woff2") format("woff2");}
+  @font-face{font-family:"Jost";font-weight:400;font-display:swap;src:url("../assets/fonts/jost-latin-400-normal.woff2") format("woff2");}
+  @font-face{font-family:"Jost";font-weight:500;font-display:swap;src:url("../assets/fonts/jost-latin-500-normal.woff2") format("woff2");}
+  @font-face{font-family:"Bodoni";font-weight:400;font-display:swap;src:url("../assets/fonts/bodoni-moda-latin-400-normal.woff2") format("woff2");}
+  @font-face{font-family:"Bodoni";font-weight:500;font-display:swap;src:url("../assets/fonts/bodoni-moda-latin-500-normal.woff2") format("woff2");}
+  :root{--ink:#111;--muted:#777;--line:#e2e2e2;color-scheme:light;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:#fff;color:var(--ink);font:16px/1.45 "Jost",system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
+  button{font:inherit;color:inherit;}
+
+  /* ---------- the picker (screen) ---------- */
+  .app{max-width:560px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px 150px;}
+  .logo{display:block;height:16px;margin:6px auto 18px;}
+  h1{font-family:"Bodoni",serif;font-weight:400;font-size:30px;text-align:center;margin:0 0 4px;}
+  .lead{text-align:center;color:var(--muted);font-size:14px;margin:0;}
+  .sec{font-size:11px;letter-spacing:.14em;color:#888;margin:24px 0 9px;text-transform:uppercase;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:8px 14px;border:1px solid #d6d6d6;background:#fff;font-size:14px;cursor:pointer;border-radius:0;}
+  .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
+  select,input[type=text]{width:100%;font:inherit;font-size:16px;padding:12px;border:1px solid #d6d6d6;background:#fff;border-radius:0;color:var(--ink);}
+  select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23111' stroke-width='1.4'/%3E%3C/svg%3E") no-repeat right 14px center;}
+  .types{display:grid;gap:8px;}
+  .tg{font-size:13px;color:var(--muted);margin:12px 0 6px;}
+  .tg:first-child{margin-top:0;}
+  .hint{color:var(--muted);font-size:13px;margin:6px 0 0;}
+  .links{display:flex;gap:16px;margin-top:8px;font-size:13px;}
+  .links button{background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;color:var(--muted);}
+  .toggle{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid #d6d6d6;background:#fff;width:100%;font-size:15px;cursor:pointer;}
+  .sw{width:42px;height:24px;border-radius:12px;background:#ccc;position:relative;transition:.2s;flex:none;}
+  .sw::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s;}
+  .toggle[aria-pressed="true"] .sw{background:var(--ink);}
+  .toggle[aria-pressed="true"] .sw::after{left:21px;}
+  .opt{display:flex;gap:8px;}
+  .opt .chip{flex:1;text-align:center;}
+  .gap{height:8px;}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #ddd;padding:12px 16px max(16px,env(safe-area-inset-bottom));}
+  .bar-in{max-width:560px;margin:0 auto;}
+  .sum{font-size:13px;color:#555;margin-bottom:8px;}
+  .go{width:100%;background:var(--ink);color:#fff;border:0;padding:15px;font-size:15px;letter-spacing:.05em;cursor:pointer;}
+  .go:disabled{background:#bbb;cursor:default;}
+  .toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;}
+  .toast.show{opacity:1;}
+  .sheet{display:none;}
+
+  /* ---------- the catalogue (PDF) ---------- */
+  @media print{
+    @page{size:A4;margin:14mm 14mm 24mm;}
+    .app,.bar,.toast{display:none !important;}
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .sheet{display:block;color:#000;}
+    .cv{height:240mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;break-after:page;}
+    .cv img{height:22px;margin-bottom:14mm;}
+    .cv h1{font-family:"Bodoni",serif;font-weight:400;font-size:38pt;margin:0;line-height:1.15;}
+    .cv .d{text-transform:uppercase;letter-spacing:.18em;font-size:8pt;color:#555;margin:5mm 0 14mm;}
+    .cv ol{list-style:none;padding:0;margin:0;font-family:"Bodoni",serif;font-size:13pt;line-height:2;}
+    .sh{font-family:"Bodoni",serif;font-size:24pt;font-weight:400;letter-spacing:.02em;border-bottom:1px solid #ccc;padding-bottom:3mm;margin:0 0 6mm;}
+    .grid + .sh{break-before:page;}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;}
+    .it{break-inside:avoid;}
+    .im{aspect-ratio:1/1;background:#f4f3f1;overflow:hidden;margin-bottom:2mm;}
+    .im img{width:100%;height:100%;object-fit:cover;display:block;}
+    .nm{font-family:"Bodoni",serif;font-size:12pt;margin-top:1mm;}
+    .cd{font-weight:300;font-size:7.5pt;letter-spacing:.14em;text-transform:uppercase;color:#666;margin-top:1.5mm;}
+    .cols{display:flex;gap:1.5mm;margin-top:2mm;flex-wrap:wrap;}
+    .cols img{width:9mm;height:11mm;object-fit:cover;background:#f4f3f1;}
+    .ft{position:fixed;left:0;right:0;bottom:0;background:#fff;text-align:center;font-size:9pt;padding-top:3mm;border-top:1px solid #ddd;}
+    .ft .by{text-transform:uppercase;letter-spacing:.16em;font-size:7pt;color:#777;}
+    .ft b{font-family:"Bodoni",serif;font-weight:400;font-size:11pt;margin:0 3mm;}
+    .ft a{display:inline-block;color:#111;text-decoration:none;border:1px solid #111;padding:1.2mm 3mm;letter-spacing:.06em;font-size:8pt;}
+    .ft a svg{vertical-align:-1px;margin-right:1mm;}
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <img class="logo" src="../assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
+  <h1>Make a catalogue</h1>
+  <p class="lead">For our VIP clients</p>
+
+  <div class="sec">1 · Created by</div>
+  <select id="advisor" aria-label="Created by"></select>
+
+  <div class="sec">2 · For</div>
+  <div class="chips" id="genders"></div>
+
+  <div class="sec">3 · Category</div>
+  <div class="chips" id="cats"></div>
+  <p class="hint">None chosen = all categories.</p>
+
+  <div class="sec">4 · Type</div>
+  <div id="types"></div>
+  <div class="links"><button type="button" id="allTypes">Select all</button><button type="button" id="noTypes">Clear</button></div>
+
+  <div class="sec">5 · Options</div>
+  <button type="button" class="toggle" id="newOnly" aria-pressed="false">New season only <span class="sw"></span></button>
+  <div class="gap"></div>
+  <div class="opt">
+    <button type="button" class="chip" id="perStyle" aria-pressed="false">One card per style</button>
+    <button type="button" class="chip" id="perColour" aria-pressed="true">Every colour</button>
+  </div>
+  <div class="gap"></div>
+  <input type="text" id="title" value="New arrivals · FW26" aria-label="Cover title" placeholder="Cover title">
+  <p class="hint">Cover title</p>
+</main>
+
+<div class="bar"><div class="bar-in">
+  <div class="sum" id="sum"></div>
+  <button type="button" class="go" id="go">Create PDF</button>
+</div></div>
+<div class="toast" id="toast"></div>
+<div class="sheet" id="sheet"></div>
+
+<script>var IS_AR=false;</script>
+<script src="../js/groups.js"></script>
+<script src="../js/advisors-data.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s);};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+var cap=function(s){s=String(s).trim().toLowerCase();return s.charAt(0).toUpperCase()+s.slice(1);};
+
+var ADVISORS=window.EA_ADVISORS||[];
+var NEW_SEASON="FW2026";
+var GENDERS=[["WOMAN","Women"],["MAN","Men"],["GIRL","Girls"],["BOY","Boys"],["UNISEX JUNIOR","Junior"]];
+var GLABEL={}; GENDERS.forEach(function(g){GLABEL[g[0]]=g[1];});
+var gOf=function(g){return g==="UNISEX"?"MAN":g;};                       /* same as the site: unisex adult shows under Men */
+var catOf=function(c){return c==="TEXTILE ACCESSORIES"?"SOFT ACCESSORIES":c;};
+
+/* photos: smaller copy from Armani, or our own saved copy if Armani's is gone (same as js/app.js) */
+var PHOTO_COPIES="https://raw.githubusercontent.com/Armani-BAH/Armani-images/main/img/";
+var sized=function(u,w){return String(u).replace(/w_\d+/,"w_"+w).replace("q_auto:best","q_auto");};
+function copyName(src){
+  try{
+    var u=new URL(src), inner=u.searchParams.get("url");
+    if(inner && /^https?:/.test(inner)) return copyName(inner);
+    var base=decodeURIComponent(u.pathname.split("/").pop()||"").replace(/\.[A-Za-z0-9]{2,5}$/,"");
+    var host=u.hostname.replace(/^www\./,"");
+    var prefix=(host==="armani.com"||host.slice(-11)===".armani.com")?"":host+"__";
+    return (prefix+base).replace(/[^A-Za-z0-9._-]/g,"_")+".jpg";
+  }catch(e){return null;}
+}
+document.addEventListener("error",function(e){
+  var img=e.target;
+  if(!(img instanceof HTMLImageElement)||img.dataset.copy) return;
+  var src=img.getAttribute("src")||""; if(!/^https?:/.test(src)) return;
+  var name=copyName(src); if(!name) return;
+  img.dataset.copy="1"; img.src=PHOTO_COPIES+encodeURIComponent(name);
+},true);
+
+var S={advisor:null,genders:new Set(["WOMAN","MAN"]),cats:new Set(),types:new Set(),newOnly:false,perColour:true};
+var ALL=[];
+try{
+  var saved=JSON.parse(localStorage.getItem("ea_catalogue")||"null");
+  if(saved){ S.advisor=saved.advisor||null; if(saved.genders&&saved.genders.length) S.genders=new Set(saved.genders); S.newOnly=!!saved.newOnly; S.perColour=saved.perColour!==false; }
+}catch(e){}
+function save(){ try{ localStorage.setItem("ea_catalogue",JSON.stringify({advisor:S.advisor,genders:[...S.genders],newOnly:S.newOnly,perColour:S.perColour})); }catch(e){} }
+
+function toast(t,ms){ var el=$("#toast"); el.textContent=t; el.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(function(){el.classList.remove("show");},ms||2500); }
+
+/* pieces that can go in a catalogue: photo needed; filtered by "For" and "New season only" */
+function pool(){ return ALL.filter(function(p){ return S.genders.has(p.g) && (!S.newOnly||p.isNew); }); }
+function typeKey(p){ return p.g+"|"+p.grp; }
+
+var gIndex=function(g){ for(var i=0;i<GENDERS.length;i++) if(GENDERS[i][0]===g) return i; return 9; };
+/* same order as the site: people, then category, then the group order from js/groups.js */
+function typeSort(a,b){ return gIndex(a.g)-gIndex(b.g) || a.c.localeCompare(b.c) || a.o-b.o || a.f.localeCompare(b.f); }
+function chip(label,on,click){ var b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=label; b.setAttribute("aria-pressed",String(on)); b.onclick=click; return b; }
+
+function render(){
+  /* 1. advisor */
+  var sel=$("#advisor");
+  if(!sel.options.length){
+    sel.innerHTML='<option value="">Choose your name…</option>'+ADVISORS.map(function(a){return '<option value="'+esc(a.id)+'">'+esc(a.name)+'</option>';}).join("");
+    sel.onchange=function(){ S.advisor=sel.value||null; save(); render(); };
+  }
+  sel.value=S.advisor||"";
+
+  /* 2. for */
+  var gBox=$("#genders"); gBox.innerHTML="";
+  GENDERS.forEach(function(g){
+    if(!ALL.some(function(p){return p.g===g[0];})) return;
+    gBox.appendChild(chip(g[1],S.genders.has(g[0]),function(){ S.genders.has(g[0])?S.genders.delete(g[0]):S.genders.add(g[0]); save(); render(); }));
+  });
+
+  /* 3. category (only those that exist for the chosen people) */
+  var pl=pool();
+  var cats=[...new Set(pl.map(function(p){return p.cat;}))].sort();
+  S.cats.forEach(function(c){ if(cats.indexOf(c)<0) S.cats.delete(c); });
+  var cBox=$("#cats"); cBox.innerHTML="";
+  cats.forEach(function(c){ cBox.appendChild(chip(cap(c),S.cats.has(c),function(){ S.cats.has(c)?S.cats.delete(c):S.cats.add(c); render(); })); });
+
+  /* 4. type = gender + family, in the order of the chosen people, then A-Z */
+  var inCats=pl.filter(function(p){return !S.cats.size||S.cats.has(p.cat);});
+  var seen={}, types=[];
+  inCats.forEach(function(p){ var k=typeKey(p); if(!seen[k]){ seen[k]=1; types.push({k:k,g:p.g,f:p.grp,c:p.cat,o:p.grpOrder}); } });
+  types.sort(typeSort);
+  var valid=new Set(types.map(function(t){return t.k;}));
+  S.types.forEach(function(k){ if(!valid.has(k)) S.types.delete(k); });
+  var tBox=$("#types"); tBox.innerHTML="";
+  if(!types.length) tBox.innerHTML='<p class="hint">Nothing here — choose who it is for above.</p>';
+  var lastG=null, wrap=null;
+  types.forEach(function(t){
+    if(t.g!==lastG){ lastG=t.g; var h=document.createElement("div"); h.className="tg"; h.textContent=GLABEL[t.g]; tBox.appendChild(h);
+      wrap=document.createElement("div"); wrap.className="chips"; tBox.appendChild(wrap); }
+    wrap.appendChild(chip(t.f,S.types.has(t.k),function(){ S.types.has(t.k)?S.types.delete(t.k):S.types.add(t.k); render(); }));
+  });
+  $("#allTypes").onclick=function(){ types.forEach(function(t){S.types.add(t.k);}); render(); };
+  $("#noTypes").onclick=function(){ S.types.clear(); render(); };
+
+  /* 5. options */
+  $("#newOnly").setAttribute("aria-pressed",String(S.newOnly));
+  $("#perStyle").setAttribute("aria-pressed",String(!S.perColour));
+  $("#perColour").setAttribute("aria-pressed",String(S.perColour));
+
+  /* bar */
+  var adv=ADVISORS.find(function(a){return a.id===S.advisor;});
+  var n=S.types.size;
+  $("#sum").textContent=(n? n+(n===1?" section":" sections")+" chosen" : "Choose at least one type")+(adv?" · by "+adv.name.split(" ")[0]:" · choose your name");
+  $("#go").disabled=!(n&&adv);
+}
+$("#newOnly").onclick=function(){ S.newOnly=!S.newOnly; save(); render(); };
+$("#perStyle").onclick=function(){ S.perColour=false; save(); render(); };
+$("#perColour").onclick=function(){ S.perColour=true; save(); render(); };
+
+/* ---------- build the PDF ---------- */
+function build(){
+  var adv=ADVISORS.find(function(a){return a.id===S.advisor;});
+  var title=$("#title").value.trim()||"Emporio Armani";
+  var date=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  var pl=pool().filter(function(p){return !S.cats.size||S.cats.has(p.cat);});
+  /* keep the order shown on the screen */
+  var seen={}, types=[];
+  pl.forEach(function(p){ var k=typeKey(p); if(S.types.has(k)&&!seen[k]){ seen[k]=1; types.push({k:k,g:p.g,f:p.grp,c:p.cat,o:p.grpOrder}); } });
+  types.sort(typeSort);
+  var keys=types.map(function(t){return t.k;});
+
+  var sections=keys.map(function(k){
+    var parts=k.split("|");
+    var list=pl.filter(function(p){return typeKey(p)===k;});
+    /* colours of one style next to each other */
+    var m=new Map(); list.forEach(function(p){ var s=p.styleCode+"|"+p.fabricCode; if(!m.has(s)) m.set(s,[]); m.get(s).push(p); });
+    return {name:GLABEL[parts[0]]+" · "+parts[1], styles:[...m.values()]};
+  });
+
+  var msg="Hello "+adv.name.split(" ")[0]+", I saw the catalogue “"+title+"” and I would like to ask about some pieces.";
+  var wa="https://wa.me/"+adv.whatsapp+"?text="+encodeURIComponent(msg);
+  var waIcon='<svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path fill="#25D366" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>';
+  var codes=function(p){ return '<div class="cd">Style '+esc(p.styleCode)+' · Colour '+esc(p.colorCode)+'</div>'; };
+  var card=function(p,extra){ return '<article class="it"><div class="im"><img src="'+esc(sized(p.images[0],640))+'" alt=""></div><div class="nm">'+esc(p.name)+'</div>'+(extra||codes(p))+'</article>'; };
+
+  var html='<div class="ft"><span class="by">Your Client Advisor</span><b>'+esc(adv.name)+'</b><a href="'+esc(wa)+'">'+waIcon+'Chat on WhatsApp</a></div>';
+  html+='<section class="cv"><img src="../assets/logo/emporio-armani-logo.png" alt="Emporio Armani"><h1>'+esc(title)+'</h1>'
+      +'<div class="d">Emporio Armani · Marassi Mall, Bahrain · '+esc(date)+'</div>'
+      +'<ol>'+sections.map(function(s){return '<li>'+esc(s.name)+'</li>';}).join("")+'</ol></section>';
+  sections.forEach(function(s){
+    html+='<h2 class="sh">'+esc(s.name)+'</h2><div class="grid">';
+    s.styles.forEach(function(g){
+      if(S.perColour) g.forEach(function(p){ html+=card(p); });
+      else html+=card(g[0], '<div class="cd">Style '+esc(g[0].styleCode)+'</div>'+(g.length>1?'<div class="cols">'+g.map(function(c){return '<img src="'+esc(sized(c.images[0],160))+'" alt="">';}).join("")+'</div>':''));
+    });
+    html+='</div>';
+  });
+  $("#sheet").innerHTML=html;
+  return title;
+}
+
+$("#go").onclick=function(){
+  var btn=$("#go"); btn.disabled=true; var label=btn.textContent;
+  var title=build();
+  var imgs=[...$("#sheet").querySelectorAll("img")];
+  var left=imgs.length;
+  btn.textContent="Preparing photos…";
+  var wait=Promise.all(imgs.map(function(i){
+    return (i.complete&&i.naturalWidth)?0:new Promise(function(r){
+      var tick=function(){ if(i.dataset.copy&&!i.dataset.second){ i.dataset.second="1"; return; } r(); };
+      i.addEventListener("load",r); i.addEventListener("error",tick);
+    }).then(function(){ left--; btn.textContent="Preparing photos… "+Math.max(left,0); });
+  }));
+  Promise.race([wait,new Promise(function(r){setTimeout(r,30000);})]).then(function(){
+    btn.textContent=label; btn.disabled=false;
+    var old=document.title; document.title=title+" - Emporio Armani";
+    toast("Choose “Save as PDF” (or Share), then send it on WhatsApp",5000);
+    setTimeout(function(){ window.print(); document.title=old; },300);
+  });
+};
+
+/* ---------- load ---------- */
+fetch("../data/products.json").then(function(r){return r.json();}).then(function(list){
+  ALL=list.filter(function(p){return p.images&&p.images.length;}).map(function(p){
+    var m=(p.images[0]||"").match(/_(FW|SS)(\d{4})\./);
+    p.isNew=!!m && (m[1]+m[2])===NEW_SEASON;
+    p.g=gOf(p.gender); p.cat=catOf(p.category);
+    var gr=groupOf(p.cat,p.g,p.sub,p.family); p.grp=gr.key; p.grpOrder=gr.order;
+    return p;
+  });
+  render();
+}).catch(function(){ toast("Could not load the collection — check the connection",6000); });
+})();
+</script>
+</body>
+</html>
