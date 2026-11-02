@@ -1,6 +1,6 @@
 /* Emporio Armani Bahrain — offline support + "install as an app"
    Change VERSION whenever you want every phone to drop its old copy at once. */
-const VERSION = "ea-v34";
+const VERSION = "ea-v35";
 const SHELL = `${VERSION}-shell`, IMAGES = `${VERSION}-img`, MAX_IMAGES = 400;
 const CORE = [
   "./", "index.html", "css/style.css", "js/i18n.js", "js/groups.js", "js/app.js", "js/advisors-data.js", "js/advisor.js", "js/stories.js", "data/products.json", "data/perfumes.json",
@@ -38,12 +38,14 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (url.origin !== location.origin) return;
+  /* Personal links (/mohammed ...) and the "page not found" page go straight to the network: never answer them with the shop page */
+  if (req.mode === "navigate" && url.pathname !== "/" && url.pathname !== "/index.html") return;
 
   /* pages, code and catalogue: always try for the newest version, fall back to the saved copy offline */
   e.respondWith(
     fetch(req, { cache: "no-cache" }).then(res => {       /* always ask GitHub if there is a newer version (cheap check) */
       if (res.ok) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); }
       return res;
-    }).catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match("index.html")))
+    }).catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || (req.mode === "navigate" ? caches.match("index.html") : undefined)))
   );
 });

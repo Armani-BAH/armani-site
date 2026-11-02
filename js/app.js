@@ -72,7 +72,7 @@ const itemInfo = p => ({
 });
 let lastTrackedPage="";
 function trackPage(){
-  const where = location.pathname + location.hash;
+  const where = (window.EA_ADVISOR && location.pathname==="/"+window.EA_ADVISOR.id ? "/" : location.pathname) + location.hash;   /* reports keep one page path whoever the advisor is */
   if(where===lastTrackedPage) return; lastTrackedPage=where;
   const landing=window.EA_LANDING; window.EA_LANDING=null;      /* advisor link: the tags advisor.js removed from the address bar */
   track("page_view", { page_location: landing || location.href, page_path: where, page_title: document.getElementById("pageTitle")?.textContent || document.title });

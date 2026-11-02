@@ -11,7 +11,7 @@
    4. Analytics: window.EA_ADVISOR is read by track() in app.js, so every event carries advisor=<id>;
       one "advisor_link_open" event is sent when the link is opened.
    5. Shared links keep the advisor: eawishlist.com/<id>#/… (SITE_URL() in app.js reads window.EA_ADVISOR).
-   6. The address bar is cleaned to www.eawishlist.com/#/ (the tags still reach Google Analytics, see EA_LANDING).
+   6. The address bar shows www.eawishlist.com/<id>#/… (tags still reach Google Analytics, see EA_LANDING).
    7. The drawer button reads "Send to <first name>" and sends in one tap (app.js).
 
    Visitors without an advisor: this file does nothing and the boutique number is used. */
@@ -54,11 +54,12 @@
   /* app.js (shared links, analytics) reads this */
   window.EA_ADVISOR = adv;
 
-  /* Clean address bar: www.eawishlist.com/#/ instead of the long ?a=…&utm_… link (so a copied address stays short).
-     Google Analytics still gets the campaign tags: app.js sends them with the first page_view (window.EA_LANDING). */
-  if (fromLink) {
-    window.EA_LANDING = location.href;
-    try { history.replaceState(history.state, "", location.pathname + location.hash); } catch (e) {}
+  /* Address bar: www.eawishlist.com/mohammed#/… (not the long ?a=…&utm_… link, and not the plain shop address).
+     Keeping the advisor's name in the address means copying it from the browser, reloading, "Open in Safari" or a restored tab
+     still lands on the same advisor. Google Analytics still gets the campaign tags: app.js sends them with the first page_view (window.EA_LANDING). */
+  if (fromLink) window.EA_LANDING = location.href;
+  if (/^\/(index\.html)?$/.test(location.pathname)) {
+    try { history.replaceState(history.state, "", "/" + adv.id + location.hash); } catch (e) {}
   }
 
   /* 3. Point the WhatsApp buttons at the advisor. */
