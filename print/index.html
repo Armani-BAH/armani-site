@@ -118,7 +118,64 @@
   var STORE_PHONE = '+973 1756 4991'; // store number shown on the client copy, e.g. '+973 1700 0000'
   var CONTACT_URL = 'https://www.eawishlist.com/contact/'; // page the client-copy QR code opens
 
+  // Reservation slips (ticket with k:"res"): store copy kept with the held items, client copy to take home.
+  function buildResXml(tk) {
+    var line = '------------------------------------------\n';
+    var x = '';
+    function txt(attrs, s) { x += '<text' + (attrs ? ' ' + attrs : '') + '>' + esc(s) + '</text>'; }
+    var items = (tk.i || []).filter(function (it) { return it && (it.n || it.s); });
+    function itemLines(withCode) {
+      items.forEach(function (it, n) {
+        txt('', (withCode ? line : '') + (n + 1) + '/' + items.length + '  ' + (it.n || '') + '\n' +
+          (it.z ? '    Size/colour: ' + it.z + '\n' : '') + (withCode && it.s ? '    Code: ' + it.s + '\n' : ''));
+      });
+    }
+    // Store copy
+    x += '<text lang="en"/><text align="center"/>';
+    txt('dw="true" dh="true" em="true"', 'EMPORIO ARMANI\n');
+    txt('dw="false" dh="false" em="false"', 'Marassi Mall - Reservation\n' + line);
+    txt('dw="true" dh="true" em="true"', (tk.t || '') + '\n');
+    txt('dw="false" dh="false" reverse="true" em="true"', ' HOLD UNTIL ' + (tk.d || '') + ' \n');
+    x += '<text reverse="false" em="false"/><text align="left"/>';
+    txt('', '\nClient name:    ' + (tk.c || '') + '\nClient number:  ' + (tk.p || '') + '\nClient advisor: ' + (tk.a || '') + '\nReserved:       ' + (tk.r || '') + '\n\n');
+    txt('em="true"', 'RESERVED ITEMS\n');
+    x += '<text em="false"/>';
+    itemLines(true);
+    if (tk.n) txt('', line + 'Notes: ' + tk.n + '\n');
+    txt('', line + '\nCollected: ___/___   Released: ___/___\n');
+    x += '<text align="center"/>';
+    txt('', line + 'Keep this slip with the reserved items\n');
+    x += '<feed line="3"/><cut type="feed"/>';
+    // Client copy
+    x += '<text align="center"/>';
+    txt('dw="true" dh="true" em="true"', 'EMPORIO ARMANI\n');
+    txt('dw="false" dh="false" em="false"', 'Marassi Mall\n' + line);
+    txt('em="true"', 'RESERVATION - CLIENT COPY\n');
+    txt('dw="true" dh="true" em="true"', (tk.t || '') + '\n');
+    txt('dw="false" dh="false" reverse="true" em="true"', ' RESERVED UNTIL ' + (tk.d || '') + ' \n');
+    x += '<text reverse="false" em="false"/><text align="left"/>';
+    txt('', '\nClient name: ' + (tk.c || '') + '\nAdvisor:     ' + (tk.a || '') + '\n\n');
+    itemLines(false);
+    x += '<text align="center"/>';
+    txt('', '\n' + line + 'Your items are kept for you until\n' + (tk.d || '') + ', closing time.\n\n' +
+      (STORE_PHONE ? 'WhatsApp / Tel: ' + STORE_PHONE + '\n' : '') +
+      'Sat-Wed 10:00-22:00\nThu-Fri 10:00-00:00\n');
+    if (STORE_PHONE) {
+      txt('', '\nScan to save our contact\nor chat with us on WhatsApp\n');
+      x += '<symbol type="qrcode_model_2" level="level_m" width="6">' + esc(CONTACT_URL) + '</symbol>';
+      txt('', '\n');
+    }
+    x += '<feed line="3"/><cut type="feed"/>';
+    return x;
+  }
+
   function buildXml(tk) {
+    if (tk && tk.k === 'res') {
+      return '<?xml version="1.0" encoding="utf-8"?>' +
+        '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>' +
+        '<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">' + buildResXml(tk) + '</epos-print>' +
+        '</s:Body></s:Envelope>';
+    }
     var line = '------------------------------------------\n';
     var x = '';
     function txt(attrs, s) { x += '<text' + (attrs ? ' ' + attrs : '') + '>' + esc(s) + '</text>'; }
@@ -213,7 +270,9 @@
             btn.textContent = 'Print again';
             setStatus('Printed ✓  Going back to the app…', 'ok');
             setTimeout(function () {
-              location.href = 'ms-apps:///providers/Microsoft.PowerApps/apps/a49cef16-25c3-4178-a823-2a1dbf175b9c?tenantId=f73b84d8-27ae-4c31-a606-000b08cc2fa4';
+              // g = id of the Power Apps app that sent the ticket (defaults to Alteration Tracker)
+              var appId = /^[0-9a-f-]{36}$/i.test(ticket.g || '') ? ticket.g : 'a49cef16-25c3-4178-a823-2a1dbf175b9c';
+              location.href = 'ms-apps:///providers/Microsoft.PowerApps/apps/' + appId + '?tenantId=f73b84d8-27ae-4c31-a606-000b08cc2fa4';
             }, 1200);
           }
         }
