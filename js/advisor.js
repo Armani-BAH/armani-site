@@ -59,7 +59,7 @@
      still lands on the same advisor. Google Analytics still gets the campaign tags: app.js sends them with the first page_view (window.EA_LANDING). */
   if (fromLink) window.EA_LANDING = location.href;
   if (/^\/(index\.html)?$/.test(location.pathname)) {
-    try { history.replaceState(history.state, "", "/" + adv.id + location.hash); } catch (e) {}
+    try { history.replaceState(history.state, "", "/" + adv.id + (location.hash.length > 2 ? location.hash : ""));   /* home page: no bare "#/" */ } catch (e) {}
   }
 
   /* 3. Point the WhatsApp buttons at the advisor. */
