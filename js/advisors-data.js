@@ -6,7 +6,7 @@
 window.EA_ADVISORS = [
   { "id": "mohammed", "name": "Mohammed Ghuloom", "nameAr": "محمد غلوم",    "whatsapp": "97333161154" },
   { "id": "layla",    "name": "Layla Alqaidoom",  "nameAr": "ليلى القيدوم", "whatsapp": "97333161142" },
-  { "id": "mayssa",   "name": "Mayssa Aloui",     "nameAr": "ميساء علوي",   "whatsapp": "97333161076" },
+  { "id": "manal",    "name": "Manal Subber",     "nameAr": "منال شبر",     "whatsapp": "97333161076" },
   { "id": "alaa",     "name": "Alaa Faisal",      "nameAr": "آلاء فيصل",    "whatsapp": "97333161159" },
   { "id": "jasim",    "name": "Jasim Almudaweb",  "nameAr": "جاسم المدوب",  "whatsapp": "97335581881", "role": "Store Manager",           "roleAr": "مدير المتجر",         "group": "management" },
   { "id": "ahmed",    "name": "Ahmed Kuwaitan",   "nameAr": "أحمد كويتان",  "whatsapp": "97333480808", "role": "Assistant Store Manager", "roleAr": "مساعد مدير المتجر", "group": "management" }
