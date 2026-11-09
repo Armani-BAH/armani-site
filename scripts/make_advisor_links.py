@@ -25,6 +25,8 @@ from qrcode.constants import ERROR_CORRECT_M
 
 BASE = "https://www.eawishlist.com/"
 CAMPAIGN = "personal-link"  # utm_campaign: shows in Google Analytics (also set in advisors/links.html)
+# Former advisor ids -> current id. Old links/QR codes keep working: /mayssa forwards to /manal.
+ALIASES = {"mayssa": "manal"}
 RESERVED = {"advisors", "advisor-qr", "assets", "contact", "css", "data", "firebase", "js", "print", "qr", "scripts", "index", "404"}
 
 root = pathlib.Path(__file__).resolve().parent.parent
@@ -88,6 +90,8 @@ NOT_FOUND = HEAD + """<script src="/js/advisors-data.js"></script>
 <script>
 (function () {
   var seg = decodeURIComponent(location.pathname.split("/").filter(Boolean)[0] || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  var ALIASES = %(aliases)s;
+  seg = ALIASES[seg] || seg;
   var list = window.EA_ADVISORS || [];
   for (var i = 0; i < list.length; i++) {
     if (list[i].id === seg) {
@@ -124,7 +128,18 @@ for a in advisors:
     rows.append([a["id"], a["name"], clean])
     print(a["name"], "->", clean)
 
-(root / "404.html").write_text(NOT_FOUND % {"url": BASE, "campaign": CAMPAIGN, "title": TITLE, "desc": DESC}, encoding="utf-8")
+by_id = {a["id"]: a for a in advisors}
+for old, new in ALIASES.items():
+    a = by_id[new]
+    folder = root / old
+    folder.mkdir(exist_ok=True)
+    (folder / "index.html").write_text(
+        PAGE % {"url": f"{BASE}{new}", "title": TITLE_ADV % a["name"], "desc": DESC_ADV % a["name"].split()[0],
+                "js": json.dumps(target(a)[:-2]), "target": target(a).replace("&", "&amp;")}, encoding="utf-8")
+    print(f"(old link) {BASE}{old} -> {BASE}{new}")
+
+(root / "404.html").write_text(NOT_FOUND % {"url": BASE, "campaign": CAMPAIGN, "title": TITLE, "desc": DESC,
+                                            "aliases": json.dumps(ALIASES)}, encoding="utf-8")
 
 with open(out / "links.csv", "w", newline="", encoding="utf-8-sig") as f:
     csv.writer(f).writerows([["id", "name", "link"]] + rows)

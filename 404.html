@@ -27,6 +27,8 @@
 <script>
 (function () {
   var seg = decodeURIComponent(location.pathname.split("/").filter(Boolean)[0] || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  var ALIASES = {"mayssa": "manal"};
+  seg = ALIASES[seg] || seg;
   var list = window.EA_ADVISORS || [];
   for (var i = 0; i < list.length; i++) {
     if (list[i].id === seg) {
