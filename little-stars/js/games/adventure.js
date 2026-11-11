@@ -9,7 +9,7 @@
     var p = LS.el('div', 'path');
     ['adStep1', 'adStep2', 'adStep3', 'adStep4'].forEach(function (k, i) {
       var n = LS.el('div', 'node' + (i < step ? ' done' : i === step ? ' now' : ''));
-      n.appendChild(LS.el('b', '', '★'));
+      var nb = LS.el('b'); nb.appendChild(LS.ea('cur')); n.appendChild(nb);
       n.appendChild(LS.el('span', '', LS.t(k)));
       p.appendChild(n);
     });

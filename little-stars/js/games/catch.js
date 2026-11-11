@@ -21,7 +21,7 @@
 
       var field = LS.el('div', 'field'), bag = LS.el('div', 'bag');
       bag.appendChild(LS.mascot('happy'));
-      bag.appendChild(LS.el('span', 'bag-body', '★'));
+      var bb = LS.el('span', 'bag-body'); bb.appendChild(LS.ea('cur')); bag.appendChild(bb);
       field.appendChild(bag); scr.appendChild(field);
       LS.show(scr);
 

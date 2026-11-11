@@ -60,7 +60,7 @@
   }
   function chip(p) {
     var c = el('div', 'chip p' + p);
-    c.appendChild(el('b', '', '★')); c.appendChild(el('span', '', name(p)));
+    var cb = el('b'); cb.appendChild(LS.ea('cur')); c.appendChild(cb); c.appendChild(el('span', '', name(p)));
     return c;
   }
   function scoreboard() {
@@ -235,7 +235,7 @@
     }
     [1, 2].forEach(function (p) {
       var box = el('div', 'pp p' + p);
-      box.appendChild(el('span', 'pp-star', '★'));
+      var ps = el('span', 'pp-star'); ps.appendChild(LS.ea('cur')); box.appendChild(ps);
       box._name = el('b', 'pp-name'); box.appendChild(box._name);
       box._sw = el('div', 'pp-swatches');
       Object.keys(PALETTE).forEach(function (k) {
@@ -327,18 +327,18 @@
     if (w) {
       var big = el('div', 'winner p' + w);
       big.appendChild(el('span', 'crown', '👑'));
-      big.appendChild(el('b', '', '★'));
+      var wb = el('b'); wb.appendChild(LS.ea('cur')); big.appendChild(wb);
       scr.appendChild(big);
       title = t('winsP', { p: name(w) });
     } else {
       var two = el('div', 'tie-stars');
-      two.appendChild(el('b', 'p1', '★')); two.appendChild(el('b', 'p2', '★'));
+      var t1 = el('b', 'p1'), t2 = el('b', 'p2'); t1.appendChild(LS.ea('cur')); t2.appendChild(LS.ea('cur')); two.appendChild(t1); two.appendChild(t2);
       scr.appendChild(two);
       title = t('tie');
     }
     if (D.face) scr.insertBefore(mirror(title), scr.firstChild);
     scr.appendChild(el('h1', 'game-title', title));
-    scr.appendChild(el('p', 'lead', t('bothStars')));
+    scr.appendChild(LS.fill(el('p', 'lead'), t('bothStars')));
     scr.appendChild(scoreboard());
     var acts = el('div', 'duel-actions');
     acts.appendChild(btn('btn primary big', t('rematch'), function () { run(key); }, 'duel-again'));
@@ -363,7 +363,7 @@
       var sc = [null, head(A.h[1], 1), head(A.h[2], 2)], F = [null];
       [1, 2].forEach(function (p) {
         var f = el('div', 'field'), bag = el('div', 'bag');
-        bag.appendChild(LS.mascot('happy')); bag.appendChild(el('span', 'bag-body', '★'));
+        bag.appendChild(LS.mascot('happy')); var bb = el('span', 'bag-body'); bb.appendChild(LS.ea('cur')); bag.appendChild(bb);
         f.appendChild(bag); A.h[p].appendChild(f);
         var o = { f: f, bag: bag, x: 0.5, items: [], score: 0 };
         var flipped = D.face && p === 2;          /* the top half is upside down */
@@ -450,7 +450,7 @@
       deck.forEach(function (id) {
         var c = el('button', 'mcard'); c.type = 'button'; c.dataset.id = id;
         var inner = el('span', 'inner');
-        inner.appendChild(el('span', 'side back', '★'));
+        var bk = el('span', 'side back'); bk.appendChild(LS.ea('cur')); inner.appendChild(bk);
         var face = el('span', 'side face');
         var img = new Image(); img.src = LS.src(id); img.alt = ''; img.draggable = false;
         face.appendChild(img); inner.appendChild(face); c.appendChild(inner);
@@ -608,8 +608,8 @@
       var rope = el('div', 'rope');
       rope.appendChild(el('span', 'track'));
       rope.appendChild(el('span', 'mid'));
-      rope.appendChild(el('span', 'goal g1', '★'));
-      rope.appendChild(el('span', 'goal g2', '★'));
+      var g1 = el('span', 'goal g1'), g2 = el('span', 'goal g2'); g1.appendChild(LS.ea('cur')); g2.appendChild(LS.ea('cur'));
+      rope.appendChild(g1); rope.appendChild(g2);
       var marker = el('div', 'marker'); marker.appendChild(LS.mascot('happy')); rope.appendChild(marker);
       scr.appendChild(rope);
       if (D.face) rope.classList.add('vertical');

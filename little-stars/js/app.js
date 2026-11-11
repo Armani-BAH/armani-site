@@ -93,9 +93,9 @@
     LS.currentPrompt = t('ageTitle');
     scr.appendChild(LS.guide(t('ageTitle'), 'big'));
     var row = el('div', 'ages');
-    [['junior', 'juniorAge', '★'], ['senior', 'seniorAge', '★ ★']].forEach(function (a) {
+    [['junior', 'juniorAge', 1], ['senior', 'seniorAge', 2]].forEach(function (a) {
       var b = el('button', 'age'); b.type = 'button'; b.dataset.age = a[0];
-      b.appendChild(el('span', 'mini', a[2]));
+      var mini = el('span', 'mini'); for (var k = 0; k < a[2]; k++) mini.appendChild(LS.ea('cur')); b.appendChild(mini);
       b.appendChild(el('span', 'num', t(a[1])));
       b.appendChild(el('span', 'yrs', t('years')));
       b.appendChild(el('span', 'who', t(a[0])));
@@ -251,9 +251,9 @@
     var title = t(rank());
     var side = el('div', 'reward-side');
     var badge = el('div', 'badge');
-    badge.appendChild(el('span', 'star', '★'));
+    var bs = el('span', 'star'); bs.appendChild(LS.ea('cur')); badge.appendChild(bs);
     badge.appendChild(el('span', 'name', t('badge')));
-    badge.appendChild(el('span', 'ea', 'EMPORIO ARMANI'));
+    badge.appendChild(el('span', 'ea-text', 'EMPORIO ARMANI'));
     side.appendChild(badge);
     if (LS.state.design) {
       var mine = el('div', 'my-tee'); mine.appendChild(LS.tee(LS.state.design)); mine.appendChild(el('small', '', t('myDesign')));
@@ -263,11 +263,11 @@
 
     var main = el('div', 'reward-main');
     main.appendChild(el('h1', 'game-title', t('congrats')));
-    var rk = el('p', 'rank'); rk.appendChild(el('small', '', t('yourTitle'))); rk.appendChild(el('b', '', '★ ' + title + ' ★'));
+    var rk = el('p', 'rank'); rk.appendChild(el('small', '', t('yourTitle'))); rk.appendChild(LS.fill(el('b'), '★ ' + title + ' ★', 'cur'));
     main.appendChild(rk);
     main.appendChild(el('p', 'lead', t('youEarned')));
     var tot = el('div', 'total'), num = el('span', 'n', '0');
-    tot.appendChild(num); tot.appendChild(el('span', 's', '★'));
+    var ts = el('span', 's'); ts.appendChild(LS.ea()); tot.appendChild(num); tot.appendChild(ts);
     main.appendChild(tot);
 
     var sur = el('div', 'surprise');
@@ -337,15 +337,15 @@
   function certificate(name, total, title) {
     name = (name || '').replace(/[<>]/g, '').trim().slice(0, 20);
     $('#c-name').textContent = name || t('certAnon');
-    $('#c-stars').textContent = total + ' ★';
-    $('#c-rank').textContent = '★ ' + title + ' ★';
+    LS.fill($('#c-stars'), total + ' ★');
+    LS.fill($('#c-rank'), '★ ' + title + ' ★', 'cur');
     var slot = $('#c-tee');
     while (slot.firstChild) slot.removeChild(slot.firstChild);
     var ph = $('#c-photo');
     while (ph.firstChild) ph.removeChild(ph.firstChild);
     if (LS.state.photo) { var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi); ph.classList.add('has'); }
     else { ph.classList.remove('has'); ph.appendChild(LS.mascot('happy')); }
-    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else slot.appendChild(LS.el('span', 'c-bigstar', '★'));
+    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else { var bg = LS.el('span', 'c-bigstar'); bg.appendChild(LS.ea()); slot.appendChild(bg); }
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }

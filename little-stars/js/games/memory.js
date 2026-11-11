@@ -40,7 +40,7 @@
       deck.forEach(function (id) {
         var c = LS.el('button', 'mcard'); c.type = 'button'; c.dataset.id = id;
         var inner = LS.el('span', 'inner');
-        inner.appendChild(LS.el('span', 'side back', '★'));
+        var bk = LS.el('span', 'side back'); bk.appendChild(LS.ea('cur')); inner.appendChild(bk);
         var face = LS.el('span', 'side face');
         var img = new Image(); img.src = LS.src(id); img.alt = ''; img.draggable = false;
         face.appendChild(img); inner.appendChild(face); c.appendChild(inner);

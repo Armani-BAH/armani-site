@@ -170,7 +170,7 @@
     var count = Math.min(n, 5);
     for (var i = 0; i < count; i++) {
       (function (i) {
-        var s = LS.el('div', 'fly-star', '★');
+        var s = LS.el('div', 'fly-star'); s.appendChild(LS.ea());
         s.style.left = sx + 'px'; s.style.top = sy + 'px';
         document.body.appendChild(s);
         setTimeout(function () {
@@ -340,7 +340,7 @@
     var burst = LS.mascot('happy', 'cheer');
     scr.appendChild(burst);
     scr.appendChild(LS.el('h1', 'game-title', LS.t('gameDone')));
-    scr.appendChild(LS.el('p', 'lead', '+' + bonus + ' ★'));
+    scr.appendChild(LS.fill(LS.el('p', 'lead'), '+' + bonus + ' ★'));
     LS.show(scr);
     LS.sfx.good();
     LS.award(bonus, burst);
@@ -361,6 +361,21 @@
     }
   };
 
+  /* ---------- the eagle in any colour, for drawing on a canvas ---------- */
+  var EAG = new Image(), EAG_OK = false, tints = {};
+  EAG.onload = function () { EAG_OK = true; };
+  EAG.src = 'assets/logo/eagle.png';
+  LS.tintedEagle = function (col) {
+    if (!EAG_OK) return null;
+    if (!tints[col]) {
+      var c = document.createElement('canvas'); c.width = 128; c.height = 74;
+      var x = c.getContext('2d'); x.drawImage(EAG, 0, 0, 128, 74);
+      x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, 128, 74);
+      tints[col] = c;
+    }
+    return tints[col];
+  };
+
   /* ---------- confetti (light, canvas based) ---------- */
   LS.confetti = function (ms) {
     var c = LS.$('#confetti'), g = c.getContext('2d'), session = LS.state.session;
@@ -375,7 +390,13 @@
     }
     var end = Date.now() + ms;
     c.style.display = 'block';
-    function star(x, y, r, a) {
+    function star(x, y, r, a, col) {
+      var img = LS.tintedEagle(col);
+      if (img) {
+        g.save(); g.translate(x, y); g.rotate(a * 0.3);
+        g.drawImage(img, -r * 1.4, -r * 0.8, r * 2.8, r * 1.6);
+        g.restore(); return;
+      }
       g.beginPath();
       for (var k = 0; k < 10; k++) {
         var rad = k % 2 ? r * 0.45 : r, ang = a + k * Math.PI / 5;
@@ -392,7 +413,7 @@
         p.y += p.vy; p.x += p.vx; p.a += p.va;
         if (p.y > H + 20) { p.y = -20; p.x = Math.random() * W; }
         g.fillStyle = p.col;
-        if (p.star) star(p.x, p.y, p.r, p.a);
+        if (p.star) star(p.x, p.y, p.r, p.a, p.col);
         else { g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); g.restore(); }
       });
       requestAnimationFrame(frame);

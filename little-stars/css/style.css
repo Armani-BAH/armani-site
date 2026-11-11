@@ -365,7 +365,7 @@ html[dir='rtl'] .timer i { transform-origin: right; }
 }
 .badge .star { font-size: clamp(3rem, 9vw, 6rem); line-height: 1; color: var(--ink); text-shadow: 0 2px 0 #fff8; }
 .badge .name { font-family: var(--display); text-transform: uppercase; letter-spacing: var(--track); font-size: clamp(.8rem, 1.9vw, 1.25rem); color: var(--ink); font-weight: 500; }
-.badge .ea { font-size: .6rem; letter-spacing: .3em; color: #2c2d32; direction: ltr; }
+.badge .ea-text { font-size: .6rem; letter-spacing: .3em; color: #2c2d32; direction: ltr; }
 .badge::before {
   content: ''; position: absolute; inset: -8%; border-radius: 50%; border: 1px dashed #ffffff55; animation: spin 30s linear infinite;
 }
@@ -574,7 +574,7 @@ body[data-g='5'] { --accent: var(--sun); }
 }
 .badge .star { color: #fff; text-shadow: 0 3px 0 #c77700; }
 .badge .name { color: #4a2500; }
-.badge .ea { color: #6b3a00; }
+.badge .ea-text { color: #6b3a00; }
 .badge::before { border: 3px dashed var(--sky); }
 .total .n { color: var(--sun); }
 .total .s { color: var(--pink); }
@@ -1230,3 +1230,54 @@ html[dir='rtl'] .pick-players > * { direction: rtl; }
 .duel-setup .hint-text { margin: -4px 0 0; }
 .duel-setup.face .pp { width: min(94vw, 920px); gap: 14px; }
 .duel-setup.face .pp-name { min-width: 6em; }
+
+/* ============================================================
+   EAGLE ICONS (in place of every star)
+   ============================================================ */
+.ea {
+  display: inline-block; width: 1.75em; aspect-ratio: 640 / 366; vertical-align: -.1em; flex: none;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+  background: linear-gradient(135deg, #ff5fa2 0%, #ffd23f 35%, #3ddc97 65%, #4cc9f0 100%);
+}
+.ea.cur { background: currentColor; }
+#stars .ea { width: 2em; background: linear-gradient(135deg, #ff5fa2, #8b6cf0 50%, #3aa8e8); }
+#progress i::before {
+  content: ''; display: inline-block; width: 1.45em; aspect-ratio: 640 / 366;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+  background: currentColor;
+}
+#sky i.big { width: 26px; height: 15px; border-radius: 0; -webkit-clip-path: none; clip-path: none;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat; }
+.card.chosen::after, .card.good::after { line-height: 44px; }
+.card.chosen::after { content: ''; background: var(--sun) url('../assets/logo/eagle.png') center / 70% auto no-repeat; }
+.gift.open::after {
+  content: ''; left: 18%; right: 18%; top: 2%; height: 42%; font-size: 0;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+  background: linear-gradient(135deg, #fff6b0, #ffd23f 40%, #ff6fb5 75%, #8b6cf0);
+}
+.fly-star { margin: -18px 0 0 -30px; font-size: 36px; text-shadow: none; filter: drop-shadow(0 0 10px #fffb); }
+.paper .c-stars { letter-spacing: 0; display: flex; align-items: center; justify-content: center; gap: .5em; }
+.paper .c-stars::before, .paper .c-stars::after {
+  content: ''; display: inline-block; width: 1.75em; aspect-ratio: 640 / 366;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+}
+.paper .c-stars::before { background: #ff6fb5; } .paper .c-stars::after { background: #3aa8e8; }
+.paper .c-seal { color: #fff; } .paper .c-seal .ea { width: 2.6em; font-size: 1em; }
+.paper .c-bigstar .ea { width: 1.6em; }
+.paper .c-rank .ea { color: #ff5fa2; }
+.paper .c-foot b .ea { width: 1.4em; }
+.age .mini { display: flex; gap: .3em; color: #fff; font-size: 1.2rem; }
+.badge .star { line-height: 1; color: #fff; filter: drop-shadow(0 3px 0 #c77700); }
+.badge .star .ea { width: 1.9em; }
+.total .s .ea { width: 1.3em; }
+.rank b .ea { width: 1.5em; vertical-align: -.08em; }
+.node b .ea { width: 1.5em; }
+.mcard .back .ea { width: 1.8em; }
+.bag-body .ea { width: 1.4em; vertical-align: middle; }
+.chip b .ea { width: 1.6em; }
+.pp-star .ea { width: 1.6em; }
+.winner b .ea, .tie-stars .ea { width: 1.6em; }
+.rope .goal .ea { width: 1.5em; }
+.tee .sticker .ea { width: 1.7em; }
+.stick .ea { width: 1.5em; }
+.lead .ea { width: 1.5em; }
