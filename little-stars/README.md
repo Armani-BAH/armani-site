@@ -36,7 +36,7 @@ little-stars/
 │       ├── duel.js            Challenge a Friend: 7 two-player games
 │       └── studio.js              · Design a T-shirt or a dress (part of game 6)
 ├── assets/
-│   ├── images/                48 Emporio Armani Kids product photos
+│   ├── images/                185 Emporio Armani Kids product photos
 │   │   ├── tops/  bottoms/  shoes/  accessories/  jackets/  dresses/
 │   │   └── SOURCES.txt        Which catalogue piece each photo is
 │   ├── logo/                  Emporio Armani logo
@@ -152,6 +152,11 @@ that section, for example:
 
 (the name must match the file name without `.jpg`). Then run
 `python tools/build_offline_list.py` once so the iPad also keeps the new photo offline.
+
+**Big catalogue:** the game uses all 185 pieces. In Mix & match, tapping the picture between the
+arrows opens a sheet with every piece for that part (115 tops, jackets and dresses; 44 trousers,
+jeans and skirts; 14 shoes; 10 extras). The quiz picks its questions from the whole catalogue
+using the `tags` in `js/catalog.js` (`sunny`, `cold`, `hat`, `bag`, `tee`, `eagle`).
 
 **Colour-matching looks** (used by the Stylist game) are listed at the bottom of
 `js/catalog.js` under `LS.LOOKS`.

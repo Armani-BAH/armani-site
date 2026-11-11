@@ -446,7 +446,7 @@
       var A = arena('dstyle');
       var prompt = el('h2', 'prompt', t('dStyle'));
       A.top.appendChild(prompt);
-      var lists = { top: TOPS, bottom: LS.byCat('bottoms'), shoes: LS.byCat('shoes'), extra: EXTRA };
+      var lists = LS.figureLists();
       var M = [null], ready = [false, false, false], ended = false, finishNow;
       [1, 2].forEach(function (p) {
         var hd = el('div', 'half-head'); hd.appendChild(chip(p)); A.h[p].appendChild(hd);
@@ -545,7 +545,7 @@
   PLAY.copy = function () {
     return new Promise(async function (res) {
       var s = LS.state.session, junior = LS.isJunior(), showSecs = junior ? 5 : 3.5, limit = 30;
-      var tops = TOPS.filter(function (x) { return LS.ITEMS[x].cat !== 'dresses'; });
+      var tops = LS.figureLists().top.filter(function (x) { return LS.ITEMS[x].cat !== 'dresses'; });
       var target = { top: LS.rand(tops), bottom: LS.rand(LS.byCat('bottoms')), shoes: LS.rand(LS.byCat('shoes')) };
       var pools = { top: tops, bottom: LS.byCat('bottoms'), shoes: LS.byCat('shoes') };
       var lists = {}, start = {};

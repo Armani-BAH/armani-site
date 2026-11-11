@@ -1010,3 +1010,23 @@ html[dir='rtl'] .copy-row > * { direction: rtl; }
   .tap-pad { min-height: 22vh; }
 }
 .half.p2 .bag-body { background: linear-gradient(135deg, #7ad9f7, #3aa8e8); }
+
+/* ---------- "see all" picker (Mix & match) ---------- */
+.mix-mid { position: relative; cursor: pointer; }
+.mix-mid .see-all { position: absolute; top: 3px; inset-inline-end: 5px; font-size: .8rem; color: #8b6cf0; }
+.picker { z-index: 85; align-items: flex-end; padding: 0; }
+.pick-panel {
+  width: 100%; max-height: 82vh; display: flex; flex-direction: column; background: #231a6b; border-radius: 30px 30px 0 0;
+  padding: 16px clamp(14px, 3vw, 30px) 20px; box-shadow: 0 -20px 60px #0008; animation: sheetUp .35s cubic-bezier(.2, .9, .3, 1) both;
+}
+@keyframes sheetUp { from { transform: translateY(100%); } }
+.pick-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.pick-head h3 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 1.5rem; }
+.pick-close { min-height: 56px; width: 56px; padding: 0; font-size: 1.4rem; }
+.pick-grid { overflow-y: auto; -webkit-overflow-scrolling: touch; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(96px, 12vw, 140px), 1fr)); gap: 12px; padding: 6px; }
+.pick-grid .card { animation: none; }
+.tool-btns { max-width: min(46vw, 560px); }
+@media (orientation: portrait) { .tool-btns { max-width: 90vw; } }
+.pick-grid { flex: 1; min-height: 0; grid-auto-rows: max-content; }
+.pick-grid .card { aspect-ratio: 4 / 5; }
+.pick-grid .card img { width: 100%; height: 100%; object-fit: cover; }

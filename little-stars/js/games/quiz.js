@@ -5,20 +5,22 @@
   var LS = window.LS;
   var R = LS.rand, S = LS.sample;
 
-  var TEES = ['green-tee', 'navy-tee', 'peach-tee', 'white-tee', 'varsity-tee'];
-  var JACKETS = ['navy-blazer', 'varsity-jacket', 'pattern-puffer', 'check-jacket', 'navy-coat', 'black-puffer'];
   var SHOES = function () { return LS.byCat('shoes'); };
+  var TEESF = function () { return LS.byTag('tee'); };
+  var JACK = function () { return LS.byCat('jackets'); };
+  var BOTT = function () { return LS.byCat('bottoms'); };
+  var notTag = function (arr, tag) { return arr.filter(function (k) { return (LS.ITEMS[k].tags || []).indexOf(tag) < 0; }); };
 
   /* each builder returns { prompt, correct[], others[], target?, need?, text? } */
   var BANK = {
-    jacket: function () { return { prompt: 'qJacket', correct: [R(JACKETS)], others: [R(TEES), R(['jeans', 'navy-shorts', 'pink-skirt']), R(SHOES()), R(['backpack', 'cap'])] }; },
-    shoes:  function () { return { prompt: 'qShoes', correct: [R(SHOES())], others: [R(['cap', 'navy-beanie', 'pink-beret']), R(['backpack', 'pink-bag']), R(TEES), R(['jeans', 'check-skirt'])] }; },
-    sunny:  function () { return { prompt: 'qSunny', correct: [R(['white-tee', 'navy-shorts', 'green-tee', 'peach-tee'])], others: ['black-puffer', 'navy-coat', 'navy-beanie', 'pattern-puffer', 'beige-beanie'] }; },
-    cold:   function () { return { prompt: 'qCold', correct: [R(['pattern-puffer', 'black-puffer', 'navy-coat'])], others: ['white-tee', 'navy-shorts', 'pink-ballet', 'check-skirt', 'peach-tee'] }; },
-    hat:    function () { return { prompt: 'qHat', correct: [R(LS.byTag('hat'))], others: ['socks', R(['backpack', 'pink-bag']), R(SHOES()), R(['jeans', 'navy-shorts'])] }; },
-    bag:    function () { return { prompt: 'qBag', correct: [R(LS.byTag('bag'))], others: [R(['cap', 'navy-beanie']), R(SHOES()), R(TEES), 'socks'] }; },
-    dress:  function () { return { prompt: 'qDress', correct: [R(LS.byCat('dresses'))], others: ['jeans', R(TEES), R(SHOES()), 'backpack'] }; },
-    eagle:  function () { return { prompt: 'qEagle', correct: ['eagle-tees'], others: ['pink-skirt', 'jeans', 'green-dress', 'check-dress', 'light-jeans'] }; },
+    jacket: function () { return { prompt: 'qJacket', correct: [R(JACK())], others: [R(TEESF()), R(BOTT()), R(SHOES()), R(LS.byTag('bag'))] }; },
+    shoes:  function () { return { prompt: 'qShoes', correct: [R(SHOES())], others: [R(LS.byTag('hat')), R(LS.byTag('bag')), R(TEESF()), R(BOTT())] }; },
+    sunny:  function () { return { prompt: 'qSunny', correct: [R(LS.byTag('sunny'))], others: LS.byTag('cold') }; },
+    cold:   function () { return { prompt: 'qCold', correct: [R(LS.byTag('cold').filter(function (k) { return LS.ITEMS[k].cat === 'jackets'; }))], others: LS.byTag('sunny') }; },
+    hat:    function () { return { prompt: 'qHat', correct: [R(LS.byTag('hat'))], others: ['socks', R(LS.byTag('bag')), R(SHOES()), R(BOTT())] }; },
+    bag:    function () { return { prompt: 'qBag', correct: [R(LS.byTag('bag'))], others: [R(LS.byTag('hat')), R(SHOES()), R(TEESF()), 'socks'] }; },
+    dress:  function () { return { prompt: 'qDress', correct: [R(LS.byCat('dresses'))], others: [R(BOTT()), R(TEESF()), R(SHOES()), R(LS.byTag('bag'))] }; },
+    eagle:  function () { return { prompt: 'qEagle', correct: [R(LS.byTag('eagle'))], others: [R(BOTT()), R(BOTT()), R(LS.byCat('dresses')), R(LS.byCat('dresses')), R(SHOES())] }; },
     same:   function () { var t = R(SHOES()); return { prompt: 'qSame', target: t, correct: [t], others: SHOES().filter(function (s) { return s !== t; }) }; },
     two:    function () {
       var l = R(LS.LOOKS);

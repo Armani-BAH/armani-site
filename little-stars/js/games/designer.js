@@ -8,16 +8,8 @@
   var LS = window.LS;
 
   /* what can be worn on each part of the figure */
-  var TOPS = ['green-tee', 'navy-tee', 'peach-tee', 'white-tee', 'varsity-tee', 'green-hoodie', 'burgundy-hoodie', 'pink-cardigan',
-    'pattern-sweatshirt', 'beige-pullover', 'varsity-jacket', 'pattern-puffer', 'check-jacket', 'navy-blazer', 'pink-jacket',
-    'check-dress', 'navy-dress', 'green-dress', 'pink-dress', 'peach-dress'];
-  var PARTS = {
-    top: TOPS,
-    bottom: function () { return LS.byCat('bottoms'); },
-    shoes: function () { return LS.byCat('shoes'); },
-    extra: ['backpack', 'cap', 'pink-bag', 'navy-beanie', 'pink-beret', 'cream-bag', 'beige-beanie', 'socks']
-  };
-  function list(k) { return typeof PARTS[k] === 'function' ? PARTS[k]() : PARTS[k]; }
+  var PARTS = function () { return LS.figureLists(); };
+  function list(k) { return PARTS()[k]; }
   function isDress(id) { return LS.ITEMS[id].cat === 'dresses'; }
 
   function pickMode() {
@@ -46,10 +38,31 @@
     });
   }
 
+  /* "see all": a sheet with every piece for one part of the outfit */
+  function picker(k, label, current, onPick) {
+    var o = LS.el('div', 'overlay on picker');
+    var panel = LS.el('div', 'pick-panel');
+    var head = LS.el('div', 'pick-head');
+    head.appendChild(LS.el('h3', '', LS.t(label) + '  ·  ' + list(k).length));
+    var close = LS.el('button', 'btn', '✕'); close.type = 'button'; close.className = 'btn pick-close';
+    close.addEventListener('click', function () { LS.sfx.tap(); o.parentNode.removeChild(o); });
+    head.appendChild(close); panel.appendChild(head);
+    var grid = LS.el('div', 'pick-grid');
+    list(k).forEach(function (id) {
+      var c = LS.card(id, id === current ? 'chosen' : '');
+      c.querySelector('img').loading = 'lazy';
+      c.addEventListener('click', function () { o.parentNode.removeChild(o); onPick(id); });
+      grid.appendChild(c);
+    });
+    panel.appendChild(grid); o.appendChild(panel);
+    o.addEventListener('click', function (e) { if (e.target === o) o.parentNode.removeChild(o); });
+    document.body.appendChild(o);
+  }
+
   /* mix & match on the figure */
   LS.mixMatch = function () {
     return new Promise(function (resolve) {
-      var look = { top: LS.rand(TOPS), bottom: LS.rand(list('bottom')), shoes: LS.rand(list('shoes')), extra: LS.rand(list('extra')) };
+      var look = { top: LS.rand(list('top')), bottom: LS.rand(list('bottom')), shoes: LS.rand(list('shoes')), extra: LS.rand(list('extra')) };
       var scr = LS.screen('mix');
       LS.setPrompt(scr, LS.t('mixPrompt'));
       var row = LS.el('div', 'mix-row');
@@ -82,9 +95,14 @@
         var next = LS.el('button', 'arrow', '›'); next.type = 'button'; next.dataset.d = '1';
         prev.addEventListener('click', function () { step(-1); });
         next.addEventListener('click', function () { step(1); });
-        var mid = LS.el('span', 'mix-mid');
+        var mid = LS.el('button', 'mix-mid'); mid.type = 'button'; mid.dataset.part = k;
+        mid.addEventListener('click', function () {
+          LS.unlockAudio(); LS.sfx.tap();
+          picker(k, p[1], look[k], function (id) { look[k] = id; LS.sfx.star(); draw(k); thumb.src = LS.src(id); step(0); });
+        });
         var thumb = new Image(); thumb.alt = ''; thumb.src = LS.src(look[k]);
         mid.appendChild(thumb); mid.appendChild(LS.el('small', '', LS.t(p[1])));
+        mid.appendChild(LS.el('span', 'see-all', '▦'));
         line.appendChild(prev); line.appendChild(mid); line.appendChild(next);
         line._thumb = thumb;
         ctrl.appendChild(line);
