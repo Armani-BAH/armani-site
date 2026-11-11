@@ -135,8 +135,7 @@ child's photo. The first time, Safari may ask permission to use the camera: tap 
 ---
 
 **Signature:** the certificate shows the Giorgio Armani signature (`assets/signature.png`, taken from the
-signature print supplied by the boutique) above a signature line, with the date and "Marassi Galleria,
-Bahrain". To change it, replace `assets/signature.png` (dark ink on a transparent background). If the file
+signature print supplied by the boutique) above a signature line, with the date underneath. To change it, replace `assets/signature.png` (dark ink on a transparent background). If the file
 is removed, the certificate shows "Emporio Armani" in italic instead.
 
 ## 6. Change or replace the product photos
