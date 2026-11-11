@@ -1,7 +1,7 @@
 # Emporio Armani · Little Stars
 
 An in-store game for the Emporio Armani Kids activity. Children aged 5–12 pick the games they
-want from a menu of six, with Stella the star as their guide. They can mix and match outfits,
+want from a menu of six, with Gio the star as their guide. They can mix and match outfits,
 design their own T-shirt or dress, collect stars, open a gift, and finish with a Little Star
 badge and a printable certificate that can carry their photo. English and Arabic.
 A child can finish after one game (about 1 minute) or play all six (about 6–8 minutes).
@@ -23,7 +23,7 @@ little-stars/
 │   ├── i18n.js                ALL the wording, English + Arabic  ← edit text here
 │   ├── catalog.js             The list of product photos         ← edit photos here
 │   ├── core.js                Shared parts (sound, cards, stars, confetti)
-│   ├── mascot.js              Stella the star (the guide) and the T-shirt drawing
+│   ├── mascot.js              Gio the star (the guide) and the T-shirt drawing
 │   ├── app.js                 Game flow + Store Event Mode settings
 │   └── games/
 │       ├── stylist.js         1 · Little Armani Stylist
@@ -183,8 +183,8 @@ between the quotes on the right-hand side.
 | Gift | Taps a gift box three times to open it. |
 | Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
 
-**Stella the star** guides the child on every screen, cheers for right answers, and can be tapped
-to make her spin. She is an original character drawn in code.
+**Gio the star** guides the child on every screen, cheers for right answers, and can be tapped
+to make him spin. Gio (short for Giorgio) is an original character drawn in code. To rename him, change the `mascot` line near the top of each language block in `js/i18n.js`.
 
 **The child's T-shirt or dress design** appears on the results screen and on the printed
 certificate. Like the name, it is never saved and is erased when the next child starts.

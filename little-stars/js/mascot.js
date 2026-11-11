@@ -1,15 +1,15 @@
 /* ============================================================
-   LITTLE STARS — STELLA THE STAR (the guide) + T-SHIRT DRAWING
-   Stella is an original character drawn in code, no image file.
+   LITTLE STARS — GIO THE STAR (the guide) + T-SHIRT DRAWING
+   Gio (short for Giorgio) is an original character drawn in code, no image file.
    ============================================================ */
 (function () {
   'use strict';
   var LS = window.LS;
 
   var STAR = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
-    '<defs><radialGradient id="stella" cx="40%" cy="32%" r="75%"><stop offset="0" stop-color="#fff6b0"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffa51a"/></radialGradient></defs>' +
-    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#stella)" stroke="#ffbf2e" stroke-width="12" stroke-linejoin="round"/>' +
-    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#stella)"/>' +
+    '<defs><radialGradient id="gio" cx="40%" cy="32%" r="75%"><stop offset="0" stop-color="#fff6b0"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffa51a"/></radialGradient></defs>' +
+    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#gio)" stroke="#ffbf2e" stroke-width="12" stroke-linejoin="round"/>' +
+    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#gio)"/>' +
     '<g class="eyes"><ellipse cx="49" cy="57" rx="4.6" ry="6.4" fill="#2b1a4f"/><ellipse cx="71" cy="57" rx="4.6" ry="6.4" fill="#2b1a4f"/>' +
     '<circle cx="50.6" cy="54.6" r="1.7" fill="#fff"/><circle cx="72.6" cy="54.6" r="1.7" fill="#fff"/></g>' +
     '<circle cx="40" cy="67" r="5" fill="#ff8fc7" opacity=".75"/><circle cx="80" cy="67" r="5" fill="#ff8fc7" opacity=".75"/>' +
@@ -22,7 +22,7 @@
     d.innerHTML = STAR;
     return d;
   };
-  /* Stella with a speech bubble */
+  /* Gio with a speech bubble */
   LS.guide = function (text, cls) {
     var g = LS.el('div', 'guide ' + (cls || ''));
     var m = LS.mascot('happy');

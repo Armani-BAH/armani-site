@@ -19,6 +19,7 @@
   LS.t = function (key, vars) {
     var table = LS.TEXT[LS.state.lang] || LS.TEXT.en;
     var s = table[key] != null ? table[key] : (LS.TEXT.en[key] != null ? LS.TEXT.en[key] : key);
+    s = s.replace(/\{mascot\}/g, table.mascot || LS.TEXT.en.mascot);
     if (vars) Object.keys(vars).forEach(function (v) { s = s.replace('{' + v + '}', vars[v]); });
     return s;
   };

@@ -7,7 +7,8 @@ window.LS = window.LS || {};
 LS.TEXT = {
   en: {
     title: 'Little Stars',
-    hello: 'Hi, I\'m Stella! Let\'s shine together!',
+    mascot: 'Gio',   /* the guide's name (short for Giorgio). Change it here. */
+    hello: 'Hi, I\'m {mascot}! Let\'s shine together!',
     hubTitle: 'Pick a game!', hubMore: 'Play another game, or collect your reward!', finish: 'Get my reward', menu: 'Games',
     g6: 'Mini Designer', g6Intro: 'Create your own fashion! Mix, match and design.',
     dzPick: 'What would you like to create?', dzMix: 'Mix & match an outfit', dzTee: 'Design a T-shirt', dzDress: 'Design a dress',
@@ -16,7 +17,7 @@ LS.TEXT = {
     qZoom: 'Detective time! Which piece is hiding here?',
     adDesign: 'Design your own T-shirt for the fashion day!',
     stColour: 'Colour', stPattern: 'Pattern', stStickers: 'Stickers', stHint: 'Drag the stickers anywhere you like.', stUndo: 'Undo', done: 'Done',
-    bonus: 'Bonus round', catchTitle: 'Catch the falling stars!', catchSub: 'Slide your finger to move Stella.', catchSubSenior: 'Slide your finger to move Stella. Watch out for clouds!',
+    bonus: 'Bonus round', catchTitle: 'Catch the falling stars!', catchSub: 'Slide your finger to move {mascot}.', catchSubSenior: 'Slide your finger to move {mascot}. Watch out for clouds!',
     giftTitle: 'A surprise for you!', giftSub: 'Tap the gift three times to open it!',
     yourTitle: 'Your star title', tStylist: 'Super Stylist', tMemory: 'Memory Master', tQuiz: 'Quiz Champion', tCatch: 'Star Catcher', tDesign: 'Dream Designer',
     myDesign: 'Designed by me',
@@ -114,7 +115,8 @@ LS.TEXT = {
 
   ar: {
     title: 'النجوم الصغار',
-    hello: 'مرحبًا، أنا ستيلا! هيّا نتألّق معًا!',
+    mascot: 'جيو',   /* اسم المرشد */
+    hello: 'مرحبًا، أنا {mascot}! هيّا نتألّق معًا!',
     hubTitle: 'اختر لعبة!', hubMore: 'العب لعبة أخرى أو احصل على جائزتك!', finish: 'احصل على جائزتي', menu: 'الألعاب',
     g6: 'المصمّم الصغير', g6Intro: 'اصنع أزياءك الخاصة! نسّق وصمّم كما تحب.',
     dzPick: 'ماذا تحب أن تصنع؟', dzMix: 'تنسيق إطلالة كاملة', dzTee: 'تصميم قميص', dzDress: 'تصميم فستان',
@@ -123,7 +125,7 @@ LS.TEXT = {
     qZoom: 'وقت المحقّق! أيّ قطعة تختبئ هنا؟',
     adDesign: 'صمّم قميصك الخاص ليوم الأزياء!',
     stColour: 'اللون', stPattern: 'النقشة', stStickers: 'الملصقات', stHint: 'اسحب الملصقات إلى أي مكان تحبّه.', stUndo: 'تراجع', done: 'تم',
-    bonus: 'جولة إضافية', catchTitle: 'التقط النجوم المتساقطة!', catchSub: 'حرّك إصبعك لتحريك ستيلا.', catchSubSenior: 'حرّك إصبعك لتحريك ستيلا وانتبه من الغيوم!',
+    bonus: 'جولة إضافية', catchTitle: 'التقط النجوم المتساقطة!', catchSub: 'حرّك إصبعك لتحريك {mascot}.', catchSubSenior: 'حرّك إصبعك لتحريك {mascot} وانتبه من الغيوم!',
     giftTitle: 'مفاجأة لك!', giftSub: 'اضغط على الهدية ثلاث مرات لفتحها!',
     yourTitle: 'لقبك النجمي', tStylist: 'منسّق أزياء خارق', tMemory: 'بطل الذاكرة', tQuiz: 'بطل المسابقة', tCatch: 'صيّاد النجوم', tDesign: 'مصمّم الأحلام',
     myDesign: 'من تصميمي',
