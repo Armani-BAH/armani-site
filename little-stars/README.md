@@ -224,7 +224,12 @@ Both children get 3 stars after every duel, whatever the result, and a draw is s
 "You are both stars!". Wins (🏆) are counted only for this visit and are cleared when
 **New Little Star** is pressed. There is no leaderboard.
 
-**Emporio the star** guides the child on every screen, cheers for right answers, and can be tapped
+**Icons:** the Emporio Armani eagle (cut from the official logo) is used for the guide, the score counter,
+progress bar, background sparkles, memory cards, chosen marker, Fashion Adventure path, player tags,
+winner screen, tug-of-war goals, catch games, badge, certificate seal and gift. Stars are kept for the
+results title, the "+3" labels and the certificate rows. Confetti is plain paper (no icons).
+
+**Emporio** (now a colourful eagle) guides the child on every screen, cheers for right answers, and can be tapped
 to make him spin. Emporio is an original character drawn in code. To rename him, change the `mascot` line near the top of each language block in `js/i18n.js`.
 
 **The child's T-shirt or dress design** appears on the results screen and on the printed

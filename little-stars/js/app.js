@@ -95,7 +95,7 @@
     var row = el('div', 'ages');
     [['junior', 'juniorAge', 1], ['senior', 'seniorAge', 2]].forEach(function (a) {
       var b = el('button', 'age'); b.type = 'button'; b.dataset.age = a[0];
-      var mini = el('span', 'mini'); for (var k = 0; k < a[2]; k++) mini.appendChild(LS.ea('cur')); b.appendChild(mini);
+      /* (no icon on the age cards) */
       b.appendChild(el('span', 'num', t(a[1])));
       b.appendChild(el('span', 'yrs', t('years')));
       b.appendChild(el('span', 'who', t(a[0])));
@@ -267,7 +267,7 @@
     main.appendChild(rk);
     main.appendChild(el('p', 'lead', t('youEarned')));
     var tot = el('div', 'total'), num = el('span', 'n', '0');
-    var ts = el('span', 's'); ts.appendChild(LS.ea()); tot.appendChild(num); tot.appendChild(ts);
+    tot.appendChild(num);            /* (no icon next to the total) */
     main.appendChild(tot);
 
     var sur = el('div', 'surprise');

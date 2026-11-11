@@ -170,7 +170,7 @@
     var count = Math.min(n, 5);
     for (var i = 0; i < count; i++) {
       (function (i) {
-        var s = LS.el('div', 'fly-star'); s.appendChild(LS.ea());
+        var s = LS.el('div', 'fly-star'); s.appendChild(LS.eagleMark());
         s.style.left = sx + 'px'; s.style.top = sy + 'px';
         document.body.appendChild(s);
         setTimeout(function () {
@@ -386,7 +386,7 @@
     for (var i = 0; i < 80; i++) {
       parts.push({ x: Math.random() * W, y: -Math.random() * H, r: (5 + Math.random() * 8) * dpr,
         vy: (2 + Math.random() * 3.5) * dpr, vx: (Math.random() - 0.5) * 1.6 * dpr,
-        a: Math.random() * 6.28, va: (Math.random() - 0.5) * 0.2, col: LS.rand(colours), star: i % 3 === 0 });
+        a: Math.random() * 6.28, va: (Math.random() - 0.5) * 0.2, col: LS.rand(colours), star: false });   /* paper confetti only, no icons */
     }
     var end = Date.now() + ms;
     c.style.display = 'block';

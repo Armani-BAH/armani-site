@@ -16,10 +16,11 @@
     '<path class="smile" d="M51 69 Q60 79 69 69" fill="none" stroke="#2b1a4f" stroke-width="3.4" stroke-linecap="round"/>' +
     '<ellipse class="oh" cx="60" cy="73" rx="4" ry="5" fill="#2b1a4f"/></svg>';
 
-  /* mood: 'happy' or 'oops' */
+  /* Emporio the guide: now the plain Emporio Armani eagle (no face). mood: 'happy' or 'oops'.
+     To bring back the smiling star, swap the two lines marked below. */
   LS.mascot = function (mood, cls) {
-    var d = LS.el('div', 'mascot ' + (mood || 'happy') + ' ' + (cls || ''));
-    d.innerHTML = STAR;
+    var d = LS.el('div', 'mascot eagle-mascot ' + (mood || 'happy') + ' ' + (cls || ''));
+    d.appendChild(LS.eagleMark());          /* star version: d.innerHTML = STAR; */
     return d;
   };
   /* Emporio with a speech bubble */
@@ -67,7 +68,7 @@
   var DEFS = '<defs>' +
     '<pattern id="tp-stripes" width="200" height="26" patternUnits="userSpaceOnUse"><rect width="200" height="11" fill="#ffffff" opacity=".55"/></pattern>' +
     '<pattern id="tp-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="5" fill="#ffffff" opacity=".6"/></pattern>' +
-    '<pattern id="tp-stars" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 6l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="#ffffff" opacity=".6"/></pattern>' +
+    '<pattern id="tp-stars" width="40" height="28" patternUnits="userSpaceOnUse"><image href="assets/logo/eagle.png" x="5" y="6" width="30" height="17" opacity=".65"/></pattern>' +
     '<pattern id="tp-hearts" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 23 C4 15 6 7 11 7 c2.5 0 4 2 4 2 s1.5-2 4-2 c5 0 7 8-4 16z" fill="#ffffff" opacity=".6"/></pattern>' +
     '<pattern id="tp-checks" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#ffffff" opacity=".45"/><rect x="14" y="14" width="14" height="14" fill="#ffffff" opacity=".45"/></pattern>' +
     '<pattern id="tp-rainbow" width="200" height="60" patternUnits="userSpaceOnUse"><rect y="0" width="200" height="10" fill="#ff6b6b" opacity=".7"/><rect y="10" width="200" height="10" fill="#ffd23f" opacity=".7"/><rect y="20" width="200" height="10" fill="#3ddc97" opacity=".7"/><rect y="30" width="200" height="10" fill="#4cc9f0" opacity=".7"/><rect y="40" width="200" height="10" fill="#a78bfa" opacity=".7"/></pattern>' +

@@ -1294,3 +1294,30 @@ html[dir='rtl'] .pick-players > * { direction: rtl; }
 .fly-star { margin: -16px 0 0 -16px; font-size: 32px; text-shadow: 0 0 14px #fffc; filter: none; color: var(--sun); }
 .sym { font-style: normal; }
 .age .mini { color: #fff; font-size: 1.1rem; letter-spacing: .3em; }
+
+/* ============================================================
+   ICON CHOICES (Nov 2026): eagle for the guide, counter, progress,
+   sparkles, memory cards, marker, path, players, winner, tug goals.
+   Stars kept: results title, "+3" labels, certificate rows.
+   ============================================================ */
+#progress i::before {
+  content: ''; display: inline-block; width: 1.45em; aspect-ratio: 640 / 366;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+  background: currentColor;
+}
+#sky i.big { width: 26px; height: 15px; -webkit-clip-path: none; clip-path: none;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat; }
+.card.chosen::after { content: ''; background: var(--sun) url('../assets/logo/eagle.png') center / 70% auto no-repeat; }
+.fly-star { margin: -18px 0 0 -30px; font-size: 36px; text-shadow: none; filter: drop-shadow(0 0 10px #fffb); }
+
+/* Emporio the guide as a plain eagle */
+.eagle-mascot .ea { display: block; width: 100%; }
+.eagle-mascot.oops .ea { background: linear-gradient(135deg, #ff9e9e, #ff6b6b); }
+.guide .eagle-mascot { width: clamp(80px, 11vw, 120px); }
+.guide.big .eagle-mascot { width: clamp(100px, 14vw, 160px); }
+#feedback .eagle-mascot { width: 54px; }
+.bag .eagle-mascot { width: 78%; margin-bottom: -4%; }
+.rope .marker .eagle-mascot { width: 100%; }
+.figure .head.eagle-mascot { width: 44%; left: 28%; top: 2.5%; }
+.paper .c-photo .eagle-mascot { width: 9em; }
+.mascot.cheer.eagle-mascot { width: clamp(150px, 26vw, 240px); }
