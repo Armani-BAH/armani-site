@@ -1,0 +1,15 @@
+{
+  "name": "Emporio Armani · Little Stars",
+  "short_name": "Little Stars",
+  "description": "Discover. Play. Shine. An in-store game for Emporio Armani Kids.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#131447",
+  "theme_color": "#2a1f7a",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

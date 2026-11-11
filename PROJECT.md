@@ -201,3 +201,7 @@ A row of round "sections" (Women, Men, Bags & leather, Shoes, Kids, Accessories)
    - CNAME `www` → armani-bah.github.io
 4. Claude: add a `CNAME` file with the domain, update `og:url` / `og:image` in `index.html`, Google Analytics stream URL.
 5. GitHub → Settings → Pages → Custom domain → Save → (after the DNS check) Enforce HTTPS.
+
+## 9. Little Stars kids game — www.eawishlist.com/little-stars/ (2026-11-11)
+
+Self-contained in-store game for the Emporio Armani Kids activity (shop iPad, Safari, English + Arabic). Lives entirely in `little-stars/` with its own photos, fonts, manifest and `sw.js` (scope `/little-stars/`); it does not use or change the catalogue site. Not linked from the site and marked `noindex`. Full guide: `little-stars/README.md`. After changing any file there, raise `VERSION` in `little-stars/sw.js` (or run `python little-stars/tools/build_offline_list.py`).

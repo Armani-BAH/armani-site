@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Emporio Armani · Little Stars</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#2a1f7a">
+  <!-- "Add to Home Screen" on the iPad opens the game full screen, like an app -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Little Stars">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/icons/favicon-32.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="sky" aria-hidden="true"></div>
+
+  <!-- top bar: logo (press and hold = staff menu), progress, stars, sound -->
+  <header id="hud">
+    <img class="logo staff-key" src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" draggable="false">
+    <div id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="hud-tools">
+      <div id="stars"><b>★</b><span id="star-count">0</span></div>
+      <button class="tool" id="listen" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>
+        <span class="lbl" data-t="listen"></span>
+      </button>
+      <button class="tool" id="sound" type="button">
+        <svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="cross" d="M3 3l18 18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="stage"></main>
+
+  <div id="feedback" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- certificate (the only thing that prints) -->
+  <div class="overlay" id="cert">
+    <div class="paper">
+      <img class="c-logo" src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
+      <h2 class="c-title" data-t="certTitle"></h2>
+      <div class="c-stars">★ ★ ★</div>
+      <p class="c-award" data-t="certAward"></p>
+      <p class="c-name" id="c-name"></p>
+      <p class="c-text" data-t="certLine1"></p>
+      <p class="c-strong" data-t="certLine2"></p>
+      <div class="c-foot">
+        <span id="c-date"></span>
+        <span class="c-seal"><span>★</span></span>
+        <span><b id="c-stars"></b></span>
+      </div>
+    </div>
+    <div class="cert-actions">
+      <button class="btn primary" id="c-print" type="button" data-t="print"></button>
+      <button class="btn" id="c-back" type="button" data-t="back"></button>
+    </div>
+  </div>
+
+  <!-- "are you still playing?" -->
+  <div class="overlay" id="still">
+    <div class="panel">
+      <h3 data-t="still"></h3>
+      <button class="btn primary big" id="still-yes" type="button" data-t="stillYes"></button>
+      <button class="btn" id="still-new" type="button" data-t="newStar"></button>
+    </div>
+  </div>
+
+  <!-- hidden staff menu: press and hold the Emporio Armani logo for 2 seconds -->
+  <div class="overlay" id="staff">
+    <div class="panel">
+      <h3 data-t="staff"></h3>
+      <button class="btn primary" id="staff-reset" type="button" data-t="staffReset"></button>
+      <button class="btn" id="staff-skip" type="button" data-t="staffSkip"></button>
+      <button class="btn" id="staff-full" type="button" data-t="staffFull"></button>
+      <button class="btn" id="staff-close" type="button" data-t="staffClose"></button>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/games/stylist.js"></script>
+  <script src="js/games/memory.js"></script>
+  <script src="js/games/quiz.js"></script>
+  <script src="js/games/adventure.js"></script>
+  <script src="js/games/challenge.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
