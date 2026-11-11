@@ -120,7 +120,7 @@ LS.TEXT = {
     certAward: 'Awarded to',
     certLine1: 'This certificate celebrates your creativity, style, and imagination.',
     certLine2: 'You are an Armani Little Star!',
-    certAnon: 'A shining Little Star',
+    certAnon: 'A shining Little Star', certPlace: 'Marassi Galleria, Bahrain',
     print: 'Print or save',
 
     still: 'Are you still playing?',
@@ -249,7 +249,7 @@ LS.TEXT = {
     certAward: 'تُمنح إلى',
     certLine1: 'هذه الشهادة تحتفي بإبداعك وأناقتك وخيالك.',
     certLine2: 'أنت نجم أرماني الصغير!',
-    certAnon: 'نجم صغير متألّق',
+    certAnon: 'نجم صغير متألّق', certPlace: 'مراسي جاليريا، البحرين',
     print: 'طباعة أو حفظ',
 
     still: 'هل ما زلت تلعب؟',

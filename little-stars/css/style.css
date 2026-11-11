@@ -1321,3 +1321,25 @@ html[dir='rtl'] .pick-players > * { direction: rtl; }
 .figure .head.eagle-mascot { width: 44%; left: 28%; top: 2.5%; }
 .paper .c-photo .eagle-mascot { width: 9em; }
 .mascot.cheer.eagle-mascot { width: clamp(150px, 26vw, 240px); }
+
+/* ---------- certificate: colourful title, signature line, no seal ---------- */
+.paper .c-title {
+  font-size: 2.3em; letter-spacing: .16em; font-weight: 500;
+  background: linear-gradient(90deg, #ff5fa2, #ff9f1c 25%, #ffc21f 42%, #2fbf7a 60%, #3aa8e8 78%, #8b6cf0);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+html[dir='rtl'] .paper .c-title { font-size: 2.6em; }
+.paper .c-foot { justify-content: center; margin-top: 2%; }
+.paper .c-sign { display: flex; flex-direction: column; align-items: center; gap: .15em; min-width: 18em; }
+.paper .c-sign-img { max-height: 3.2em; max-width: 14em; object-fit: contain; }
+.paper .c-sign.has-img .c-sign-text { display: none; }
+.paper .c-sign-text { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 2em; line-height: 1.1; color: #111; direction: ltr; }
+.paper .c-sign-line { width: 100%; height: 1px; background: #b9a987; }
+.paper .c-sign-meta { font-size: .85em; color: #555; letter-spacing: .04em; }
+.paper .c-title { display: inline-block; padding: 0 .4em; -webkit-text-fill-color: transparent; }
+/* colourful certificate title drawn as SVG text (prints cleanly, keeps Arabic letters joined) */
+.paper .c-title { display: block; width: 70%; padding: 0; background: none; color: inherit; -webkit-text-fill-color: initial; font-size: 2.3em; line-height: 1; }
+.paper .c-title svg { display: block; width: 100%; height: 1.3em; overflow: visible; }
+.paper .c-title text { font-family: var(--display); font-size: 1em; font-weight: 500; letter-spacing: .16em; }
+html[dir='rtl'] .paper .c-title text { letter-spacing: 0; font-weight: 700; font-size: 1.1em; }

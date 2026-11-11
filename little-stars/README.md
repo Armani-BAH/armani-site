@@ -134,6 +134,10 @@ child's photo. The first time, Safari may ask permission to use the camera: tap 
 
 ---
 
+**Signature:** the certificate shows "Emporio Armani" in italic above a signature line, with the date and
+"Marassi Galleria, Bahrain". To use an approved handwritten signature instead, save it as
+`assets/signature.png` (transparent background) and it replaces the italic text automatically.
+
 ## 6. Change or replace the product photos
 
 **Swap a photo (easiest):** save your new photo with the *same file name* as the one you are

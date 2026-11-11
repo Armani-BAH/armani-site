@@ -50,7 +50,7 @@
       <span class="c-side c-photo" id="c-photo"></span>
       <span class="c-side c-tee" id="c-tee"></span>
       <img class="c-logo" src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
-      <h2 class="c-title" data-t="certTitle"></h2>
+      <h2 class="c-title"><svg aria-hidden="false" role="img"><defs><linearGradient id="ctg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ff5fa2"/><stop offset=".25" stop-color="#ff9f1c"/><stop offset=".45" stop-color="#ffc21f"/><stop offset=".62" stop-color="#2fbf7a"/><stop offset=".8" stop-color="#3aa8e8"/><stop offset="1" stop-color="#8b6cf0"/></linearGradient></defs><text x="50%" y="80%" text-anchor="middle" fill="url(#ctg)" data-t="certTitle"></text></svg></h2>
       <div class="c-stars">★ ★ ★</div>
       <p class="c-award" data-t="certAward"></p>
       <p class="c-name" id="c-name"></p>
@@ -58,9 +58,14 @@
       <p class="c-text" data-t="certLine1"></p>
       <p class="c-strong" data-t="certLine2"></p>
       <div class="c-foot">
-        <span id="c-date"></span>
-        <span class="c-seal"><span class="ea cur"></span></span>
-        <span><b id="c-stars"></b></span>
+        <span class="c-sign">
+          <!-- To use an approved signature: save it as assets/signature.png (transparent background). -->
+          <img class="c-sign-img" src="assets/signature.png" alt="" onload="this.parentNode.classList.add('has-img')" onerror="this.parentNode.removeChild(this)">
+          <span class="c-sign-text">Emporio Armani</span>
+          <span class="c-sign-line"></span>
+          <span class="c-sign-meta"><span id="c-date"></span> · <span data-t="certPlace"></span></span>
+        </span>
+        <b id="c-stars" hidden></b>
       </div>
     </div>
     <div class="cert-actions">
