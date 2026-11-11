@@ -74,7 +74,7 @@
       var sBox = group(LS.t('stStickers'));
       LS.TEE_STICKERS.forEach(function (k) {
         var b = LS.el('button', 'stick', k === 'EAGLE' ? null : k); b.type = 'button';
-        if (k === 'EAGLE') b.appendChild(LS.ea());
+        if (k === 'EAGLE') b.appendChild(LS.eagleMark());
         b.addEventListener('click', function () {
           LS.unlockAudio();
           if (design.stickers.length >= SPOTS.length) { LS.sfx.bad(); return; }

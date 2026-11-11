@@ -1281,3 +1281,16 @@ html[dir='rtl'] .pick-players > * { direction: rtl; }
 .tee .sticker .ea { width: 1.7em; }
 .stick .ea { width: 1.5em; }
 .lead .ea { width: 1.5em; }
+
+/* ---------- fewer logos: stars are back everywhere except the special moments ---------- */
+#progress i::before { content: '★'; width: auto; aspect-ratio: auto; -webkit-mask: none; mask: none; background: none; }
+#sky i.big { width: 16px; height: 16px; -webkit-mask: none; mask: none;
+  -webkit-clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+          clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
+.card.chosen::after { content: '★'; background: var(--sun); color: #2a1a00; }
+.paper .c-stars { letter-spacing: .5em; display: block; }
+.paper .c-stars::before { content: '★ '; width: auto; aspect-ratio: auto; -webkit-mask: none; mask: none; background: none; color: #ff6fb5; display: inline; }
+.paper .c-stars::after { content: ' ★'; width: auto; aspect-ratio: auto; -webkit-mask: none; mask: none; background: none; color: #3aa8e8; display: inline; }
+.fly-star { margin: -16px 0 0 -16px; font-size: 32px; text-shadow: 0 0 14px #fffc; filter: none; color: var(--sun); }
+.sym { font-style: normal; }
+.age .mini { color: #fff; font-size: 1.1rem; letter-spacing: .3em; }

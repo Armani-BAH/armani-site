@@ -47,9 +47,10 @@
     return w;
   };
 
-  /* small eagle icon used wherever a star used to be.
-     cls: '' = colourful (rainbow), 'cur' = takes the colour of the text around it */
-  LS.ea = function (cls) { return LS.el('span', 'ea' + (cls ? ' ' + cls : '')); };
+  /* LS.ea = the small star symbol; LS.eagleMark = the Emporio Armani eagle, kept for special moments only
+     (results badge, certificate, gift, eagle-catch games). cls 'cur' = takes the colour of the text around it */
+  LS.ea = function (cls) { return LS.el('span', 'sym' + (cls ? ' ' + cls : ''), '★'); };
+  LS.eagleMark = function (cls) { return LS.el('span', 'ea' + (cls ? ' ' + cls : '')); };
   /* put text into a node, turning every ★ into an eagle */
   LS.fill = function (node, text, cls) {
     while (node.firstChild) node.removeChild(node.firstChild);
@@ -66,7 +67,7 @@
   var DEFS = '<defs>' +
     '<pattern id="tp-stripes" width="200" height="26" patternUnits="userSpaceOnUse"><rect width="200" height="11" fill="#ffffff" opacity=".55"/></pattern>' +
     '<pattern id="tp-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="5" fill="#ffffff" opacity=".6"/></pattern>' +
-    '<pattern id="tp-stars" width="40" height="28" patternUnits="userSpaceOnUse"><image href="assets/logo/eagle.png" x="5" y="6" width="30" height="17" opacity=".65"/></pattern>' +
+    '<pattern id="tp-stars" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 6l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="#ffffff" opacity=".6"/></pattern>' +
     '<pattern id="tp-hearts" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15 23 C4 15 6 7 11 7 c2.5 0 4 2 4 2 s1.5-2 4-2 c5 0 7 8-4 16z" fill="#ffffff" opacity=".6"/></pattern>' +
     '<pattern id="tp-checks" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#ffffff" opacity=".45"/><rect x="14" y="14" width="14" height="14" fill="#ffffff" opacity=".45"/></pattern>' +
     '<pattern id="tp-rainbow" width="200" height="60" patternUnits="userSpaceOnUse"><rect y="0" width="200" height="10" fill="#ff6b6b" opacity=".7"/><rect y="10" width="200" height="10" fill="#ffd23f" opacity=".7"/><rect y="20" width="200" height="10" fill="#3ddc97" opacity=".7"/><rect y="30" width="200" height="10" fill="#4cc9f0" opacity=".7"/><rect y="40" width="200" height="10" fill="#a78bfa" opacity=".7"/></pattern>' +
@@ -74,7 +75,7 @@
     '</defs>';
   LS.TEE_COLOURS = ['#4cc9f0', '#ff8fc7', '#ffd23f', '#3ddc97', '#a78bfa', '#ff6b6b', '#ff9f1c', '#2ec4b6', '#e9dcc4', '#b0b6c3', '#ffffff', '#1f2340'];
   LS.TEE_PATTERNS = ['plain', 'stripes', 'dots', 'stars', 'hearts', 'checks', 'zigzag', 'rainbow'];
-  LS.TEE_STICKERS = ['EAGLE', '❤️', '⚡', '🌈', '👑', '🦋', '🚀', '⚽', '🦄', '🎀', '🌸', '🐻', '🦖', '🍭', '🎈', '🌙'];
+  LS.TEE_STICKERS = ['⭐', '❤️', '⚡', '🌈', '👑', '🦋', '🚀', '⚽', '🦄', '🎀', '🌸', '🐻', '🦖', '🍭', '🎈', 'EAGLE'];
 
   LS.tee = function (design) {
     var d = LS.el('div', 'tee');
@@ -87,7 +88,7 @@
              : '<path d="M70 20 Q100 44 130 20" fill="none" stroke="#00000033" stroke-width="5" stroke-linecap="round"/>') + '</svg>';
     design.stickers.forEach(function (s) {
       var n = LS.el('span', 'sticker', s.k === 'EAGLE' ? null : s.k);
-      if (s.k === 'EAGLE') n.appendChild(LS.ea());
+      if (s.k === 'EAGLE') n.appendChild(LS.eagleMark());
       n.style.left = s.x + '%'; n.style.top = s.y + '%';
       d.appendChild(n);
     });

@@ -391,7 +391,7 @@
     var end = Date.now() + ms;
     c.style.display = 'block';
     function star(x, y, r, a, col) {
-      var img = LS.tintedEagle(col);
+      var img = null;          /* confetti uses stars (set to LS.tintedEagle(col) for eagles) */
       if (img) {
         g.save(); g.translate(x, y); g.rotate(a * 0.3);
         g.drawImage(img, -r * 1.4, -r * 0.8, r * 2.8, r * 1.6);

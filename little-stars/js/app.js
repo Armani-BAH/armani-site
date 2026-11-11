@@ -251,7 +251,7 @@
     var title = t(rank());
     var side = el('div', 'reward-side');
     var badge = el('div', 'badge');
-    var bs = el('span', 'star'); bs.appendChild(LS.ea('cur')); badge.appendChild(bs);
+    var bs = el('span', 'star'); bs.appendChild(LS.eagleMark('cur')); badge.appendChild(bs);
     badge.appendChild(el('span', 'name', t('badge')));
     badge.appendChild(el('span', 'ea-text', 'EMPORIO ARMANI'));
     side.appendChild(badge);
@@ -345,7 +345,7 @@
     while (ph.firstChild) ph.removeChild(ph.firstChild);
     if (LS.state.photo) { var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi); ph.classList.add('has'); }
     else { ph.classList.remove('has'); ph.appendChild(LS.mascot('happy')); }
-    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else { var bg = LS.el('span', 'c-bigstar'); bg.appendChild(LS.ea()); slot.appendChild(bg); }
+    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else { var bg = LS.el('span', 'c-bigstar'); bg.appendChild(LS.eagleMark()); slot.appendChild(bg); }
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }
