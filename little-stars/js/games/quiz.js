@@ -25,10 +25,15 @@
       var odd = { green: ['pink-ballet', 'burgundy-hoodie'], pink: ['black-boots', 'green-joggers'], burgundy: ['cream-sneakers', 'green-tee'] }[l.id];
       return { prompt: 'qTwo', correct: [l.top, l.bottom.ok], need: 2, others: odd, fixed: true };
     },
+    zoom:   function () {
+      var pool = ['pattern-puffer', 'check-dress', 'varsity-tee', 'check-jacket', 'cap', 'pattern-sweatshirt', 'check-skirt', 'jeans', 'varsity-jacket', 'backpack'];
+      var t = R(pool);
+      return { prompt: 'qZoom', target: t, targetClass: 'zoom', correct: [t], others: pool.filter(function (s) { return s !== t; }) };
+    },
     count:  function () { return { prompt: 'qCount', target: 'three-tees', correct: ['3'], text: [2, 3, 4] }; }
   };
-  var JUNIOR = ['shoes', 'hat', 'dress', 'jacket', 'sunny', 'bag', 'same'];
-  var SENIOR = ['jacket', 'sunny', 'cold', 'eagle', 'same', 'two', 'count', 'hat', 'bag'];
+  var JUNIOR = ['shoes', 'hat', 'dress', 'jacket', 'sunny', 'bag', 'same', 'zoom'];
+  var SENIOR = ['jacket', 'sunny', 'cold', 'eagle', 'same', 'two', 'count', 'hat', 'bag', 'zoom'];
 
   /* Ask one question. Returns the result of LS.choice. */
   LS.ask = function (key, extra) {
@@ -39,7 +44,7 @@
       var nOthers = q.fixed ? q.others.length : (junior ? 2 : 3);
       options = LS.shuffle(q.correct.concat(S(q.others, nOthers)));
     }
-    var o = { prompt: LS.t(q.prompt), options: options, correct: q.correct, need: q.need, target: q.target };
+    var o = { prompt: LS.t(q.prompt), options: options, correct: q.correct, need: q.need, target: q.target, targetClass: q.targetClass };
     if (extra) Object.keys(extra).forEach(function (k) { o[k] = extra[k]; });
     return LS.choice(o);
   };
@@ -52,7 +57,10 @@
   };
 
   LS.games.quiz = async function () {
-    var keys = LS.pickQuestions(LS.isJunior() ? 3 : 5);
+    var n = LS.isJunior() ? 3 : 5;
+    /* always include one detective question */
+    LS.state.usedQ.push('zoom');
+    var keys = LS.shuffle(['zoom'].concat(LS.pickQuestions(n - 1)));
     for (var i = 0; i < keys.length; i++) {
       var r = await LS.ask(keys[i], { kicker: LS.t('question', { n: i + 1, t: keys.length }) });
       LS.score(r);

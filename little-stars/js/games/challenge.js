@@ -35,5 +35,9 @@
       options: LS.shuffle([look.bottom.ok].concat(LS.sample(look.bottom.no, n)))
     });
     LS.score(r, bonus(r));
+
+    /* bonus round: catch the falling stars */
+    var c = await LS.catchGame();
+    LS.state.caught = c.caught;
   };
 })();

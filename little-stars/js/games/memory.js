@@ -64,6 +64,7 @@
               }
             }, 380);
           } else {
+            if (!opts.kicker) LS.slip(0.5);
             setTimeout(function () { a.classList.add('nope'); b.classList.add('nope'); LS.sfx.bad(); }, 380);
             setTimeout(function () {
               a.classList.remove('open', 'nope'); b.classList.remove('open', 'nope'); busy = false;

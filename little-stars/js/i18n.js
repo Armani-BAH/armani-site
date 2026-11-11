@@ -7,6 +7,14 @@ window.LS = window.LS || {};
 LS.TEXT = {
   en: {
     title: 'Little Stars',
+    hello: 'Hi, I\'m Stella! Let\'s shine together!',
+    qZoom: 'Detective time! Which piece is hiding here?',
+    adDesign: 'Design your own T-shirt for the fashion day!',
+    stColour: 'Colour', stPattern: 'Pattern', stStickers: 'Stickers', stHint: 'Drag the stickers anywhere you like.', stUndo: 'Undo', done: 'Done',
+    bonus: 'Bonus round', catchTitle: 'Catch the falling stars!', catchSub: 'Slide your finger to move Stella.', catchSubSenior: 'Slide your finger to move Stella. Watch out for clouds!',
+    giftTitle: 'A surprise for you!', giftSub: 'Tap the gift three times to open it!',
+    yourTitle: 'Your star title', tStylist: 'Super Stylist', tMemory: 'Memory Master', tQuiz: 'Quiz Champion', tCatch: 'Star Catcher', tDesign: 'Dream Designer',
+    myDesign: 'Designed by me',
     tagline: 'Discover. Play. Shine.',
     start: 'Start your adventure',
     ageTitle: 'How old are you?',
@@ -57,7 +65,7 @@ LS.TEXT = {
     adAcc: 'Choose a finishing touch!',
     adJacket: 'It is cool outside. Find a jacket!',
     adReady: 'Ready for the Armani fashion day!',
-    adStep1: 'Outfit', adStep2: 'Shoes', adStep3: 'Extra', adStep4: 'Final look',
+    adStep1: 'Design', adStep2: 'Shoes', adStep3: 'Extra', adStep4: 'Final look',
 
     chSame: 'Quick! Find the same picture.',
     chMemory: 'Quick! Find the pairs.',
@@ -101,6 +109,14 @@ LS.TEXT = {
 
   ar: {
     title: 'النجوم الصغار',
+    hello: 'مرحبًا، أنا ستيلا! هيّا نتألّق معًا!',
+    qZoom: 'وقت المحقّق! أيّ قطعة تختبئ هنا؟',
+    adDesign: 'صمّم قميصك الخاص ليوم الأزياء!',
+    stColour: 'اللون', stPattern: 'النقشة', stStickers: 'الملصقات', stHint: 'اسحب الملصقات إلى أي مكان تحبّه.', stUndo: 'تراجع', done: 'تم',
+    bonus: 'جولة إضافية', catchTitle: 'التقط النجوم المتساقطة!', catchSub: 'حرّك إصبعك لتحريك ستيلا.', catchSubSenior: 'حرّك إصبعك لتحريك ستيلا وانتبه من الغيوم!',
+    giftTitle: 'مفاجأة لك!', giftSub: 'اضغط على الهدية ثلاث مرات لفتحها!',
+    yourTitle: 'لقبك النجمي', tStylist: 'منسّق أزياء خارق', tMemory: 'بطل الذاكرة', tQuiz: 'بطل المسابقة', tCatch: 'صيّاد النجوم', tDesign: 'مصمّم الأحلام',
+    myDesign: 'من تصميمي',
     tagline: 'اكتشف. العب. تألّق.',
     start: 'ابدأ مغامرتك',
     ageTitle: 'كم عمرك؟',
@@ -151,7 +167,7 @@ LS.TEXT = {
     adAcc: 'اختر لمسة أخيرة!',
     adJacket: 'الجو بارد في الخارج. ابحث عن سترة!',
     adReady: 'جاهزون ليوم أزياء أرماني!',
-    adStep1: 'الإطلالة', adStep2: 'الحذاء', adStep3: 'الإضافة', adStep4: 'اللمسة الأخيرة',
+    adStep1: 'التصميم', adStep2: 'الحذاء', adStep3: 'الإضافة', adStep4: 'اللمسة الأخيرة',
 
     chSame: 'بسرعة! ابحث عن الصورة نفسها.',
     chMemory: 'بسرعة! ابحث عن الأزواج.',

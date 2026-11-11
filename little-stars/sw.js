@@ -1,7 +1,7 @@
 /* LITTLE STARS — offline support.
    After the game has been opened once with internet, it keeps working without it.
    Changed a photo or text? Raise VERSION (any new value) so iPads fetch the update. */
-const VERSION = '20261111-1835';
+const VERSION = '20261111-1913';
 const FILES = [
   "./",
   "assets/fonts/bodoni-moda-latin-400-normal.woff2",
@@ -71,11 +71,14 @@ const FILES = [
   "js/catalog.js",
   "js/core.js",
   "js/games/adventure.js",
+  "js/games/catch.js",
   "js/games/challenge.js",
   "js/games/memory.js",
   "js/games/quiz.js",
+  "js/games/studio.js",
   "js/games/stylist.js",
   "js/i18n.js",
+  "js/mascot.js",
   "manifest.webmanifest"
 ];
 

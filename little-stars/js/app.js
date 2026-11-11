@@ -37,6 +37,8 @@
   function wipe() {
     LS.state.session++;
     LS.state.stars = 0; LS.state.name = ''; LS.state.usedQ = []; LS.state.usedLooks = [];
+    LS.state.design = null; LS.state.stats = {}; LS.state.cur = ''; LS.state.caught = 0;
+    ['#c-tee', '#c-rank'].forEach(function (s) { var n = $(s); while (n.firstChild) n.removeChild(n.firstChild); });
     $('#star-count').textContent = '0';
     delete document.body.dataset.g;
     $('#c-name').textContent = '';
@@ -56,8 +58,8 @@
     logo.className = 'logo staff-key'; logo.draggable = false;
     scr.appendChild(logo);
     scr.appendChild(el('h1', 'hero', t('title')));
-    var orn = el('div', 'orn'); orn.appendChild(el('span', '', '★')); scr.appendChild(orn);
     scr.appendChild(el('p', 'tagline', t('tagline')));
+    scr.appendChild(LS.guide(t('hello'), 'big'));
 
     var lang = el('div', 'lang');
     [['en', 'English'], ['ar', 'العربية']].forEach(function (l) {
@@ -84,7 +86,7 @@
     where = 'age';
     var scr = LS.screen('age-screen');
     LS.currentPrompt = t('ageTitle');
-    scr.appendChild(el('h2', 'prompt', t('ageTitle')));
+    scr.appendChild(LS.guide(t('ageTitle'), 'big'));
     var row = el('div', 'ages');
     [['junior', 'juniorAge', '★'], ['senior', 'seniorAge', '★ ★']].forEach(function (a) {
       var b = el('button', 'age'); b.type = 'button'; b.dataset.age = a[0];
@@ -127,13 +129,51 @@
     LS.hud(true);
     for (var i = 0; i < GAMES.length; i++) {
       LS.setProgress(i);
+      LS.state.cur = '';
       await LS.intro(i + 1, FANS[i], i === 1 ? levels() : null);
+      LS.state.cur = GAMES[i];
       await LS.games[GAMES[i]]();
       LS.hush();
       await LS.gameDone(GAME_BONUS);
     }
+    LS.state.cur = '';
+    await gift();
     LS.award(5);                      /* finishing the whole adventure */
     reward();
+  }
+
+  /* ---------- a gift to open before the results ---------- */
+  function gift() {
+    return new Promise(function (resolve) {
+      delete document.body.dataset.g;
+      var scr = LS.screen('gift-screen');
+      scr.appendChild(LS.guide(t('giftTitle') + ' ' + t('giftSub'), 'big'));
+      var box = el('button', 'gift'); box.type = 'button'; box.id = 'gift';
+      ['lid', 'bow', 'body', 'band'].forEach(function (k) { box.appendChild(el('span', k)); });
+      var taps = 0;
+      box.addEventListener('click', function () {
+        if (taps >= 3) return;
+        taps++; LS.unlockAudio(); LS.sfx.tap();
+        box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+        if (taps === 3) { box.classList.add('open'); LS.sfx.win(); LS.wait(1000).then(resolve); }
+      });
+      scr.appendChild(box);
+      LS.currentPrompt = t('giftTitle') + ' ' + t('giftSub');
+      LS.show(scr);
+      LS.say(LS.currentPrompt);
+    });
+  }
+
+  /* a fun title, chosen from what the child did best */
+  function rank() {
+    var st = LS.state.stats, best = [], low = 99;
+    [['stylist', 'tStylist'], ['memory', 'tMemory'], ['quiz', 'tQuiz']].forEach(function (g) {
+      var v = st[g[0]] || 0;
+      if (v < low) { low = v; best = [g[1]]; } else if (v === low) best.push(g[1]);
+    });
+    if (LS.state.caught >= (LS.isJunior() ? 8 : 11)) best.push('tCatch');
+    if (LS.state.design && LS.state.design.stickers.length >= 3) best.push('tDesign');
+    return LS.rand(best);
   }
 
   /* ---------- 4. reward ---------- */
@@ -144,14 +184,23 @@
     var total = LS.state.stars;
     var scr = LS.screen('reward');
 
+    var title = t(rank());
+    var side = el('div', 'reward-side');
     var badge = el('div', 'badge');
     badge.appendChild(el('span', 'star', '★'));
     badge.appendChild(el('span', 'name', t('badge')));
     badge.appendChild(el('span', 'ea', 'EMPORIO ARMANI'));
-    scr.appendChild(badge);
+    side.appendChild(badge);
+    if (LS.state.design) {
+      var mine = el('div', 'my-tee'); mine.appendChild(LS.tee(LS.state.design)); mine.appendChild(el('small', '', t('myDesign')));
+      side.appendChild(mine);
+    }
+    scr.appendChild(side);
 
     var main = el('div', 'reward-main');
     main.appendChild(el('h1', 'game-title', t('congrats')));
+    var rk = el('p', 'rank'); rk.appendChild(el('small', '', t('yourTitle'))); rk.appendChild(el('b', '', '★ ' + title + ' ★'));
+    main.appendChild(rk);
     main.appendChild(el('p', 'lead', t('youEarned')));
     var tot = el('div', 'total'), num = el('span', 'n', '0');
     tot.appendChild(num); tot.appendChild(el('span', 's', '★'));
@@ -167,7 +216,7 @@
     input.setAttribute('autocomplete', 'off'); input.setAttribute('autocapitalize', 'words');
     input.setAttribute('autocorrect', 'off'); input.setAttribute('spellcheck', 'false'); input.id = 'name-input';
     var cb = el('button', 'btn primary', t('seeCert')); cb.type = 'button'; cb.id = 'see-cert';
-    cb.addEventListener('click', function () { LS.sfx.tap(); input.blur(); certificate(input.value, total); });
+    cb.addEventListener('click', function () { LS.sfx.tap(); input.blur(); certificate(input.value, total, title); });
     row.appendChild(input); row.appendChild(cb);
     main.appendChild(row);
     main.appendChild(el('p', 'hint-text', t('nameHelp')));
@@ -198,10 +247,14 @@
   }
 
   /* ---------- 5. certificate ---------- */
-  function certificate(name, total) {
+  function certificate(name, total, title) {
     name = (name || '').replace(/[<>]/g, '').trim().slice(0, 20);
     $('#c-name').textContent = name || t('certAnon');
     $('#c-stars').textContent = total + ' ★';
+    $('#c-rank').textContent = '★ ' + title + ' ★';
+    var slot = $('#c-tee');
+    while (slot.firstChild) slot.removeChild(slot.firstChild);
+    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else slot.appendChild(LS.mascot('happy'));
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }

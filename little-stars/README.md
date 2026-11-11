@@ -1,8 +1,9 @@
 # Emporio Armani · Little Stars
 
 An in-store game for the Emporio Armani Kids activity. Children aged 5–12 play five short
-mini-games on the shop iPad, collect stars, and finish with a Little Star badge and a printable
-certificate. English and Arabic. About 3–5 minutes per child.
+mini-games on the shop iPad with Stella the star as their guide, design their own T-shirt, collect
+stars, open a gift, and finish with a Little Star badge and a printable certificate.
+English and Arabic. About 4–6 minutes per child.
 
 No login, no accounts, no leaderboard. Nothing a child does or types is saved anywhere.
 
@@ -21,13 +22,16 @@ little-stars/
 │   ├── i18n.js                ALL the wording, English + Arabic  ← edit text here
 │   ├── catalog.js             The list of product photos         ← edit photos here
 │   ├── core.js                Shared parts (sound, cards, stars, confetti)
+│   ├── mascot.js              Stella the star (the guide) and the T-shirt drawing
 │   ├── app.js                 Game flow + Store Event Mode settings
 │   └── games/
 │       ├── stylist.js         1 · Little Armani Stylist
 │       ├── memory.js          2 · Armani Memory Match
 │       ├── quiz.js            3 · Little Fashion Quiz
 │       ├── adventure.js       4 · Fashion Adventure
-│       └── challenge.js       5 · Little Star Challenge
+│       ├── studio.js              · Design-your-own T-shirt (part of game 4)
+│       ├── challenge.js       5 · Little Star Challenge
+│       └── catch.js               · Star Catch bonus round (part of game 5)
 ├── assets/
 │   ├── images/                48 Emporio Armani Kids product photos
 │   │   ├── tops/  bottoms/  shoes/  accessories/  jackets/  dresses/
@@ -165,18 +169,26 @@ between the quotes on the right-hand side.
 | Age | Junior Little Stars (5–7) or Senior Little Stars (8–12) |
 | 1 · Little Armani Stylist | Builds an outfit: matches colours, then picks shoes and a finishing touch. Tap or drag. |
 | 2 · Armani Memory Match | Finds the pairs. Easy 6 cards, Medium 8, Hard 12 (chosen on the intro screen). |
-| 3 · Little Fashion Quiz | Picture questions: jacket, sunny day, eagle logo, matching shoes… |
-| 4 · Fashion Adventure | Four steps along a path of stars to get ready for the fashion day. |
-| 5 · Little Star Challenge | Four quick tasks, one from each earlier game. |
-| Reward | Total stars, confetti, Little Star badge, surprise message, certificate. |
+| 3 · Little Fashion Quiz | Picture questions: jacket, sunny day, eagle logo, matching shoes, plus a zoomed-in "detective" question. |
+| 4 · Fashion Adventure | Designs their own T-shirt (colour, pattern, stickers they can drag), then finds shoes, an extra and a jacket. Ends on a runway with camera flashes. |
+| 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch falling stars. |
+| Gift | Taps a gift box three times to open it. |
+| Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
+
+**Stella the star** guides the child on every screen, cheers for right answers, and can be tapped
+to make her spin. She is an original character drawn in code.
+
+**The child's T-shirt design** appears on the runway, on the results screen and on the printed
+certificate. Like the name, it is never saved and is erased when the next child starts.
 
 **Juniors (5–7):** fewer choices, fewer cards and questions, no timers, instructions read aloud,
 and a gentle hint after two wrong tries.
 **Seniors (8–12):** more choices, more questions, two outfits to style, and a bonus star for
 answering before the timer bar runs out in the final challenge.
 
-**Stars:** 2 for a first-try answer, 1 after a retry, 1 per memory pair, 3 for finishing each
-mini-game, 5 for finishing the adventure. There is no way to lose.
+**Stars:** 2 for a first-try answer, 1 after a retry, 1 per memory pair, 3 for the T-shirt design,
+1 per star caught in the bonus round (gold stars count 3), 3 for finishing each mini-game, 5 for
+finishing the adventure. There is no way to lose.
 
 **Sound:** the music-note button (top corner) switches all sound on or off. The **Listen**
 button reads the current instruction aloud using the iPad's own voice. Nothing plays before the

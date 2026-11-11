@@ -1,0 +1,64 @@
+/* ============================================================
+   LITTLE STARS — STELLA THE STAR (the guide) + T-SHIRT DRAWING
+   Stella is an original character drawn in code, no image file.
+   ============================================================ */
+(function () {
+  'use strict';
+  var LS = window.LS;
+
+  var STAR = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<defs><radialGradient id="stella" cx="40%" cy="32%" r="75%"><stop offset="0" stop-color="#fff6b0"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffa51a"/></radialGradient></defs>' +
+    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#stella)" stroke="#ffbf2e" stroke-width="12" stroke-linejoin="round"/>' +
+    '<path d="M60 12 L73 45 L108 48 L81 71 L90 105 L60 86 L30 105 L39 71 L12 48 L47 45 Z" fill="url(#stella)"/>' +
+    '<g class="eyes"><ellipse cx="49" cy="57" rx="4.6" ry="6.4" fill="#2b1a4f"/><ellipse cx="71" cy="57" rx="4.6" ry="6.4" fill="#2b1a4f"/>' +
+    '<circle cx="50.6" cy="54.6" r="1.7" fill="#fff"/><circle cx="72.6" cy="54.6" r="1.7" fill="#fff"/></g>' +
+    '<circle cx="40" cy="67" r="5" fill="#ff8fc7" opacity=".75"/><circle cx="80" cy="67" r="5" fill="#ff8fc7" opacity=".75"/>' +
+    '<path class="smile" d="M51 69 Q60 79 69 69" fill="none" stroke="#2b1a4f" stroke-width="3.4" stroke-linecap="round"/>' +
+    '<ellipse class="oh" cx="60" cy="73" rx="4" ry="5" fill="#2b1a4f"/></svg>';
+
+  /* mood: 'happy' or 'oops' */
+  LS.mascot = function (mood, cls) {
+    var d = LS.el('div', 'mascot ' + (mood || 'happy') + ' ' + (cls || ''));
+    d.innerHTML = STAR;
+    return d;
+  };
+  /* Stella with a speech bubble */
+  LS.guide = function (text, cls) {
+    var g = LS.el('div', 'guide ' + (cls || ''));
+    var m = LS.mascot('happy');
+    m.addEventListener('click', function () {
+      LS.unlockAudio(); LS.sfx.star();
+      m.classList.remove('spin'); void m.offsetWidth; m.classList.add('spin');
+    });
+    g.appendChild(m);
+    g.appendChild(LS.el('div', 'bubble', text));
+    return g;
+  };
+
+  /* ---------- the T-shirt a child designs ---------- */
+  var TEE = 'M70 20 Q100 44 130 20 L185 50 L165 92 L142 80 L142 180 Q142 186 136 186 L64 186 Q58 186 58 180 L58 80 L35 92 L15 50 Z';
+  var DEFS = '<defs>' +
+    '<pattern id="tp-stripes" width="200" height="26" patternUnits="userSpaceOnUse"><rect width="200" height="11" fill="#ffffff" opacity=".55"/></pattern>' +
+    '<pattern id="tp-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="5" fill="#ffffff" opacity=".6"/></pattern>' +
+    '<pattern id="tp-stars" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 6l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="#ffffff" opacity=".6"/></pattern>' +
+    '<pattern id="tp-zigzag" width="28" height="22" patternUnits="userSpaceOnUse"><path d="M0 16 L7 6 L14 16 L21 6 L28 16" fill="none" stroke="#ffffff" stroke-width="4" opacity=".6"/></pattern>' +
+    '</defs>';
+  LS.TEE_COLOURS = ['#4cc9f0', '#ff8fc7', '#ffd23f', '#3ddc97', '#a78bfa', '#ff6b6b', '#ffffff', '#1f2340'];
+  LS.TEE_PATTERNS = ['plain', 'stripes', 'dots', 'stars', 'zigzag'];
+  LS.TEE_STICKERS = ['⭐', '❤️', '⚡', '🌈', '👑', '🦋', '🚀', '⚽'];
+
+  LS.tee = function (design) {
+    var d = LS.el('div', 'tee');
+    var pat = design.pattern && design.pattern !== 'plain' ? 'url(#tp-' + design.pattern + ')' : 'none';
+    d.innerHTML = '<svg viewBox="0 0 200 200" aria-hidden="true">' + DEFS +
+      '<path d="' + TEE + '" fill="' + design.color + '" stroke="#00000030" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<path d="' + TEE + '" fill="' + pat + '"/>' +
+      '<path d="M70 20 Q100 44 130 20" fill="none" stroke="#00000033" stroke-width="5" stroke-linecap="round"/></svg>';
+    design.stickers.forEach(function (s) {
+      var n = LS.el('span', 'sticker', s.k);
+      n.style.left = s.x + '%'; n.style.top = s.y + '%';
+      d.appendChild(n);
+    });
+    return d;
+  };
+})();

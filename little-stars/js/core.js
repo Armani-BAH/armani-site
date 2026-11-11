@@ -8,7 +8,9 @@
   'use strict';
   var LS = window.LS;
 
-  LS.state = { lang: 'en', age: 'junior', stars: 0, sound: true, session: 0, name: '', memCount: 6, usedQ: [], usedLooks: [] };
+  LS.state = { lang: 'en', age: 'junior', stars: 0, sound: true, session: 0, name: '', memCount: 6, usedQ: [], usedLooks: [], design: null, stats: {}, cur: '' };
+  /* count a slip for the current mini-game (used only to pick a fun title at the end) */
+  LS.slip = function (n) { var s = LS.state.stats, k = LS.state.cur; if (k) s[k] = (s[k] || 0) + (n || 1); };
   LS.games = {};
   LS.currentPrompt = '';
 
@@ -148,7 +150,9 @@
   LS.feedback = function (kind) {
     var keys = { good: ['good1', 'good2', 'good3', 'good4'], retry: ['retry1', 'retry2'], free: ['free1', 'free2'] }[kind];
     var box = LS.$('#feedback');
-    box.textContent = LS.t(LS.rand(keys));
+    while (box.firstChild) box.removeChild(box.firstChild);
+    box.appendChild(LS.mascot(kind === 'retry' ? 'oops' : 'happy'));
+    box.appendChild(LS.el('span', '', LS.t(LS.rand(keys))));
     box.className = 'show ' + kind;
     clearTimeout(fbTimer);
     fbTimer = setTimeout(function () { box.className = ''; }, 1300);
@@ -250,7 +254,8 @@
       var row = LS.el('div', 'choice-row');
       if (o.target) {
         var wrap = LS.el('div', 'target-wrap');
-        wrap.appendChild(LS.card(o.target, 'target', 'div'));
+        var tcard = LS.card(o.target, 'target ' + (o.targetClass || ''), 'div');
+        wrap.appendChild(tcard);
         row.appendChild(wrap);
       }
       if (o.side) row.appendChild(o.side);
@@ -260,6 +265,7 @@
 
       function finish(id, c) {
         locked = true;
+        if (o.targetClass) tcard.classList.remove(o.targetClass);   /* reveal the whole picture */
         clearTimeout(tHandle);
         if (bar) bar.classList.add('stopped');
         LS.wait(950).then(function () { resolve({ wrong: wrong, picked: id, el: c, inTime: inTime }); });
@@ -278,7 +284,7 @@
             c.classList.add('good'); found++; LS.sfx.good();
             if (found >= need) { LS.feedback('good'); finish(id, c); }
           } else {
-            wrong++;
+            wrong++; LS.slip();
             c.classList.add('bad'); LS.sfx.bad(); LS.feedback('retry');
             setTimeout(function () { c.classList.remove('bad'); c.classList.add('tried'); }, 650);
             if (wrong >= 2) {              /* gentle hint after two tries */
@@ -315,8 +321,7 @@
       var txt = LS.el('div', 'intro-text');
       txt.appendChild(LS.el('div', 'kicker', LS.t('gameOf', { n: n })));
       txt.appendChild(LS.el('h1', 'game-title', LS.t('g' + n)));
-      var p = LS.el('p', 'lead', LS.t('g' + n + 'Intro'));
-      txt.appendChild(p);
+      txt.appendChild(LS.guide(LS.t('g' + n + 'Intro')));
       if (extra) txt.appendChild(extra);
       var b = LS.el('button', 'btn primary big', LS.t('play'));
       b.type = 'button';
@@ -332,7 +337,7 @@
   /* ---------- "well done" between games ---------- */
   LS.gameDone = function (bonus) {
     var scr = LS.screen('done');
-    var burst = LS.el('div', 'burst', '★');
+    var burst = LS.mascot('happy', 'cheer');
     scr.appendChild(burst);
     scr.appendChild(LS.el('h1', 'game-title', LS.t('gameDone')));
     scr.appendChild(LS.el('p', 'lead', '+' + bonus + ' ★'));
