@@ -337,15 +337,15 @@
   function certificate(name, total, title) {
     name = (name || '').replace(/[<>]/g, '').trim().slice(0, 20);
     $('#c-name').textContent = name || t('certAnon');
-    LS.fill($('#c-stars'), total + ' ★');
+    $('#c-stars').textContent = '';     /* no score on the certificate */
     LS.fill($('#c-rank'), '★ ' + title + ' ★', 'cur');
     var slot = $('#c-tee');
     while (slot.firstChild) slot.removeChild(slot.firstChild);
     var ph = $('#c-photo');
     while (ph.firstChild) ph.removeChild(ph.firstChild);
     if (LS.state.photo) { var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi); ph.classList.add('has'); }
-    else { ph.classList.remove('has'); ph.appendChild(LS.mascot('happy')); }
-    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else { var bg = LS.el('span', 'c-bigstar'); bg.appendChild(LS.eagleMark()); slot.appendChild(bg); }
+    else ph.classList.remove('has');   /* no picture when no photo was taken */
+    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); /* no picture when the child made no design */
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }
