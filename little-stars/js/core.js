@@ -368,9 +368,9 @@
   LS.tintedEagle = function (col) {
     if (!EAG_OK) return null;
     if (!tints[col]) {
-      var c = document.createElement('canvas'); c.width = 128; c.height = 74;
-      var x = c.getContext('2d'); x.drawImage(EAG, 0, 0, 128, 74);
-      x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, 128, 74);
+      var c = document.createElement('canvas'); c.width = 128; c.height = 63;
+      var x = c.getContext('2d'); x.drawImage(EAG, 0, 0, 128, 63);
+      x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, 128, 63);
       tints[col] = c;
     }
     return tints[col];
