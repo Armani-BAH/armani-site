@@ -22,9 +22,13 @@
   <!-- top bar: logo (press and hold = staff menu), progress, stars, sound -->
   <header id="hud">
     <img class="logo staff-key" src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani" draggable="false">
-    <div id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="hud-tools">
       <div id="stars"><b>★</b><span id="star-count">0</span></div>
+      <button class="tool" id="menu" type="button">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>
+        <span class="lbl" data-t="menu"></span>
+      </button>
       <button class="tool" id="listen" type="button">
         <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></svg>
         <span class="lbl" data-t="listen"></span>
@@ -43,6 +47,8 @@
   <!-- certificate (the only thing that prints) -->
   <div class="overlay" id="cert">
     <div class="paper">
+      <span class="c-side c-photo" id="c-photo"></span>
+      <span class="c-side c-tee" id="c-tee"></span>
       <img class="c-logo" src="assets/logo/emporio-armani-logo.png" alt="Emporio Armani">
       <h2 class="c-title" data-t="certTitle"></h2>
       <div class="c-stars">★ ★ ★</div>
@@ -53,7 +59,7 @@
       <p class="c-strong" data-t="certLine2"></p>
       <div class="c-foot">
         <span id="c-date"></span>
-        <span class="c-tee" id="c-tee"></span>
+        <span class="c-seal"><span>★</span></span>
         <span><b id="c-stars"></b></span>
       </div>
     </div>
@@ -94,6 +100,7 @@
   <script src="js/games/quiz.js"></script>
   <script src="js/games/adventure.js"></script>
   <script src="js/games/challenge.js"></script>
+  <script src="js/games/designer.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

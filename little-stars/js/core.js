@@ -319,7 +319,6 @@
       fan.forEach(function (id) { deck.appendChild(LS.card(id, '', 'div')); });
       scr.appendChild(deck);
       var txt = LS.el('div', 'intro-text');
-      txt.appendChild(LS.el('div', 'kicker', LS.t('gameOf', { n: n })));
       txt.appendChild(LS.el('h1', 'game-title', LS.t('g' + n)));
       txt.appendChild(LS.guide(LS.t('g' + n + 'Intro')));
       if (extra) txt.appendChild(extra);

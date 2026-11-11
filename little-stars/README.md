@@ -1,9 +1,10 @@
 # Emporio Armani · Little Stars
 
-An in-store game for the Emporio Armani Kids activity. Children aged 5–12 play five short
-mini-games on the shop iPad with Stella the star as their guide, design their own T-shirt, collect
-stars, open a gift, and finish with a Little Star badge and a printable certificate.
-English and Arabic. About 4–6 minutes per child.
+An in-store game for the Emporio Armani Kids activity. Children aged 5–12 pick the games they
+want from a menu of six, with Stella the star as their guide. They can mix and match outfits,
+design their own T-shirt or dress, collect stars, open a gift, and finish with a Little Star
+badge and a printable certificate that can carry their photo. English and Arabic.
+A child can finish after one game (about 1 minute) or play all six (about 6–8 minutes).
 
 No login, no accounts, no leaderboard. Nothing a child does or types is saved anywhere.
 
@@ -29,9 +30,10 @@ little-stars/
 │       ├── memory.js          2 · Armani Memory Match
 │       ├── quiz.js            3 · Little Fashion Quiz
 │       ├── adventure.js       4 · Fashion Adventure
-│       ├── studio.js              · Design-your-own T-shirt (part of game 4)
 │       ├── challenge.js       5 · Little Star Challenge
-│       └── catch.js               · Star Catch bonus round (part of game 5)
+│       ├── catch.js               · Star Catch bonus round (part of game 5)
+│       ├── designer.js        6 · Mini Designer (mix & match on a figure)
+│       └── studio.js              · Design a T-shirt or a dress (part of game 6)
 ├── assets/
 │   ├── images/                48 Emporio Armani Kids product photos
 │   │   ├── tops/  bottoms/  shoes/  accessories/  jackets/  dresses/
@@ -115,14 +117,17 @@ To change the waiting times, open `js/app.js`; the numbers are at the top under
 
 ## 5. The certificate
 
-1. On the results screen the child may type a first name (optional), then tap **MY CERTIFICATE**.
+1. On the results screen the child may type a first name (optional) and tap **Add my photo**
+   (optional) to take a picture with the iPad camera. Then tap **MY CERTIFICATE**.
 2. Tap **PRINT OR SAVE**.
    - **Print:** choose your AirPrint printer. It prints one A4 landscape page.
    - **Save as PDF:** in the print preview, pinch outwards on the page preview with two fingers,
      then tap **Share** → **Save to Files** (or send by AirDrop / WhatsApp).
 3. Tap **BACK**, then **NEW LITTLE STAR**.
 
-The name is shown on the certificate only. It is erased as soon as the next game starts.
+The name and the photo are shown on the certificate only. They stay on the iPad, are never sent
+anywhere, and are erased as soon as the next game starts. Please ask a parent before taking a
+child's photo. The first time, Safari may ask permission to use the camera: tap **Allow**.
 
 ---
 
@@ -167,18 +172,20 @@ between the quotes on the right-hand side.
 |---|---|
 | Welcome | Chooses English or العربية, taps START YOUR ADVENTURE |
 | Age | Junior Little Stars (5–7) or Senior Little Stars (8–12) |
+| Game menu | Six game cards. The child taps any game, in any order. Played games get a tick. **Get my reward** appears after the first game. The **Games** button in the top bar returns to the menu at any time. |
 | 1 · Little Armani Stylist | Builds an outfit: matches colours, then picks shoes and a finishing touch. Tap or drag. |
 | 2 · Armani Memory Match | Finds the pairs. Easy 6 cards, Medium 8, Hard 12 (chosen on the intro screen). |
 | 3 · Little Fashion Quiz | Picture questions: jacket, sunny day, eagle logo, matching shoes, plus a zoomed-in "detective" question. |
-| 4 · Fashion Adventure | Designs their own T-shirt (colour, pattern, stickers they can drag), then finds shoes, an extra and a jacket. Ends on a runway with camera flashes. |
+| 4 · Fashion Adventure | Chooses an outfit, then finds shoes, an extra and a jacket. Ends on a runway with camera flashes. |
 | 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch falling stars. |
+| 6 · Mini Designer | Chooses one: **mix & match** tops, bottoms, dresses, shoes and extras on a figure with arrows (or "Surprise me"), **design a T-shirt**, or **design a dress** (colour, pattern, stickers they can drag). |
 | Gift | Taps a gift box three times to open it. |
 | Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
 
 **Stella the star** guides the child on every screen, cheers for right answers, and can be tapped
 to make her spin. She is an original character drawn in code.
 
-**The child's T-shirt design** appears on the runway, on the results screen and on the printed
+**The child's T-shirt or dress design** appears on the results screen and on the printed
 certificate. Like the name, it is never saved and is erased when the next child starts.
 
 **Juniors (5–7):** fewer choices, fewer cards and questions, no timers, instructions read aloud,
@@ -186,7 +193,7 @@ and a gentle hint after two wrong tries.
 **Seniors (8–12):** more choices, more questions, two outfits to style, and a bonus star for
 answering before the timer bar runs out in the final challenge.
 
-**Stars:** 2 for a first-try answer, 1 after a retry, 1 per memory pair, 3 for the T-shirt design,
+**Stars:** 2 for a first-try answer, 1 after a retry, 1 per memory pair, 3 for a Mini Designer creation,
 1 per star caught in the bonus round (gold stars count 3), 3 for finishing each mini-game, 5 for
 finishing the adventure. There is no way to lose.
 

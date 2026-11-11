@@ -23,9 +23,10 @@
         .filter(function (x) { return not.indexOf(x) < 0; }), n - 1);
     };
 
-    /* 1. design your own T-shirt (creative, every design is right) */
-    r = await LS.studio({ top: path(0) });
-    LS.state.design = r.design; LS.award(3, r.el);
+    /* 1. choose an outfit (free choice) */
+    var outfits = LS.shuffle(S(['check-dress', 'navy-dress', 'peach-dress'], 2).concat(S(['varsity-tee', 'pattern-sweatshirt', 'beige-pullover'], 2))).slice(0, n);
+    r = await LS.choice({ top: path(0), prompt: LS.t('adOutfit'), options: outfits });
+    look.push(r.picked); LS.award(2, r.el);
 
     /* 2. find the shoes */
     var shoe = R(LS.byCat('shoes'));
@@ -46,7 +47,7 @@
     scr.appendChild(path(4));
     LS.setPrompt(scr, LS.t('adReady'));
     var row = LS.el('div', 'runway');
-    var mine = LS.el('div', 'card mine'); mine.appendChild(LS.tee(LS.state.design)); row.appendChild(mine);
+    if (LS.state.design) { var mine = LS.el('div', 'card mine'); mine.appendChild(LS.tee(LS.state.design)); row.appendChild(mine); }
     for (var f = 0; f < 7; f++) { var fl = LS.el('i', 'flash'); fl.style.left = (6 + Math.random() * 88) + '%'; fl.style.top = (10 + Math.random() * 80) + '%'; fl.style.animationDelay = (Math.random() * 1.6) + 's'; scr.appendChild(fl); }
     look.forEach(function (id, i) {
       var c = LS.card(id, '', 'div'); c.style.animationDelay = (i * 0.15) + 's'; row.appendChild(c);

@@ -14,13 +14,15 @@
   var STAFF_HOLD = 2000;    /* press-and-hold time on the logo (milliseconds)   */
   var GAME_BONUS = 3;       /* stars for finishing each mini-game               */
 
-  var GAMES = ['stylist', 'memory', 'quiz', 'adventure', 'challenge'];
+  var GAMES = ['stylist', 'memory', 'quiz', 'adventure', 'challenge', 'designer'];
+  var COVER = ['pink-cardigan', 'varsity-tee', 'navy-coat', 'tan-sneakers', 'pattern-puffer', null];
   var FANS = [
     ['green-tee', 'pink-cardigan', 'burgundy-hoodie'],
     ['cap', 'varsity-tee', 'blue-sneakers'],
     ['navy-coat', 'check-dress', 'backpack'],
     ['navy-blazer', 'peach-dress', 'tan-sneakers'],
-    ['pattern-puffer', 'varsity-jacket', 'pink-bag']
+    ['pattern-puffer', 'varsity-jacket', 'pink-bag'],
+    ['check-dress', 'varsity-tee', 'pink-skirt']
   ];
   var where = 'home';
 
@@ -38,7 +40,8 @@
     LS.state.session++;
     LS.state.stars = 0; LS.state.name = ''; LS.state.usedQ = []; LS.state.usedLooks = [];
     LS.state.design = null; LS.state.stats = {}; LS.state.cur = ''; LS.state.caught = 0;
-    ['#c-tee', '#c-rank'].forEach(function (s) { var n = $(s); while (n.firstChild) n.removeChild(n.firstChild); });
+    LS.state.done = {}; LS.state.look = null; LS.state.created = false; LS.state.photo = null;
+    ['#c-tee', '#c-rank', '#c-photo'].forEach(function (s) { var n = $(s); while (n.firstChild) n.removeChild(n.firstChild); });
     $('#star-count').textContent = '0';
     delete document.body.dataset.g;
     $('#c-name').textContent = '';
@@ -124,23 +127,71 @@
   }
 
   /* ---------- 3. the five mini-games ---------- */
-  async function journey() {
-    wipe(); where = 'game';
+  function journey() {              /* a fresh start for one child */
+    wipe();
     LS.hud(true);
-    for (var i = 0; i < GAMES.length; i++) {
-      LS.setProgress(i);
-      LS.state.cur = '';
-      await LS.intro(i + 1, FANS[i], i === 1 ? levels() : null);
-      LS.state.cur = GAMES[i];
-      await LS.games[GAMES[i]]();
-      LS.hush();
-      await LS.gameDone(GAME_BONUS);
+    hub();
+  }
+
+  /* the game menu: the child picks what to play, in any order */
+  function hub() {
+    where = 'game';
+    LS.state.cur = ''; LS.hush();
+    delete document.body.dataset.g;
+    var done = LS.state.done, count = Object.keys(done).length;
+    LS.setProgress(count);
+    var scr = LS.screen('hub');
+    var text = t(count ? 'hubMore' : 'hubTitle');
+    scr.appendChild(LS.guide(text, 'big'));
+    LS.currentPrompt = text;
+    var grid = el('div', 'hub-grid');
+    GAMES.forEach(function (g, i) {
+      var b = el('button', 'gcard' + (done[g] ? ' played' : '')); b.type = 'button'; b.dataset.game = g; b.dataset.n = i + 1;
+      var art = el('span', 'gart');
+      if (COVER[i]) { var im = new Image(); im.src = LS.src(COVER[i]); im.alt = ''; im.draggable = false; art.appendChild(im); }
+      else art.appendChild(LS.tee({ color: '#ffd23f', pattern: 'stars', stickers: [{ k: '🌈', x: 50, y: 52 }] }));
+      b.appendChild(art);
+      b.appendChild(el('span', 'gname', t('g' + (i + 1))));
+      b.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); play(i); });
+      grid.appendChild(b);
+    });
+    scr.appendChild(grid);
+    if (count) {
+      var fin = el('button', 'btn primary big', '🎁  ' + t('finish')); fin.type = 'button'; fin.id = 'finish';
+      fin.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); finish(); });
+      scr.appendChild(fin);
     }
+    LS.show(scr);
+    if (LS.isJunior() || !count) LS.say(text);
+  }
+
+  async function play(i) {
+    var g = GAMES[i];
+    LS.state.cur = '';
+    await LS.intro(i + 1, FANS[i], g === 'memory' ? levels() : null);
+    LS.state.cur = g;
+    await LS.games[g]();
+    LS.hush();
+    await LS.gameDone(GAME_BONUS);
+    LS.state.done[g] = true;
+    if (Object.keys(LS.state.done).length === GAMES.length) finish(); else hub();
+  }
+
+  async function finish() {
     LS.state.cur = '';
     await gift();
-    LS.award(5);                      /* finishing the whole adventure */
+    LS.award(5);                      /* finishing the adventure */
     reward();
   }
+
+  /* top-bar "Games" button: leave the current game and go back to the menu */
+  $('#menu').addEventListener('click', function () {
+    if (where !== 'game') return;
+    LS.unlockAudio(); LS.sfx.tap();
+    LS.state.session++;               /* quietly stops whatever was running */
+    $('#feedback').className = '';
+    hub();
+  });
 
   /* ---------- a gift to open before the results ---------- */
   function gift() {
@@ -168,18 +219,19 @@
   function rank() {
     var st = LS.state.stats, best = [], low = 99;
     [['stylist', 'tStylist'], ['memory', 'tMemory'], ['quiz', 'tQuiz']].forEach(function (g) {
+      if (!LS.state.done[g[0]]) return;
       var v = st[g[0]] || 0;
       if (v < low) { low = v; best = [g[1]]; } else if (v === low) best.push(g[1]);
     });
     if (LS.state.caught >= (LS.isJunior() ? 8 : 11)) best.push('tCatch');
-    if (LS.state.design && LS.state.design.stickers.length >= 3) best.push('tDesign');
-    return LS.rand(best);
+    if (LS.state.created) best.push('tDesign');
+    return best.length ? LS.rand(best) : 'tStar';
   }
 
   /* ---------- 4. reward ---------- */
   function reward() {
     where = 'reward';
-    LS.setProgress(5); LS.hush();
+    LS.setProgress(Object.keys(LS.state.done).length); LS.hush();
     delete document.body.dataset.g;
     var total = LS.state.stars;
     var scr = LS.screen('reward');
@@ -217,7 +269,30 @@
     input.setAttribute('autocorrect', 'off'); input.setAttribute('spellcheck', 'false'); input.id = 'name-input';
     var cb = el('button', 'btn primary', t('seeCert')); cb.type = 'button'; cb.id = 'see-cert';
     cb.addEventListener('click', function () { LS.sfx.tap(); input.blur(); certificate(input.value, total, title); });
-    row.appendChild(input); row.appendChild(cb);
+    /* optional photo for the certificate: opens the iPad camera, kept in memory only */
+    var file = el('input'); file.type = 'file'; file.accept = 'image/*'; file.setAttribute('capture', 'user'); file.id = 'photo-file'; file.hidden = true;
+    var pb = el('button', 'btn photo-btn'); pb.type = 'button'; pb.id = 'add-photo';
+    var pic = el('span', 'photo-thumb', '📷'), plabel = el('span', '', t('addPhoto'));
+    pb.appendChild(pic); pb.appendChild(plabel);
+    pb.addEventListener('click', function () { LS.sfx.tap(); file.click(); });
+    file.addEventListener('change', function () {
+      var f = file.files && file.files[0]; if (!f) return;
+      var session = LS.state.session, url = URL.createObjectURL(f), im = new Image();
+      im.onload = function () {
+        var s = Math.min(im.naturalWidth, im.naturalHeight), c = document.createElement('canvas');
+        c.width = c.height = 480;
+        c.getContext('2d').drawImage(im, (im.naturalWidth - s) / 2, (im.naturalHeight - s) / 2, s, s, 0, 0, 480, 480);
+        URL.revokeObjectURL(url); file.value = '';
+        if (session !== LS.state.session) return;
+        LS.state.photo = c.toDataURL('image/jpeg', 0.85);
+        pic.textContent = ''; pic.style.backgroundImage = 'url(' + LS.state.photo + ')';
+        plabel.textContent = t('changePhoto');
+        LS.sfx.star();
+      };
+      im.onerror = function () { URL.revokeObjectURL(url); file.value = ''; };
+      im.src = url;
+    });
+    row.appendChild(input); row.appendChild(pb); row.appendChild(file); row.appendChild(cb);
     main.appendChild(row);
     main.appendChild(el('p', 'hint-text', t('nameHelp')));
 
@@ -254,7 +329,11 @@
     $('#c-rank').textContent = '★ ' + title + ' ★';
     var slot = $('#c-tee');
     while (slot.firstChild) slot.removeChild(slot.firstChild);
-    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else slot.appendChild(LS.mascot('happy'));
+    var ph = $('#c-photo');
+    while (ph.firstChild) ph.removeChild(ph.firstChild);
+    if (LS.state.photo) { var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi); ph.classList.add('has'); }
+    else { ph.classList.remove('has'); ph.appendChild(LS.mascot('happy')); }
+    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); else slot.appendChild(LS.el('span', 'c-bigstar', '★'));
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }
@@ -288,7 +367,7 @@
   $('#staff-close').addEventListener('click', function () { $('#staff').classList.remove('on'); });
   $('#staff-skip').addEventListener('click', function () {
     if (where === 'home' || where === 'age') { $('#staff').classList.remove('on'); return; }
-    LS.state.session++; $('#staff').classList.remove('on'); LS.hud(true); reward();
+    LS.state.session++; LS.state.cur = ''; $('#staff').classList.remove('on'); LS.hud(true); reward();
   });
   $('#staff-full').addEventListener('click', function () {
     var d = document, e = d.documentElement;

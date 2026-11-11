@@ -36,6 +36,7 @@
   };
 
   /* ---------- the T-shirt a child designs ---------- */
+  var DRESS = 'M78 18 Q100 38 122 18 L160 40 L150 70 L130 62 L128 92 L172 178 Q100 198 28 178 L72 92 L70 62 L50 70 L40 40 Z';
   var TEE = 'M70 20 Q100 44 130 20 L185 50 L165 92 L142 80 L142 180 Q142 186 136 186 L64 186 Q58 186 58 180 L58 80 L35 92 L15 50 Z';
   var DEFS = '<defs>' +
     '<pattern id="tp-stripes" width="200" height="26" patternUnits="userSpaceOnUse"><rect width="200" height="11" fill="#ffffff" opacity=".55"/></pattern>' +
@@ -49,11 +50,13 @@
 
   LS.tee = function (design) {
     var d = LS.el('div', 'tee');
+    var dress = design.shape === 'dress', shape = dress ? DRESS : TEE;
     var pat = design.pattern && design.pattern !== 'plain' ? 'url(#tp-' + design.pattern + ')' : 'none';
     d.innerHTML = '<svg viewBox="0 0 200 200" aria-hidden="true">' + DEFS +
-      '<path d="' + TEE + '" fill="' + design.color + '" stroke="#00000030" stroke-width="2.5" stroke-linejoin="round"/>' +
-      '<path d="' + TEE + '" fill="' + pat + '"/>' +
-      '<path d="M70 20 Q100 44 130 20" fill="none" stroke="#00000033" stroke-width="5" stroke-linecap="round"/></svg>';
+      '<path d="' + shape + '" fill="' + design.color + '" stroke="#00000030" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<path d="' + shape + '" fill="' + pat + '"/>' +
+      (dress ? '<path d="M78 18 Q100 38 122 18" fill="none" stroke="#00000033" stroke-width="5" stroke-linecap="round"/><path d="M72 92 Q100 100 128 92" fill="none" stroke="#00000030" stroke-width="4" stroke-linecap="round"/>'
+             : '<path d="M70 20 Q100 44 130 20" fill="none" stroke="#00000033" stroke-width="5" stroke-linecap="round"/>') + '</svg>';
     design.stickers.forEach(function (s) {
       var n = LS.el('span', 'sticker', s.k);
       n.style.left = s.x + '%'; n.style.top = s.y + '%';

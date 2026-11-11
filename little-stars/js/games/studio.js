@@ -9,10 +9,11 @@
   LS.studio = function (o) {
     o = o || {};
     return new Promise(function (resolve) {
-      var design = { color: LS.TEE_COLOURS[0], pattern: 'plain', stickers: [] };
+      var shape = o.shape === 'dress' ? 'dress' : 'tee';
+      var design = { shape: shape, color: LS.TEE_COLOURS[shape === 'dress' ? 1 : 0], pattern: 'plain', stickers: [] };
       var scr = LS.screen('studio');
       if (o.top) scr.appendChild(o.top);
-      LS.setPrompt(scr, LS.t('adDesign'));
+      LS.setPrompt(scr, LS.t(shape === 'dress' ? 'adDress' : 'adDesign'));
 
       var row = LS.el('div', 'studio-row');
       var easel = LS.el('div', 'easel');
@@ -57,7 +58,7 @@
 
       var cBox = group(LS.t('stColour'));
       LS.TEE_COLOURS.forEach(function (c, i) {
-        var b = LS.el('button', 'swatch' + (i === 0 ? ' on' : '')); b.type = 'button'; b.style.background = c; b.dataset.c = c;
+        var b = LS.el('button', 'swatch' + (c === design.color ? ' on' : '')); b.type = 'button'; b.style.background = c; b.dataset.c = c;
         b.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); design.color = c; select(cBox, b); draw(); });
         cBox.appendChild(b);
       });
@@ -65,7 +66,7 @@
       var pBox = group(LS.t('stPattern'));
       LS.TEE_PATTERNS.forEach(function (p, i) {
         var b = LS.el('button', 'pat' + (i === 0 ? ' on' : '')); b.type = 'button'; b.dataset.p = p;
-        b.appendChild(LS.tee({ color: '#8b6cf0', pattern: p, stickers: [] }));
+        b.appendChild(LS.tee({ shape: shape, color: '#8b6cf0', pattern: p, stickers: [] }));
         b.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); design.pattern = p; select(pBox, b); draw(); });
         pBox.appendChild(b);
       });
