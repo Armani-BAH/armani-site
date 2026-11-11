@@ -9,12 +9,12 @@
 (function () {
   'use strict';
   var LS = window.LS, t = LS.t, el = LS.el;
-  var D = LS.duel = { wins: [0, 0, 0], xoStart: 1 };   /* wins[0] = ties */
+  var D = LS.duel = { wins: [0, 0, 0], xoStart: 1, face: true };   /* wins[0] = ties; face = players sit opposite each other */
   var PLAY = {};
 
   var GAMES = [
     ['catch', 'dCatch', '⭐'], ['memory', 'dMemory', '🃏'], ['quiz', 'dQuiz', '⚡'], ['style', 'dStyle', '👗'],
-    ['tug', 'dTug', '💪'], ['copy', 'dCopy', '👀'], ['xo', 'dXO', '✖️⭕']
+    ['tug', 'dTug', '💪'], ['copy', 'dCopy', '👀'], ['xo', 'dXO', '✖️⭕'], ['puzzle', 'dPuzzle', '🧩']
   ];
   var TOPS = ['green-tee', 'navy-tee', 'peach-tee', 'white-tee', 'varsity-tee', 'green-hoodie', 'burgundy-hoodie', 'pink-cardigan',
     'pattern-sweatshirt', 'beige-pullover', 'varsity-jacket', 'pattern-puffer', 'check-jacket', 'navy-blazer', 'pink-jacket',
@@ -55,8 +55,20 @@
     var b = el('div', 'timer'), i = el('i'); i.style.animationDuration = secs + 's'; b.appendChild(i);
     return b;
   }
+  function faceCls() { return D.face ? ' face' : ''; }
+  /* the instruction: shown once in the middle, or once per player when sitting face to face */
+  function title(A, text) {
+    if (!A._tp) {
+      A._tp = el('h2', 'prompt'); A.top.insertBefore(A._tp, A.top.firstChild);
+      A._ht = [null, el('p', 'half-title'), el('p', 'half-title')];
+      A.h[1].insertBefore(A._ht[1], A.h[1].firstChild); A.h[2].insertBefore(A._ht[2], A.h[2].firstChild);
+    }
+    A._tp.textContent = A._ht[1].textContent = A._ht[2].textContent = text;
+    LS.currentPrompt = text;
+  }
+  function mirror(text) { return el('p', 'mirror-title', text); }
   function arena(cls) {
-    var scr = LS.screen('duel ' + cls);
+    var scr = LS.screen('duel ' + cls + faceCls());
     var top = el('div', 'duel-top');
     var a = el('div', 'arena');
     var h1 = el('div', 'half p1'), h2 = el('div', 'half p2');
@@ -83,14 +95,16 @@
   function find(key) { return GAMES.filter(function (g) { return g[0] === key; })[0]; }
 
   function countdown() {
-    var s = LS.state.session, o = el('div', 'count');
+    var s = LS.state.session, o = el('div', 'count' + faceCls());
+    var top = el('span', 'c-top'), bot = el('span', 'c-bot');
+    o.appendChild(top); o.appendChild(bot);
     document.body.appendChild(o);
     var steps = ['3', '2', '1', t('go')], i = 0;
     return new Promise(function (res) {
       (function next() {
         if (!alive(s)) { if (o.parentNode) o.parentNode.removeChild(o); return; }
         if (i === steps.length) { o.parentNode.removeChild(o); res(); return; }
-        o.textContent = steps[i];
+        top.textContent = bot.textContent = steps[i];
         o.classList.remove('pop'); void o.offsetWidth; o.classList.add('pop');
         if (i === 3) LS.sfx.good(); else LS.sfx.tap();
         i++;
@@ -165,10 +179,23 @@
   LS.duelHub = function () {
     LS.state.session++;                 /* stop anything still running */
     LS.state.cur = ''; LS.hush();
-    document.body.dataset.g = '7';
+    document.body.dataset.g = '8';
     var scr = LS.screen('duel-hub');
     scr.appendChild(LS.guide(t('duelPick'), 'big'));
     scr.appendChild(scoreboard());
+    /* how the two children sit: changes the layout of every duel */
+    var seat = el('div', 'seat');
+    seat.appendChild(el('span', 'seat-label', t('seatTitle')));
+    [['face', '🔄', 'seatFace'], ['side', '👫', 'seatSide']].forEach(function (o) {
+      var b = el('button', 'seat-btn' + ((o[0] === 'face') === D.face ? ' on' : '')); b.type = 'button'; b.dataset.seat = o[0];
+      b.appendChild(el('span', 'seat-ico', o[1])); b.appendChild(el('span', '', t(o[2])));
+      b.addEventListener('click', function () {
+        LS.sfx.tap(); D.face = o[0] === 'face';
+        Array.prototype.forEach.call(seat.querySelectorAll('.seat-btn'), function (k) { k.classList.toggle('on', k === b); });
+      });
+      seat.appendChild(b);
+    });
+    scr.appendChild(seat);
     var grid = el('div', 'duel-grid');
     GAMES.forEach(function (g, i) {
       var b = el('button', 'dcard d' + (i + 1)); b.type = 'button'; b.dataset.duel = g[0];
@@ -196,7 +223,8 @@
 
   function intro(key) {
     return new Promise(function (res) {
-      var g = find(key), scr = LS.screen('duel-intro');
+      var g = find(key), scr = LS.screen('duel-intro' + faceCls());
+      if (D.face) scr.appendChild(mirror(t(g[1]) + ' · ' + t(g[1] + 'How')));
       scr.appendChild(el('div', 'kicker', t('duel')));
       scr.appendChild(el('div', 'dart big', g[2]));
       scr.appendChild(el('h1', 'game-title', t(g[1])));
@@ -213,7 +241,7 @@
 
   function result(w, key) {
     D.wins[w]++;
-    var scr = LS.screen('duel-result');
+    var scr = LS.screen('duel-result' + faceCls());
     var title;
     if (w) {
       var big = el('div', 'winner p' + w);
@@ -227,6 +255,7 @@
       scr.appendChild(two);
       title = t('tie');
     }
+    if (D.face) scr.insertBefore(mirror(title), scr.firstChild);
     scr.appendChild(el('h1', 'game-title', title));
     scr.appendChild(el('p', 'lead', t('bothStars')));
     scr.appendChild(scoreboard());
@@ -250,22 +279,23 @@
     return new Promise(async function (res) {
       var s = LS.state.session, secs = LS.isJunior() ? 18 : 20;
       var A = arena('dcatch');
-      A.top.appendChild(el('h2', 'prompt', t('dCatch')));
       var sc = [null, head(A.h[1], 1), head(A.h[2], 2)], F = [null];
       [1, 2].forEach(function (p) {
         var f = el('div', 'field'), bag = el('div', 'bag');
         bag.appendChild(LS.mascot('happy')); bag.appendChild(el('span', 'bag-body', '★'));
         f.appendChild(bag); A.h[p].appendChild(f);
         var o = { f: f, bag: bag, x: 0.5, items: [], score: 0 };
+        var flipped = D.face && p === 2;          /* the top half is upside down */
         function steer(e) {
-          var r = f.getBoundingClientRect();
-          o.x = Math.max(0.1, Math.min(0.9, (e.clientX - r.left) / r.width));
+          var r = f.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width;
+          o.x = Math.max(0.1, Math.min(0.9, flipped ? 1 - fx : fx));
           bag.style.left = (o.x * 100) + '%';
         }
         f.addEventListener('pointerdown', function (e) { LS.unlockAudio(); steer(e); });
         f.addEventListener('pointermove', steer);
         F.push(o);
       });
+      title(A, t('dCatch'));
       LS.show(A.scr);
       await countdown();
       if (!alive(s)) return;
@@ -326,7 +356,7 @@
   PLAY.memory = function () {
     return new Promise(function (res) {
       var s = LS.state.session, pairs = 6, ids = LS.sample(MEM, pairs), deck = LS.shuffle(ids.concat(ids));
-      var scr = LS.screen('duel dmemory');
+      var scr = LS.screen('duel dmemory' + faceCls());
       scr.appendChild(el('div', 'duel-top')).appendChild(el('h2', 'prompt', t('dMemory')));
       var a = el('div', 'arena three');
       var S = [null, side(1), side(2)], score = [0, 0, 0], turn = 1;
@@ -381,12 +411,12 @@
       var s = LS.state.session, rounds = 5;
       var keys = LS.sample(['jacket', 'shoes', 'hat', 'bag', 'dress', 'sunny', 'cold', 'same', 'eagle'], rounds);
       var A = arena('dquiz');
-      var kick = el('div', 'kicker'), qrow = el('div', 'dq-top'), prompt = el('h2', 'prompt');
+      var kick = el('div', 'kicker'), qrow = el('div', 'dq-top');
       A.top.appendChild(kick); A.top.appendChild(qrow);
       var sc = [null, head(A.h[1], 1), head(A.h[2], 2)], score = [0, 0, 0];
       var G = [null, el('div', 'dq-grid'), el('div', 'dq-grid')];
       A.h[1].appendChild(G[1]); A.h[2].appendChild(G[2]);
-      qrow.appendChild(prompt);
+      title(A, t('dQuiz'));
       LS.show(A.scr);
       await countdown();
 
@@ -394,9 +424,8 @@
         if (!alive(s)) return;
         var q = LS.QUIZ_BANK[keys[r]](), set = [q.correct[0]].concat(LS.sample(q.others, 3));
         kick.textContent = t('round', { n: r + 1, t: rounds });
-        prompt.textContent = t(q.prompt);
-        LS.currentPrompt = prompt.textContent;
-        while (qrow.children.length > 1) qrow.removeChild(qrow.lastChild);
+        title(A, t(q.prompt));
+        while (qrow.firstChild) qrow.removeChild(qrow.firstChild);
         if (q.target) qrow.appendChild(LS.card(q.target, 'target', 'div'));
         await new Promise(function (next) {
           var done = false, frozen = [false, false, false];
@@ -444,8 +473,6 @@
     return new Promise(async function (res) {
       var s = LS.state.session, secs = LS.isJunior() ? 40 : 30;
       var A = arena('dstyle');
-      var prompt = el('h2', 'prompt', t('dStyle'));
-      A.top.appendChild(prompt);
       var lists = LS.figureLists();
       var M = [null], ready = [false, false, false], ended = false, finishNow;
       [1, 2].forEach(function (p) {
@@ -459,6 +486,7 @@
         });
         A.h[p].appendChild(rb);
       });
+      title(A, t('dStyle'));
       LS.show(A.scr);
       await countdown();
       if (!alive(s)) return;
@@ -467,7 +495,7 @@
       if (!alive(s) || ended) return;
       ended = true;
       LS.sfx.win();
-      prompt.textContent = t('fans');
+      title(A, t('fans'));
       while (A.top.children.length > 1) A.top.removeChild(A.top.lastChild);
       [1, 2].forEach(function (p) {
         M[p].lock();
@@ -494,7 +522,7 @@
   PLAY.tug = function () {
     return new Promise(async function (res) {
       var s = LS.state.session, secs = 20, pos = 0, step = 0.05, started = false, ended = false;
-      var scr = LS.screen('duel dtug');
+      var scr = LS.screen('duel dtug' + faceCls());
       var top = el('div', 'duel-top'); top.appendChild(el('h2', 'prompt', t('dTug'))); scr.appendChild(top);
       var rope = el('div', 'rope');
       rope.appendChild(el('span', 'track'));
@@ -503,10 +531,12 @@
       rope.appendChild(el('span', 'goal g2', '★'));
       var marker = el('div', 'marker'); marker.appendChild(LS.mascot('happy')); rope.appendChild(marker);
       scr.appendChild(rope);
+      if (D.face) rope.classList.add('vertical');
       var a = el('div', 'arena'), H = [null];
       [1, 2].forEach(function (p) {
         var h = el('div', 'half p' + p);
         var hd = el('div', 'half-head'); hd.appendChild(chip(p)); h.appendChild(hd);
+        h.appendChild(el('p', 'half-title', t('dTugHow')));
         var pad = el('button', 'tap-pad', t('tapTap')); pad.type = 'button'; pad.dataset.p = p;
         onTap(pad, function () {
           if (!started || ended) return;
@@ -519,9 +549,13 @@
         });
         h.appendChild(pad); a.appendChild(h); H.push(h);
       });
-      scr.appendChild(a);
+      if (D.face) {                      /* rope runs up the side, between the two players */
+        scr.removeChild(rope);
+        var wrap = el('div', 'tug-face'); wrap.appendChild(a); wrap.appendChild(rope); scr.appendChild(wrap);
+      } else scr.appendChild(a);
       function draw() {
-        marker.style.left = (50 + pos * 44) + '%';
+        if (D.face) { marker.style.left = '50%'; marker.style.top = (50 - pos * 42) + '%'; }
+        else marker.style.left = (50 + pos * 44) + '%';
         H[1].classList.toggle('ahead', pos < -0.05); H[2].classList.toggle('ahead', pos > 0.05);
       }
       function end(w) {
@@ -556,7 +590,8 @@
       });
 
       /* look carefully */
-      var show = LS.screen('duel dcopy-show');
+      var show = LS.screen('duel dcopy-show' + faceCls());
+      if (D.face) show.appendChild(mirror(t('remember')));
       show.appendChild(LS.guide(t('remember'), 'big'));
       var f = figure(target); f.el.classList.add('big-fig'); show.appendChild(f.el);
       show.appendChild(timerBar(showSecs));
@@ -566,7 +601,6 @@
 
       /* rebuild it */
       var A = arena('dcopy');
-      A.top.appendChild(el('h2', 'prompt', t('copyNow')));
       var M = [null], doneAt = [0, 0, 0], t0 = Date.now(), finishNow;
       [1, 2].forEach(function (p) {
         var hd = el('div', 'half-head'); hd.appendChild(chip(p)); A.h[p].appendChild(hd);
@@ -580,7 +614,7 @@
         A.h[p].appendChild(rb);
       });
       A.top.appendChild(timerBar(limit));
-      LS.currentPrompt = t('copyNow');
+      title(A, t('copyNow'));
       LS.show(A.scr); LS.say(LS.currentPrompt);
       await new Promise(function (go) { finishNow = go; setTimeout(go, limit * 1000); });
       if (!alive(s)) return;
@@ -621,13 +655,42 @@
   };
 
   /* ============================================================
+     8. PUZZLE RACE — the same puzzle on both sides
+     ============================================================ */
+  PLAY.puzzle = function () {
+    return new Promise(async function (res) {
+      var s = LS.state.session, junior = LS.isJunior(), rows = junior ? 2 : 3, cols = junior ? 2 : 3;
+      var id = LS.rand(LS.puzzlePool()), order = LS.puzzleOrder(rows * cols);
+      var A = arena('dpuzzle'), B = [null], finished = false;
+      [1, 2].forEach(function (p) {
+        var hd = el('div', 'half-head'); hd.appendChild(chip(p)); A.h[p].appendChild(hd);
+        var row = el('div', 'pz-row');
+        var ref = el('div', 'pz-ref'); ref.appendChild(LS.card(id, '', 'div'));
+        var b = LS.puzzleBoard(id, rows, cols, { order: order, locked: true });
+        row.appendChild(ref); row.appendChild(b.el); A.h[p].appendChild(row);
+        B.push(b);
+        b.done.then(function () {
+          if (finished || !alive(s)) return;
+          finished = true; A.h[p].classList.add('win');
+          LS.wait(1500).then(function () { res(p); });
+        });
+      });
+      title(A, t('pzPrompt'));
+      LS.show(A.scr);
+      await countdown();
+      if (!alive(s)) return;
+      B[1].start(); B[2].start();
+    });
+  };
+
+  /* ============================================================
      7. XO — three in a row
      ============================================================ */
   PLAY.xo = function () {
     return new Promise(function (res) {
       var s = LS.state.session, turn = D.xoStart;
       D.xoStart = D.xoStart === 1 ? 2 : 1;          /* take turns starting */
-      var scr = LS.screen('duel dxo');
+      var scr = LS.screen('duel dxo' + faceCls());
       scr.appendChild(el('div', 'duel-top')).appendChild(el('h2', 'prompt', t('dXO')));
       var a = el('div', 'arena three');
       function mk(cls) { var m = el('span', 'xo-cell mk ' + cls); return m; }

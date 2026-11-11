@@ -14,15 +14,16 @@
   var STAFF_HOLD = 2000;    /* press-and-hold time on the logo (milliseconds)   */
   var GAME_BONUS = 3;       /* stars for finishing each mini-game               */
 
-  var GAMES = ['stylist', 'memory', 'quiz', 'adventure', 'challenge', 'designer'];
-  var COVER = ['pink-cardigan', 'varsity-tee', 'navy-coat', 'tan-sneakers', 'pattern-puffer', null];
+  var GAMES = ['stylist', 'memory', 'quiz', 'adventure', 'challenge', 'designer', 'puzzle'];
+  var COVER = ['pink-cardigan', 'varsity-tee', 'navy-coat', 'tan-sneakers', 'pattern-puffer', null, 'check-dress'];
   var FANS = [
     ['green-tee', 'pink-cardigan', 'burgundy-hoodie'],
     ['cap', 'varsity-tee', 'blue-sneakers'],
     ['navy-coat', 'check-dress', 'backpack'],
     ['navy-blazer', 'peach-dress', 'tan-sneakers'],
     ['pattern-puffer', 'varsity-jacket', 'pink-bag'],
-    ['check-dress', 'varsity-tee', 'pink-skirt']
+    ['check-dress', 'varsity-tee', 'pink-skirt'],
+    ['pattern-sweatshirt', 'check-jacket', 'varsity-jacket']
   ];
   var where = 'home';
 
@@ -150,6 +151,7 @@
     GAMES.forEach(function (g, i) {
       var b = el('button', 'gcard' + (done[g] ? ' played' : '')); b.type = 'button'; b.dataset.game = g; b.dataset.n = i + 1;
       var art = el('span', 'gart');
+      if (g === 'puzzle') { art.classList.add('puz'); art.appendChild(el('span', 'puz-ico', '🧩')); }
       if (COVER[i]) { var im = new Image(); im.src = LS.src(COVER[i]); im.alt = ''; im.draggable = false; art.appendChild(im); }
       else art.appendChild(LS.tee({ color: '#ffd23f', pattern: 'stars', stickers: [{ k: '🌈', x: 50, y: 52 }] }));
       b.appendChild(art);
@@ -234,6 +236,7 @@
     });
     if (LS.state.caught >= (LS.isJunior() ? 8 : 11)) best.push('tCatch');
     if (LS.state.created) best.push('tDesign');
+    if (LS.state.done.puzzle) best.push('tPuzzle');
     return best.length ? LS.rand(best) : 'tStar';
   }
 

@@ -1,7 +1,7 @@
 # Emporio Armani · Little Stars
 
 An in-store game for the Emporio Armani Kids activity. Children aged 5–12 pick the games they
-want from a menu of six, with Emporio the star as their guide. They can mix and match outfits,
+want from a menu of seven, with Emporio the star as their guide. They can mix and match outfits,
 design their own T-shirt or dress, collect stars, open a gift, and finish with a Little Star
 badge and a printable certificate that can carry their photo. English and Arabic.
 A child can finish after one game (about 1 minute) or play all six (about 6–8 minutes).
@@ -33,7 +33,8 @@ little-stars/
 │       ├── challenge.js       5 · Little Star Challenge
 │       ├── catch.js               · Star Catch bonus round (part of game 5)
 │       ├── designer.js        6 · Mini Designer (mix & match on a figure)
-│       ├── duel.js            Challenge a Friend: 7 two-player games
+│       ├── puzzle.js          7 · Fashion Puzzle
+│       ├── duel.js            Challenge a Friend: 8 two-player games
 │       └── studio.js              · Design a T-shirt or a dress (part of game 6)
 ├── assets/
 │   ├── images/                185 Emporio Armani Kids product photos
@@ -186,14 +187,20 @@ between the quotes on the right-hand side.
 | 4 · Fashion Adventure | Chooses an outfit, then finds shoes, an extra and a jacket. Ends on a runway with camera flashes. |
 | 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch falling stars. |
 | 6 · Mini Designer | Chooses one: **mix & match** tops, bottoms, dresses, shoes and extras on a figure with arrows (or "Surprise me"), **design a T-shirt**, or **design a dress** (colour, pattern, stickers they can drag). |
+| 7 · Fashion Puzzle | A product photo is cut into pieces and mixed up. Tap two pieces to swap them (or drag one onto another). Juniors: 4 then 6 pieces. Seniors: 9 then 12. |
 | Gift | Taps a gift box three times to open it. |
 | Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
 
 ### Challenge a Friend (two players, one iPad)
 
-The rainbow **Challenge a Friend** button on the game menu opens seven games for two children.
-**Pink Star** plays on the left (top when the iPad is upright) and **Blue Star** on the right
-(bottom). Landscape works best, with the children sitting side by side.
+The rainbow **Challenge a Friend** button on the game menu opens eight games for two children.
+
+**Seating** (choose on the Challenge a Friend menu):
+- **Face to face** (default): lay the iPad flat on the table, landscape. **Pink Star** sits at the
+  bottom edge, **Blue Star** at the top edge. Blue's half of the screen is turned upside down so it
+  reads the right way for them, and every instruction appears on both sides. In Tug of War the rope
+  runs up the side between them.
+- **Side by side**: Pink on the left, Blue on the right, both reading the same way.
 
 | Game | How it works |
 |---|---|
@@ -204,6 +211,7 @@ The rainbow **Challenge a Friend** button on the game menu opens seven games for
 | Tug of War | Tap your big button as fast as you can to pull the star to your side. |
 | Copy the Look | A look appears for a few seconds, then both rebuild it from memory. Most pieces right wins; same score → the quicker one. |
 | X O | Classic noughts and crosses. Players take turns starting. |
+| Puzzle Race | The same mixed-up puzzle on both sides. First to finish wins. |
 
 Both children get 3 stars after every duel, whatever the result, and a draw is shown as
 "You are both stars!". Wins (🏆) are counted only for this visit and are cleared when
