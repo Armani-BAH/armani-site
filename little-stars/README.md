@@ -107,6 +107,7 @@ logo on the welcome screen). You get:
 
 - **Reset for the next child** — stop the current game at any moment.
 - **Skip to results** — jump to the badge and certificate.
+- **Update the game (needs Wi-Fi)** — loads the newest version. Use this after any update.
 - **Full screen on / off**
 - **Close**
 

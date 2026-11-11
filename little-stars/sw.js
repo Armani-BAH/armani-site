@@ -1,7 +1,7 @@
 /* LITTLE STARS — offline support.
    After the game has been opened once with internet, it keeps working without it.
-   Changed a photo or text? Raise VERSION (any new value) so iPads fetch the update. */
-const VERSION = '20261111-1936';
+   Online it always loads the newest files; VERSION only matters for the offline copy. */
+const VERSION = '20261111-2000';
 const FILES = [
   "./",
   "assets/fonts/bodoni-moda-latin-400-normal.woff2",
@@ -95,15 +95,17 @@ self.addEventListener('activate', (e) => {
       .then(() => self.clients.claim())
   );
 });
+/* Online: always take the newest file from the web (and keep a copy).
+   Offline: use the saved copy. So updates show up the next time the game opens. */
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request).then((res) => {
-      if (res.ok && new URL(e.request.url).origin === location.origin) {
+    fetch(e.request, { cache: 'no-cache' }).then((res) => {
+      if (res.ok) {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(e.request, copy));
       }
       return res;
-    }))
+    }).catch(() => caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || (e.request.mode === 'navigate' ? caches.match('./index.html') : undefined)))
   );
 });

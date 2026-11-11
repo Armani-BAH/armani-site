@@ -369,6 +369,14 @@
     if (where === 'home' || where === 'age') { $('#staff').classList.remove('on'); return; }
     LS.state.session++; LS.state.cur = ''; $('#staff').classList.remove('on'); LS.hud(true); reward();
   });
+  /* staff: throw away the saved copy and load the newest version from the web */
+  $('#staff-update').addEventListener('click', async function () {
+    try {
+      if ('serviceWorker' in navigator) { var regs = await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(function (r) { return r.unregister(); })); }
+      if (window.caches) { var keys = await caches.keys(); await Promise.all(keys.map(function (k) { return caches.delete(k); })); }
+    } catch (e) { /* ignore */ }
+    location.reload();
+  });
   $('#staff-full').addEventListener('click', function () {
     var d = document, e = d.documentElement;
     try {

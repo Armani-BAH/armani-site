@@ -107,7 +107,7 @@ LS.TEXT = {
     staffReset: 'Reset for the next child',
     staffSkip: 'Skip to results',
     staffFull: 'Full screen on / off',
-    staffClose: 'Close',
+    staffClose: 'Close', staffUpdate: 'Update the game (needs Wi-Fi)',
     rotate: 'Turn the iPad sideways for the best view',
     soundOn: 'Sound on', soundOff: 'Sound off', listen: 'Listen'
   },
@@ -214,7 +214,7 @@ LS.TEXT = {
     staffReset: 'إعادة التشغيل للطفل التالي',
     staffSkip: 'الانتقال إلى النتيجة',
     staffFull: 'تشغيل / إيقاف ملء الشاشة',
-    staffClose: 'إغلاق',
+    staffClose: 'إغلاق', staffUpdate: 'تحديث اللعبة (يلزم الواي فاي)',
     rotate: 'أدر الآيباد بشكل أفقي لأفضل عرض',
     soundOn: 'الصوت يعمل', soundOff: 'الصوت متوقف', listen: 'استمع'
   }
