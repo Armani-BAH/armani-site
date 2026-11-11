@@ -9,7 +9,28 @@
 (function () {
   'use strict';
   var LS = window.LS, t = LS.t, el = LS.el;
-  var D = LS.duel = { wins: [0, 0, 0], xoStart: 1, face: true };   /* wins[0] = ties; face = players sit opposite each other */
+  var D = LS.duel = { wins: [0, 0, 0], xoStart: 1, face: true, col: [null, null, null] };   /* wins[0] = ties; face = players sit opposite each other; col = colour each player picked */
+
+  /* the colours children can pick: main, light, dark, text */
+  var PALETTE = {
+    blue:   ['#3aa8e8', '#7ad9f7', '#2a7fb8', '#fff'],
+    green:  ['#2fbf7a', '#7df0bd', '#1e8f58', '#fff'],
+    orange: ['#ff8c1a', '#ffc985', '#c96a0a', '#fff'],
+    purple: ['#8b6cf0', '#cdbcff', '#6447c9', '#fff'],
+    pink:   ['#ff5fa2', '#ffa3d1', '#c2357a', '#fff'],
+    yellow: ['#ffc21f', '#ffe680', '#c99400', '#3a2a00'],
+    red:    ['#ff4d4d', '#ff9e9e', '#c22e2e', '#fff'],
+    teal:   ['#1fb5a8', '#7fe3d8', '#13877d', '#fff']
+  };
+  function applyColours() {
+    var r = document.documentElement.style;
+    [1, 2].forEach(function (p) {
+      var c = PALETTE[D.col[p] || (p === 1 ? 'blue' : 'green')];
+      r.setProperty('--c' + p, c[0]); r.setProperty('--c' + p + 'l', c[1]); r.setProperty('--c' + p + 'd', c[2]);
+      r.setProperty('--c' + p + 'ink', c[3]); r.setProperty('--c' + p + 't', c[0] + '3a'); r.setProperty('--c' + p + 'b', c[0] + '88');
+    });
+  }
+  D.reset = function () { D.wins = [0, 0, 0]; D.xoStart = 1; D.col = [null, null, null]; applyColours(); };
   var PLAY = {};
 
   var GAMES = [
@@ -26,7 +47,7 @@
 
   /* ---------- small helpers ---------- */
   function alive(s) { return s === LS.state.session; }
-  function name(p) { return t(p === 1 ? 'pink' : 'blue'); }
+  function name(p) { return t('starName', { c: t('col_' + (D.col[p] || (p === 1 ? 'blue' : 'green'))) }); }
   function winner(a, b) { return a > b ? 1 : b > a ? 2 : 0; }
   function btn(cls, text, fn, id) {
     var b = el('button', cls, text); b.type = 'button'; if (id) b.id = id;
@@ -174,28 +195,77 @@
   }
 
   /* ============================================================
-     DUEL MENU
+     PLAYERS: how they sit, and each child picks a colour
      ============================================================ */
-  LS.duelHub = function () {
-    LS.state.session++;                 /* stop anything still running */
-    LS.state.cur = ''; LS.hush();
-    document.body.dataset.g = '8';
-    var scr = LS.screen('duel-hub');
-    scr.appendChild(LS.guide(t('duelPick'), 'big'));
-    scr.appendChild(scoreboard());
-    /* how the two children sit: changes the layout of every duel */
+  function seatPicker(onChange) {
     var seat = el('div', 'seat');
     seat.appendChild(el('span', 'seat-label', t('seatTitle')));
     [['face', '🔄', 'seatFace'], ['side', '👫', 'seatSide']].forEach(function (o) {
       var b = el('button', 'seat-btn' + ((o[0] === 'face') === D.face ? ' on' : '')); b.type = 'button'; b.dataset.seat = o[0];
       b.appendChild(el('span', 'seat-ico', o[1])); b.appendChild(el('span', '', t(o[2])));
-      b.addEventListener('click', function () {
-        LS.sfx.tap(); D.face = o[0] === 'face';
-        Array.prototype.forEach.call(seat.querySelectorAll('.seat-btn'), function (k) { k.classList.toggle('on', k === b); });
-      });
+      b.addEventListener('click', function () { LS.sfx.tap(); D.face = o[0] === 'face'; onChange(); });
       seat.appendChild(b);
     });
-    scr.appendChild(seat);
+    return seat;
+  }
+  function players() {
+    LS.state.session++; LS.state.cur = ''; LS.hush();
+    document.body.dataset.g = '8';
+    var scr = LS.screen('duel-setup' + faceCls());
+    scr.appendChild(LS.guide(t('pickColour'), 'big'));
+    scr.appendChild(seatPicker(players));
+    var row = el('div', 'pick-players'), boxes = [null];
+    var go = el('button', 'btn primary big', t('letsPlay')); go.type = 'button'; go.id = 'players-go';
+    function refresh() {
+      [1, 2].forEach(function (p) {
+        var other = D.col[p === 1 ? 2 : 1];
+        boxes[p].classList.toggle('picked', !!D.col[p]);
+        boxes[p]._name.textContent = D.col[p] ? name(p) : t('player', { n: p });
+        Array.prototype.forEach.call(boxes[p]._sw.children, function (b) {
+          b.classList.toggle('on', b.dataset.c === D.col[p]);
+          b.disabled = b.dataset.c === other;
+        });
+      });
+      go.disabled = !(D.col[1] && D.col[2]);
+    }
+    [1, 2].forEach(function (p) {
+      var box = el('div', 'pp p' + p);
+      box.appendChild(el('span', 'pp-star', '★'));
+      box._name = el('b', 'pp-name'); box.appendChild(box._name);
+      box._sw = el('div', 'pp-swatches');
+      Object.keys(PALETTE).forEach(function (k) {
+        var b = el('button', 'cswatch'); b.type = 'button'; b.dataset.c = k; b.style.background = PALETTE[k][0];
+        b.setAttribute('aria-label', t('col_' + k));
+        onTap(b, function () { if (b.disabled) return; D.col[p] = k; applyColours(); LS.sfx.star(); refresh(); });
+        box._sw.appendChild(b);
+      });
+      box.appendChild(box._sw);
+      boxes.push(box); row.appendChild(box);
+    });
+    scr.appendChild(row);
+    go.addEventListener('click', function () { if (go.disabled) return; LS.unlockAudio(); LS.sfx.welcome(); LS.duelHub(); });
+    scr.appendChild(go);
+    applyColours(); refresh();
+    LS.currentPrompt = t('pickColour');
+    LS.show(scr);
+    LS.say(LS.currentPrompt);
+  }
+
+  /* ============================================================
+     DUEL MENU
+     ============================================================ */
+  LS.duelHub = function () {
+    if (!D.col[1] || !D.col[2]) return players();
+    LS.state.session++;                 /* stop anything still running */
+    LS.state.cur = ''; LS.hush();
+    document.body.dataset.g = '8';
+    applyColours();
+    var scr = LS.screen('duel-hub');
+    scr.appendChild(LS.guide(t('duelPick'), 'big'));
+    var sbRow = el('div', 'sb-row');
+    sbRow.appendChild(scoreboard());
+    sbRow.appendChild(btn('btn change-btn', '✎  ' + t('changePlayers'), players, 'change-players'));
+    scr.appendChild(sbRow);
     var grid = el('div', 'duel-grid');
     GAMES.forEach(function (g, i) {
       var b = el('button', 'dcard d' + (i + 1)); b.type = 'button'; b.dataset.duel = g[0];

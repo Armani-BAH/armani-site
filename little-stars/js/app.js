@@ -41,7 +41,7 @@
     LS.state.session++;
     LS.state.stars = 0; LS.state.name = ''; LS.state.usedQ = []; LS.state.usedLooks = [];
     LS.state.design = null; LS.state.stats = {}; LS.state.cur = ''; LS.state.caught = 0;
-    if (LS.duel) { LS.duel.wins = [0, 0, 0]; LS.duel.xoStart = 1; }
+    if (LS.duel) LS.duel.reset();
     LS.state.done = {}; LS.state.look = null; LS.state.created = false; LS.state.photo = null;
     ['#c-tee', '#c-rank', '#c-photo'].forEach(function (s) { var n = $(s); while (n.firstChild) n.removeChild(n.firstChild); });
     $('#star-count').textContent = '0';

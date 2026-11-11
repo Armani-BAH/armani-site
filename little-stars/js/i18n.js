@@ -9,6 +9,9 @@ LS.TEXT = {
     title: 'Little Stars',
     mascot: 'Emporio',   /* the guide's name. Change it here. */
     hello: 'Hi, I\'m {mascot}! Let\'s shine together!',
+    pickColour: 'Pick your colour!', player: 'Player {n}', letsPlay: 'Let\'s play!', changePlayers: 'Change colours',
+    starName: '{c} Star', col_blue: 'Blue', col_green: 'Green', col_orange: 'Orange', col_purple: 'Purple',
+    col_pink: 'Pink', col_yellow: 'Yellow', col_red: 'Red', col_teal: 'Teal',
     duel: 'Challenge a Friend', duelSub: 'Two players, one iPad!', pink: 'Pink Star', blue: 'Blue Star',
     duelPick: 'Pick a game to play together!', backGames: 'Back to my games',
     dCatch: 'Star Catch Duel', dCatchHow: 'Each player moves their own bag. Catch more stars to win!',
@@ -135,6 +138,9 @@ LS.TEXT = {
     title: 'النجوم الصغار',
     mascot: 'إمبوريو',   /* اسم المرشد */
     hello: 'مرحبًا، أنا {mascot}! هيّا نتألّق معًا!',
+    pickColour: 'اختر لونك!', player: 'اللاعب {n}', letsPlay: 'هيّا نلعب!', changePlayers: 'تغيير الألوان',
+    starName: 'النجم {c}', col_blue: 'الأزرق', col_green: 'الأخضر', col_orange: 'البرتقالي', col_purple: 'البنفسجي',
+    col_pink: 'الوردي', col_yellow: 'الأصفر', col_red: 'الأحمر', col_teal: 'الفيروزي',
     duel: 'تحدَّ صديقك', duelSub: 'لاعبان على آيباد واحد!', pink: 'النجم الوردي', blue: 'النجم الأزرق',
     duelPick: 'اختارا لعبة لتلعباها معًا!', backGames: 'العودة إلى ألعابي',
     dCatch: 'سباق التقاط النجوم', dCatchHow: 'كل لاعب يحرّك حقيبته. من يلتقط نجومًا أكثر يفوز!',

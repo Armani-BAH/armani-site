@@ -195,12 +195,18 @@ between the quotes on the right-hand side.
 
 The rainbow **Challenge a Friend** button on the game menu opens eight games for two children.
 
-**Seating** (choose on the Challenge a Friend menu):
-- **Face to face** (default): lay the iPad flat on the table, landscape. **Pink Star** sits at the
-  bottom edge, **Blue Star** at the top edge. Blue's half of the screen is turned upside down so it
+**Before the first duel** the two children choose how they sit and each taps **their own colour**
+(blue, green, orange, purple, pink, yellow, red or teal; the same colour can't be taken twice).
+They are then called by their colour, for example "Green Star" and "Orange Star". The game never
+asks for gender. **Change colours** on the duel menu lets a new pair choose again, and the colours are
+cleared for every **New Little Star**.
+
+**Seating**:
+- **Face to face** (default): lay the iPad flat on the table, landscape. **Player 1** sits at the
+  bottom edge, **Player 2** at the top edge. Player 2's half of the screen is turned upside down so it
   reads the right way for them, and every instruction appears on both sides. In Tug of War the rope
   runs up the side between them.
-- **Side by side**: Pink on the left, Blue on the right, both reading the same way.
+- **Side by side**: Player 1 on the left, Player 2 on the right, both reading the same way.
 
 | Game | How it works |
 |---|---|

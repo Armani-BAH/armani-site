@@ -1136,3 +1136,66 @@ html[dir='rtl'] .copy-row > * { direction: rtl; }
 .dcard.d8 { background: linear-gradient(150deg, #ffc985, #ff9f1c); animation-delay: .28s; }
 /* puzzle pieces: zoom in on the product so every piece shows part of it */
 .pz-tile { background-origin: border-box; }
+
+/* ============================================================
+   PLAYER COLOURS (each child picks one before the duels)
+   ============================================================ */
+:root { --c1: #3aa8e8; --c1l: #7ad9f7; --c1d: #2a7fb8; --c1ink: #fff; --c1t: #3aa8e83a; --c1b: #3aa8e888;
+        --c2: #2fbf7a; --c2l: #7df0bd; --c2d: #1e8f58; --c2ink: #fff; --c2t: #2fbf7a3a; --c2b: #2fbf7a88; }
+.chip.p1 { background: linear-gradient(135deg, var(--c1l), var(--c1)); color: var(--c1ink); }
+.chip.p2 { background: linear-gradient(135deg, var(--c2l), var(--c2)); color: var(--c2ink); }
+.half.p1 { background: linear-gradient(160deg, var(--c1t), #ffffff08); box-shadow: inset 0 0 0 2px var(--c1b); }
+.half.p2 { background: linear-gradient(160deg, var(--c2t), #ffffff08); box-shadow: inset 0 0 0 2px var(--c2b); }
+.half.ahead, .half.win, .half.done { box-shadow: inset 0 0 0 4px #fff, 0 0 40px #ffffff55; }
+.pside.p1 { background: linear-gradient(160deg, var(--c1t), #ffffff08); }
+.pside.p2 { background: linear-gradient(160deg, var(--c2t), #ffffff08); }
+.mcard.matched.by1 .face { box-shadow: inset 0 0 0 6px var(--c1); }
+.mcard.matched.by2 .face { box-shadow: inset 0 0 0 6px var(--c2); }
+.xo-cell.x::before, .xo-cell.x::after { background: linear-gradient(135deg, var(--c1l), var(--c1)); box-shadow: 0 4px 0 var(--c1d); }
+.xo-cell.o::before { border-color: var(--c2); box-shadow: 0 4px 0 var(--c2d); }
+.p1 .tap-pad { background: radial-gradient(circle at 50% 40%, var(--c1l), var(--c1)); }
+.p2 .tap-pad { background: radial-gradient(circle at 50% 40%, var(--c2l), var(--c2)); }
+.rope .g1 { color: var(--c1); } .rope .g2 { color: var(--c2); }
+.winner.p1 b { color: var(--c1); text-shadow: 0 0 50px var(--c1b); }
+.winner.p2 b { color: var(--c2); text-shadow: 0 0 50px var(--c2b); }
+.tie-stars .p1 { color: var(--c1); } .tie-stars .p2 { color: var(--c2); }
+.copy-col.p1 .figure { box-shadow: 0 0 0 5px var(--c1); } .copy-col.p2 .figure { box-shadow: 0 0 0 5px var(--c2); }
+.half.p1 .bag-body { background: linear-gradient(135deg, var(--c1l), var(--c1)); }
+.half.p2 .bag-body { background: linear-gradient(135deg, var(--c2l), var(--c2)); }
+
+.duel-setup { gap: clamp(10px, 2vh, 20px); }
+.pick-players { display: flex; gap: clamp(14px, 3vw, 40px); justify-content: center; direction: ltr; flex-wrap: wrap; }
+html[dir='rtl'] .pick-players > * { direction: rtl; }
+.pp {
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 20px; border-radius: 28px;
+  width: min(42vw, 440px); background: #ffffff14; box-shadow: inset 0 0 0 2px #ffffff40; transition: background .3s, box-shadow .3s;
+}
+.pp.p1.picked { background: linear-gradient(160deg, var(--c1t), #ffffff08); box-shadow: inset 0 0 0 3px var(--c1); }
+.pp.p2.picked { background: linear-gradient(160deg, var(--c2t), #ffffff08); box-shadow: inset 0 0 0 3px var(--c2); }
+.pp-star { font-size: clamp(3rem, 7vw, 4.6rem); line-height: 1; color: #ffffff40; transition: color .3s; }
+.pp.p1.picked .pp-star { color: var(--c1); animation: matched .5s; }
+.pp.p2.picked .pp-star { color: var(--c2); animation: matched .5s; }
+.pp-name { font-size: clamp(1.1rem, 2.4vw, 1.5rem); font-weight: 500; }
+.pp-swatches { display: grid; grid-template-columns: repeat(4, auto); gap: 10px; }
+.cswatch { width: clamp(50px, 6vw, 64px); height: clamp(50px, 6vw, 64px); border-radius: 50%; box-shadow: 0 0 0 3px #ffffff66, 0 6px 14px #0006; transition: transform .15s, opacity .2s; }
+.cswatch.on { box-shadow: 0 0 0 4px #fff, 0 0 0 9px var(--sun); transform: scale(1.08); }
+.cswatch:disabled { opacity: .18; }
+#players-go:disabled { opacity: .45; animation: none; }
+/* face to face: player 2 sits at the top edge, so their picker is turned towards them */
+.duel-setup.face .pick-players { flex-direction: column; align-items: center; gap: 12px; }
+.duel-setup.face .pp.p2 { order: -1; transform: rotate(180deg); }
+.duel-setup.face .pp { width: min(80vw, 560px); flex-direction: row; justify-content: center; padding: 10px 18px; }
+.duel-setup.face .pp-star { font-size: 2.6rem; }
+.duel-setup.face .pp-swatches { grid-template-columns: repeat(8, auto); gap: 8px; }
+.duel-setup.face .cswatch { width: clamp(42px, 4.6vw, 52px); height: clamp(42px, 4.6vw, 52px); }
+.duel-setup.face .guide { display: none; }
+.sb-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.change-btn { min-height: 48px; padding: .3em 1.2em; font-size: .85rem; }
+@media (orientation: portrait) {
+  .pp { width: min(86vw, 440px); }
+  .duel-setup.face .pp { flex-direction: column; }
+  .duel-setup.face .pp-swatches { grid-template-columns: repeat(4, auto); }
+  .duel-setup.face .guide { display: flex; }
+}
+.duel-setup.face .guide { display: flex; }
+.duel-setup.face .pp-name { white-space: nowrap; min-width: 7.5em; text-align: center; }
