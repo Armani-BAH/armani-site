@@ -32,6 +32,7 @@
     },
     count:  function () { return { prompt: 'qCount', target: 'three-tees', correct: ['3'], text: [2, 3, 4] }; }
   };
+  LS.QUIZ_BANK = BANK;
   var JUNIOR = ['shoes', 'hat', 'dress', 'jacket', 'sunny', 'bag', 'same', 'zoom'];
   var SENIOR = ['jacket', 'sunny', 'cold', 'eagle', 'same', 'two', 'count', 'hat', 'bag', 'zoom'];
 

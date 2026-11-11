@@ -40,6 +40,7 @@
     LS.state.session++;
     LS.state.stars = 0; LS.state.name = ''; LS.state.usedQ = []; LS.state.usedLooks = [];
     LS.state.design = null; LS.state.stats = {}; LS.state.cur = ''; LS.state.caught = 0;
+    if (LS.duel) { LS.duel.wins = [0, 0, 0]; LS.duel.xoStart = 1; }
     LS.state.done = {}; LS.state.look = null; LS.state.created = false; LS.state.photo = null;
     ['#c-tee', '#c-rank', '#c-photo'].forEach(function (s) { var n = $(s); while (n.firstChild) n.removeChild(n.firstChild); });
     $('#star-count').textContent = '0';
@@ -48,7 +49,7 @@
     ['#cert', '#still', '#staff'].forEach(function (s) { $(s).classList.remove('on'); });
     $('#feedback').className = '';
     $('#confetti').style.display = 'none';
-    Array.prototype.forEach.call(document.querySelectorAll('.fly-star, .drag-ghost'), function (n) { n.parentNode.removeChild(n); });
+    Array.prototype.forEach.call(document.querySelectorAll('.fly-star, .drag-ghost, .count'), function (n) { n.parentNode.removeChild(n); });
     LS.hush();
   }
 
@@ -136,6 +137,7 @@
   /* the game menu: the child picks what to play, in any order */
   function hub() {
     where = 'game';
+    LS.state.session++;               /* stop any game still running */
     LS.state.cur = ''; LS.hush();
     delete document.body.dataset.g;
     var done = LS.state.done, count = Object.keys(done).length;
@@ -156,11 +158,18 @@
       grid.appendChild(b);
     });
     scr.appendChild(grid);
+    var foot = el('div', 'hub-foot');
+    var duel = el('button', 'duel-banner'); duel.type = 'button'; duel.id = 'duel-open';
+    duel.appendChild(el('span', 'ico', '🏆'));
+    var dt = el('span', 'txt'); dt.appendChild(el('b', '', t('duel'))); dt.appendChild(el('small', '', t('duelSub'))); duel.appendChild(dt);
+    duel.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); LS.duelHub(); });
+    foot.appendChild(duel);
     if (count) {
       var fin = el('button', 'btn primary big', '🎁  ' + t('finish')); fin.type = 'button'; fin.id = 'finish';
       fin.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); finish(); });
-      scr.appendChild(fin);
+      foot.appendChild(fin);
     }
+    scr.appendChild(foot);
     LS.show(scr);
     if (LS.isJunior() || !count) LS.say(text);
   }
@@ -416,6 +425,7 @@
   }
 
   /* expose a few things for the staff and for testing */
+  LS.hub = hub;
   LS.home = home; LS.journey = journey; LS.reward = reward;
 
   LS.sky();

@@ -33,6 +33,7 @@ little-stars/
 │       ├── challenge.js       5 · Little Star Challenge
 │       ├── catch.js               · Star Catch bonus round (part of game 5)
 │       ├── designer.js        6 · Mini Designer (mix & match on a figure)
+│       ├── duel.js            Challenge a Friend: 7 two-player games
 │       └── studio.js              · Design a T-shirt or a dress (part of game 6)
 ├── assets/
 │   ├── images/                48 Emporio Armani Kids product photos
@@ -182,6 +183,26 @@ between the quotes on the right-hand side.
 | 6 · Mini Designer | Chooses one: **mix & match** tops, bottoms, dresses, shoes and extras on a figure with arrows (or "Surprise me"), **design a T-shirt**, or **design a dress** (colour, pattern, stickers they can drag). |
 | Gift | Taps a gift box three times to open it. |
 | Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
+
+### Challenge a Friend (two players, one iPad)
+
+The rainbow **Challenge a Friend** button on the game menu opens seven games for two children.
+**Pink Star** plays on the left (top when the iPad is upright) and **Blue Star** on the right
+(bottom). Landscape works best, with the children sitting side by side.
+
+| Game | How it works |
+|---|---|
+| Star Catch Duel | Each child slides a finger on their own side to catch the same falling stars. Most stars wins. |
+| Memory Duel | One shared board. Take turns flipping two cards; find a pair and go again. Most pairs wins. |
+| Quick Tap Quiz | Five picture questions. First correct tap on your side wins the round. A wrong tap pauses that side for a moment. |
+| Style Face-Off | Both dress a model with arrows (30–40 seconds, or until both tap Ready). Then a parent or staff member taps the heart under the favourite, or **Both**. |
+| Tug of War | Tap your big button as fast as you can to pull the star to your side. |
+| Copy the Look | A look appears for a few seconds, then both rebuild it from memory. Most pieces right wins; same score → the quicker one. |
+| X O | Classic noughts and crosses. Players take turns starting. |
+
+Both children get 3 stars after every duel, whatever the result, and a draw is shown as
+"You are both stars!". Wins (🏆) are counted only for this visit and are cleared when
+**New Little Star** is pressed. There is no leaderboard.
 
 **Emporio the star** guides the child on every screen, cheers for right answers, and can be tapped
 to make him spin. Emporio is an original character drawn in code. To rename him, change the `mascot` line near the top of each language block in `js/i18n.js`.
