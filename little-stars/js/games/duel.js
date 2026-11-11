@@ -30,11 +30,12 @@
       r.setProperty('--c' + p + 'ink', c[3]); r.setProperty('--c' + p + 't', c[0] + '3a'); r.setProperty('--c' + p + 'b', c[0] + '88');
     });
   }
-  D.reset = function () { D.wins = [0, 0, 0]; D.xoStart = 1; D.col = [null, null, null]; applyColours(); };
+  D.reset = function () { D.wins = [0, 0, 0]; D.xoStart = 1; D.col = [null, null, null]; D.nm = [null, '', '']; applyColours(); };
+  D.nm = [null, '', ''];
   var PLAY = {};
 
   var GAMES = [
-    ['catch', 'dCatch', '⭐'], ['memory', 'dMemory', '🃏'], ['quiz', 'dQuiz', '⚡'], ['style', 'dStyle', '👗'],
+    ['catch', 'dCatch', 'EAGLE'], ['memory', 'dMemory', '🃏'], ['quiz', 'dQuiz', '⚡'], ['style', 'dStyle', '👗'],
     ['tug', 'dTug', '💪'], ['copy', 'dCopy', '👀'], ['xo', 'dXO', '✖️⭕'], ['puzzle', 'dPuzzle', '🧩']
   ];
   var TOPS = ['green-tee', 'navy-tee', 'peach-tee', 'white-tee', 'varsity-tee', 'green-hoodie', 'burgundy-hoodie', 'pink-cardigan',
@@ -43,11 +44,10 @@
   var EXTRA = ['backpack', 'cap', 'pink-bag', 'navy-beanie', 'pink-beret', 'cream-bag', 'beige-beanie', 'socks'];
   var MEM = ['varsity-tee', 'pattern-puffer', 'check-dress', 'blue-sneakers', 'cap', 'backpack', 'jeans', 'pink-bag',
     'check-jacket', 'green-hoodie', 'black-boots', 'pink-skirt', 'burgundy-hoodie', 'navy-blazer', 'silver-ballet', 'socks'];
-  var DROP_COLOURS = ['#ffd23f', '#ff8fc7', '#4cc9f0', '#3ddc97', '#c4b0ff'];
 
   /* ---------- small helpers ---------- */
   function alive(s) { return s === LS.state.session; }
-  function name(p) { return t('starName', { c: t('col_' + (D.col[p] || (p === 1 ? 'blue' : 'green'))) }); }
+  function name(p) { if (D.nm && D.nm[p]) return D.nm[p]; return t('starName', { c: t('col_' + (D.col[p] || (p === 1 ? 'blue' : 'green'))) }); }
   function winner(a, b) { return a > b ? 1 : b > a ? 2 : 0; }
   function btn(cls, text, fn, id) {
     var b = el('button', cls, text); b.type = 'button'; if (id) b.id = id;
@@ -112,6 +112,11 @@
     s.appendChild(el('span', 'turn', t('turn')));
     s._score = sc;
     return s;
+  }
+  function art(g, cls) {
+    var d = el('span', 'dart' + (cls ? ' ' + cls : ''));
+    if (g[2] === 'EAGLE') d.appendChild(LS.eagle('', ['#ffd23f', '#ff6fb5'])); else d.textContent = g[2];
+    return d;
   }
   function find(key) { return GAMES.filter(function (g) { return g[0] === key; })[0]; }
 
@@ -220,7 +225,7 @@
       [1, 2].forEach(function (p) {
         var other = D.col[p === 1 ? 2 : 1];
         boxes[p].classList.toggle('picked', !!D.col[p]);
-        boxes[p]._name.textContent = D.col[p] ? name(p) : t('player', { n: p });
+        boxes[p]._name.textContent = D.col[p] || D.nm[p] ? name(p) : t('player', { n: p });
         Array.prototype.forEach.call(boxes[p]._sw.children, function (b) {
           b.classList.toggle('on', b.dataset.c === D.col[p]);
           b.disabled = b.dataset.c === other;
@@ -240,9 +245,15 @@
         box._sw.appendChild(b);
       });
       box.appendChild(box._sw);
+      /* optional first name, used only during the game and never saved */
+      var nm = el('input', 'pp-input'); nm.type = 'text'; nm.maxLength = 12; nm.placeholder = t('yourName'); nm.value = D.nm[p] || '';
+      nm.setAttribute('autocomplete', 'off'); nm.setAttribute('autocorrect', 'off'); nm.setAttribute('spellcheck', 'false'); nm.setAttribute('autocapitalize', 'words');
+      nm.addEventListener('input', function () { D.nm[p] = nm.value.replace(/[<>]/g, '').trim(); refresh(); });
+      box.appendChild(nm);
       boxes.push(box); row.appendChild(box);
     });
     scr.appendChild(row);
+    scr.appendChild(el('p', 'hint-text', t('namesNote')));
     go.addEventListener('click', function () { if (go.disabled) return; LS.unlockAudio(); LS.sfx.welcome(); LS.duelHub(); });
     scr.appendChild(go);
     applyColours(); refresh();
@@ -269,7 +280,7 @@
     var grid = el('div', 'duel-grid');
     GAMES.forEach(function (g, i) {
       var b = el('button', 'dcard d' + (i + 1)); b.type = 'button'; b.dataset.duel = g[0];
-      b.appendChild(el('span', 'dart', g[2]));
+      b.appendChild(art(g));
       b.appendChild(el('span', 'gname', t(g[1])));
       b.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); run(g[0]); });
       grid.appendChild(b);
@@ -296,7 +307,7 @@
       var g = find(key), scr = LS.screen('duel-intro' + faceCls());
       if (D.face) scr.appendChild(mirror(t(g[1]) + ' · ' + t(g[1] + 'How')));
       scr.appendChild(el('div', 'kicker', t('duel')));
-      scr.appendChild(el('div', 'dart big', g[2]));
+      scr.appendChild(art(g, 'big'));
       scr.appendChild(el('h1', 'game-title', t(g[1])));
       scr.appendChild(LS.guide(t(g[1] + 'How')));
       var vs = el('div', 'vs');
@@ -373,10 +384,10 @@
 
       function spawn() {
         var r = Math.random(), kind = r < 0.14 ? 'cloud' : r < 0.27 ? 'gold' : 'star';
-        var x = 0.1 + Math.random() * 0.8, v = 0.3 + Math.random() * 0.12, col = LS.rand(DROP_COLOURS);
+        var x = 0.1 + Math.random() * 0.8, v = 0.3 + Math.random() * 0.12, col = LS.rand([['#ff5fa2', '#ffb3da'], ['#3aa8e8', '#8fe0fa'], ['#2fbf7a', '#7df0bd'], ['#8b6cf0', '#cdbcff'], ['#ff8c1a', '#ffd23f'], ['#1fb5a8', '#7fe3d8']]);
         [1, 2].forEach(function (p) {
-          var n = el('span', 'drop' + (kind !== 'star' ? ' ' + kind : ''), kind === 'cloud' ? '☁' : '★');
-          if (kind === 'star') n.style.color = col;
+          var n = el('span', 'drop' + (kind !== 'star' ? ' ' + kind : ''), kind === 'cloud' ? '☁' : null);
+          if (kind !== 'cloud') n.appendChild(LS.eagle(kind === 'gold' ? 'gold' : '', col));
           n.style.left = (x * 100) + '%';
           F[p].f.appendChild(n);
           F[p].items.push({ n: n, x: x, y: -0.1, v: v, kind: kind });

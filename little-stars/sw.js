@@ -1,7 +1,7 @@
 /* LITTLE STARS — offline support.
    After the game has been opened once with internet, it keeps working without it.
    Online it always loads the newest files; VERSION only matters for the offline copy. */
-const VERSION = '20261111-2156';
+const VERSION = '20261111-2240';
 const FILES = [
   "./",
   "assets/fonts/bodoni-moda-latin-400-normal.woff2",
@@ -201,6 +201,7 @@ const FILES = [
   "assets/images/tops/three-tees.jpg",
   "assets/images/tops/varsity-tee.jpg",
   "assets/images/tops/white-tee.jpg",
+  "assets/logo/eagle.png",
   "assets/logo/emporio-armani-logo.png",
   "css/style.css",
   "index.html",

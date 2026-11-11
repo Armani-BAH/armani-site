@@ -5,7 +5,6 @@
 (function () {
   'use strict';
   var LS = window.LS;
-  var COLOURS = ['#ffd23f', '#ff8fc7', '#4cc9f0', '#3ddc97', '#c4b0ff'];
 
   LS.catchGame = function () {
     return new Promise(function (resolve) {
@@ -14,8 +13,9 @@
       scr.appendChild(LS.el('div', 'kicker', LS.t('bonus')));
       LS.setPrompt(scr, LS.t('catchTitle'));
       scr.appendChild(LS.el('p', 'sub', LS.t(junior ? 'catchSub' : 'catchSubSenior')));
-      var info = LS.el('div', 'mem-info'), count = LS.el('span', 'pill', '★ 0');
-      info.appendChild(count); scr.appendChild(info);
+      var info = LS.el('div', 'mem-info'), pill = LS.el('span', 'pill eagle-pill'), count = LS.el('b', '', '0');
+      pill.appendChild(LS.eagle('mini', ['#ffd23f', '#ff9f1c'])); pill.appendChild(count);
+      info.appendChild(pill); scr.appendChild(info);
       var bar = LS.el('div', 'timer'), fill = LS.el('i'); fill.style.animationDuration = secs + 's';
       bar.appendChild(fill); scr.appendChild(bar);
 
@@ -38,9 +38,9 @@
 
       function spawn() {
         var cloud = !junior && Math.random() < 0.2, gold = !cloud && Math.random() < 0.13;
-        var n = LS.el('span', 'drop' + (cloud ? ' cloud' : gold ? ' gold' : ''), cloud ? '☁' : '★');
+        var n = LS.el('span', 'drop' + (cloud ? ' cloud' : gold ? ' gold' : ''), cloud ? '☁' : null);
+        if (!cloud) n.appendChild(LS.eagle(gold ? 'gold' : ''));
         var x = 0.07 + Math.random() * 0.86;
-        if (!cloud && !gold) n.style.color = LS.rand(COLOURS);
         n.style.left = (x * 100) + '%';
         field.appendChild(n);
         items.push({ n: n, x: x, y: -0.1, v: (junior ? 0.24 : 0.33) + Math.random() * 0.12, cloud: cloud, gold: gold });
@@ -59,7 +59,7 @@
           var hit = it.y > 0.74 && it.y < 0.93 && Math.abs(it.x - bagX) < 0.085;
           if (hit) {
             if (it.cloud) { LS.sfx.bad(); wobble('wet'); }
-            else { caught += it.gold ? 3 : 1; count.textContent = '★ ' + caught; LS.sfx.star(); wobble('yum'); }
+            else { caught += it.gold ? 3 : 1; count.textContent = caught; LS.sfx.star(); wobble('yum'); }
           }
           if (hit || it.y > 1.1) { field.removeChild(it.n); items.splice(i, 1); }
         }

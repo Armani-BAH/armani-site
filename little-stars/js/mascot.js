@@ -35,6 +35,18 @@
     return g;
   };
 
+  /* ---------- the Emporio Armani eagle (cut from the official logo), in any colour ---------- */
+  var EAGLE_COLOURS = [['#ff5fa2', '#ffb3da'], ['#3aa8e8', '#8fe0fa'], ['#2fbf7a', '#7df0bd'], ['#8b6cf0', '#cdbcff'],
+    ['#ff8c1a', '#ffd23f'], ['#ff4d4d', '#ffa3a3'], ['#1fb5a8', '#7fe3d8'], ['#ff6fb5', '#a78bfa'], ['#4cc9f0', '#3ddc97']];
+  LS.eagle = function (cls, colours) {
+    var w = LS.el('span', 'eagle-wrap ' + (cls || ''));
+    var i = LS.el('span', 'eagle-ic');
+    var c = colours || LS.rand(EAGLE_COLOURS);
+    if (cls !== 'gold') i.style.background = 'linear-gradient(135deg, ' + c[0] + ', ' + c[1] + ')';
+    w.appendChild(i);
+    return w;
+  };
+
   /* ---------- the T-shirt a child designs ---------- */
   var DRESS = 'M78 18 Q100 38 122 18 L160 40 L150 70 L130 62 L128 92 L172 178 Q100 198 28 178 L72 92 L70 62 L50 70 L40 40 Z';
   var TEE = 'M70 20 Q100 44 130 20 L185 50 L165 92 L142 80 L142 180 Q142 186 136 186 L64 186 Q58 186 58 180 L58 80 L35 92 L15 50 Z';

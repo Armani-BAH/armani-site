@@ -40,7 +40,7 @@ little-stars/
 │   ├── images/                185 Emporio Armani Kids product photos
 │   │   ├── tops/  bottoms/  shoes/  accessories/  jackets/  dresses/
 │   │   └── SOURCES.txt        Which catalogue piece each photo is
-│   ├── logo/                  Emporio Armani logo
+│   ├── logo/                  Emporio Armani logo + eagle.png (the eagle cut from the logo, used in the catch games)
 │   ├── icons/                 Home-screen icons
 │   └── fonts/                 Bodoni Moda, Jost (English) and Tajawal (Arabic)
 └── tools/build_offline_list.py   Only needed if you add or rename files
@@ -185,19 +185,20 @@ between the quotes on the right-hand side.
 | 2 · Armani Memory Match | Finds the pairs. Easy 6 cards, Medium 8, Hard 12 (chosen on the intro screen). |
 | 3 · Little Fashion Quiz | Picture questions: jacket, sunny day, eagle logo, matching shoes, plus a zoomed-in "detective" question. |
 | 4 · Fashion Adventure | Chooses an outfit, then finds shoes, an extra and a jacket. Ends on a runway with camera flashes. |
-| 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch falling stars. |
+| 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch colourful flying Emporio Armani eagles (gold eagles count 3). |
 | 6 · Mini Designer | Chooses one: **mix & match** tops, bottoms, dresses, shoes and extras on a figure with arrows (or "Surprise me"), **design a T-shirt**, or **design a dress** (colour, pattern, stickers they can drag). |
 | 7 · Fashion Puzzle | A product photo is cut into pieces and mixed up. Tap two pieces to swap them (or drag one onto another). Juniors: 4 then 6 pieces. Seniors: 9 then 12. |
 | Gift | Taps a gift box three times to open it. |
-| Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Star Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
+| Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Eagle Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
 
 ### Challenge a Friend (two players, one iPad)
 
 The rainbow **Challenge a Friend** button on the game menu opens eight games for two children.
 
-**Before the first duel** the two children choose how they sit and each taps **their own colour**
+**Before the first duel** the two children choose how they sit and each taps **their own colour** and may type a first name
 (blue, green, orange, purple, pink, yellow, red or teal; the same colour can't be taken twice).
-They are then called by their colour, for example "Green Star" and "Orange Star". The game never
+They are then called by their name ("Ali wins!"), or by their colour if they skip the name ("Green Star").
+Names are only kept while the game is open and are cleared with the colours. The game never
 asks for gender. **Change colours** on the duel menu lets a new pair choose again, and the colours are
 cleared for every **New Little Star**.
 
@@ -210,7 +211,7 @@ cleared for every **New Little Star**.
 
 | Game | How it works |
 |---|---|
-| Star Catch Duel | Each child slides a finger on their own side to catch the same falling stars. Most stars wins. |
+| Eagle Catch Duel | Each child slides a finger on their own side to catch the same colourful Emporio Armani eagles. Gold eagles count 3. Most wins. |
 | Memory Duel | One shared board. Take turns flipping two cards; find a pair and go again. Most pairs wins. |
 | Quick Tap Quiz | Five picture questions. First correct tap on your side wins the round. A wrong tap pauses that side for a moment. |
 | Style Face-Off | Both dress a model with arrows (30–40 seconds, or until both tap Ready). Then a parent or staff member taps the heart under the favourite, or **Both**. |
@@ -235,7 +236,7 @@ and a gentle hint after two wrong tries.
 answering before the timer bar runs out in the final challenge.
 
 **Stars:** 2 for a first-try answer, 1 after a retry, 1 per memory pair, 3 for a Mini Designer creation,
-1 per star caught in the bonus round (gold stars count 3), 3 for finishing each mini-game, 5 for
+1 per eagle caught in the bonus round (gold eagles count 3), 3 for finishing each mini-game, 5 for
 finishing the adventure. There is no way to lose.
 
 **Sound:** the music-note button (top corner) switches all sound on or off. The **Listen**

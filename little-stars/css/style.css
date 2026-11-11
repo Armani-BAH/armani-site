@@ -1199,3 +1199,34 @@ html[dir='rtl'] .pick-players > * { direction: rtl; }
 }
 .duel-setup.face .guide { display: flex; }
 .duel-setup.face .pp-name { white-space: nowrap; min-width: 7.5em; text-align: center; }
+
+/* ============================================================
+   EMPORIO ARMANI EAGLES (Catch the eagles) + PLAYER NAMES
+   ============================================================ */
+.eagle-wrap { display: inline-block; width: 1.75em; aspect-ratio: 640 / 366; filter: drop-shadow(0 4px 5px #0006); line-height: 0; }
+.eagle-ic {
+  display: block; width: 100%; height: 100%;
+  -webkit-mask: url('../assets/logo/eagle.png') center / contain no-repeat; mask: url('../assets/logo/eagle.png') center / contain no-repeat;
+}
+.eagle-wrap.gold { filter: drop-shadow(0 0 10px #ffd23f) drop-shadow(0 0 3px #fff); animation: goldPulse .8s ease-in-out infinite; }
+.eagle-wrap.gold .eagle-ic { background: linear-gradient(135deg, #fff6b0, #ffd23f 45%, #ff9f1c); }
+@keyframes goldPulse { 50% { filter: drop-shadow(0 0 18px #ffd23f) drop-shadow(0 0 5px #fff); } }
+.drop .eagle-wrap { width: clamp(68px, 8.6vw, 100px); animation: flap .5s ease-in-out infinite alternate; }
+.drop.gold .eagle-wrap { width: clamp(86px, 11vw, 126px); animation: flap .5s ease-in-out infinite alternate, goldPulse .8s ease-in-out infinite; }
+@keyframes flap { from { transform: scaleY(1) rotate(-4deg); } to { transform: scaleY(.82) rotate(4deg); } }
+.drop.gold { color: inherit; text-shadow: none; font-size: inherit; }
+.eagle-wrap.mini { width: 1.9em; vertical-align: middle; filter: none; }
+.eagle-pill { display: inline-flex; align-items: center; gap: .5em; }
+.dart .eagle-wrap { width: 1.6em; }
+.dart.big .eagle-wrap { width: 1.6em; }
+
+.pp-input {
+  font: inherit; min-height: 52px; width: 100%; max-width: 320px; padding: 0 1em; border-radius: 99px; text-align: center;
+  border: 1px solid #ffffff55; background: #ffffff1f; color: #fff; outline: none; -webkit-user-select: text; user-select: text;
+}
+.pp-input::placeholder { color: #d5cfff; }
+.pp-input:focus { border-color: var(--sun); }
+.duel-setup.face .pp-input { width: 190px; min-height: 46px; flex: none; }
+.duel-setup .hint-text { margin: -4px 0 0; }
+.duel-setup.face .pp { width: min(94vw, 920px); gap: 14px; }
+.duel-setup.face .pp-name { min-width: 6em; }
