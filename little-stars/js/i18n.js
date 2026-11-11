@@ -7,7 +7,7 @@ window.LS = window.LS || {};
 LS.TEXT = {
   en: {
     title: 'Little Stars',
-    mascot: 'Gio',   /* the guide's name (short for Giorgio). Change it here. */
+    mascot: 'Emporio',   /* the guide's name. Change it here. */
     hello: 'Hi, I\'m {mascot}! Let\'s shine together!',
     hubTitle: 'Pick a game!', hubMore: 'Play another game, or collect your reward!', finish: 'Get my reward', menu: 'Games',
     g6: 'Mini Designer', g6Intro: 'Create your own fashion! Mix, match and design.',
@@ -115,7 +115,7 @@ LS.TEXT = {
 
   ar: {
     title: 'النجوم الصغار',
-    mascot: 'جيو',   /* اسم المرشد */
+    mascot: 'إمبوريو',   /* اسم المرشد */
     hello: 'مرحبًا، أنا {mascot}! هيّا نتألّق معًا!',
     hubTitle: 'اختر لعبة!', hubMore: 'العب لعبة أخرى أو احصل على جائزتك!', finish: 'احصل على جائزتي', menu: 'الألعاب',
     g6: 'المصمّم الصغير', g6Intro: 'اصنع أزياءك الخاصة! نسّق وصمّم كما تحب.',

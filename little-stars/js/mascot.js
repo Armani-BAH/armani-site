@@ -1,6 +1,6 @@
 /* ============================================================
-   LITTLE STARS — GIO THE STAR (the guide) + T-SHIRT DRAWING
-   Gio (short for Giorgio) is an original character drawn in code, no image file.
+   LITTLE STARS — EMPORIO THE STAR (the guide) + T-SHIRT DRAWING
+   Emporio is an original character drawn in code, no image file.
    ============================================================ */
 (function () {
   'use strict';
@@ -22,7 +22,7 @@
     d.innerHTML = STAR;
     return d;
   };
-  /* Gio with a speech bubble */
+  /* Emporio with a speech bubble */
   LS.guide = function (text, cls) {
     var g = LS.el('div', 'guide ' + (cls || ''));
     var m = LS.mascot('happy');
