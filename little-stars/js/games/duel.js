@@ -76,7 +76,12 @@
     var b = el('div', 'timer'), i = el('i'); i.style.animationDuration = secs + 's'; b.appendChild(i);
     return b;
   }
-  function faceCls() { return D.face ? ' face' : ''; }
+  /* face to face needs room: on a short screen (a phone held sideways) the halves sit side by side instead */
+  function isFace() {
+    var short = window.matchMedia && window.matchMedia('(max-height: 500px) and (orientation: landscape)').matches;
+    return D.face && !short;
+  }
+  function faceCls() { return isFace() ? ' face' : ''; }
   /* the instruction: shown once in the middle, or once per player when sitting face to face */
   function title(A, text) {
     if (!A._tp) {
@@ -305,7 +310,7 @@
   function intro(key) {
     return new Promise(function (res) {
       var g = find(key), scr = LS.screen('duel-intro' + faceCls());
-      if (D.face) scr.appendChild(mirror(t(g[1]) + ' · ' + t(g[1] + 'How')));
+      if (isFace()) scr.appendChild(mirror(t(g[1]) + ' · ' + t(g[1] + 'How')));
       scr.appendChild(el('div', 'kicker', t('duel')));
       scr.appendChild(art(g, 'big'));
       scr.appendChild(el('h1', 'game-title', t(g[1])));
@@ -336,7 +341,7 @@
       scr.appendChild(two);
       title = t('tie');
     }
-    if (D.face) scr.insertBefore(mirror(title), scr.firstChild);
+    if (isFace()) scr.insertBefore(mirror(title), scr.firstChild);
     scr.appendChild(el('h1', 'game-title', title));
     scr.appendChild(LS.fill(el('p', 'lead'), t('bothStars')));
     scr.appendChild(scoreboard());
@@ -366,7 +371,7 @@
         bag.appendChild(LS.mascot('happy')); var bb = el('span', 'bag-body'); bb.appendChild(LS.eagleMark('cur')); bag.appendChild(bb);
         f.appendChild(bag); A.h[p].appendChild(f);
         var o = { f: f, bag: bag, x: 0.5, items: [], score: 0 };
-        var flipped = D.face && p === 2;          /* the top half is upside down */
+        var flipped = isFace() && p === 2;          /* the top half is upside down */
         function steer(e) {
           var r = f.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width;
           o.x = Math.max(0.1, Math.min(0.9, flipped ? 1 - fx : fx));
@@ -612,7 +617,7 @@
       rope.appendChild(g1); rope.appendChild(g2);
       var marker = el('div', 'marker'); marker.appendChild(LS.mascot('happy')); rope.appendChild(marker);
       scr.appendChild(rope);
-      if (D.face) rope.classList.add('vertical');
+      if (isFace()) rope.classList.add('vertical');
       var a = el('div', 'arena'), H = [null];
       [1, 2].forEach(function (p) {
         var h = el('div', 'half p' + p);
@@ -630,12 +635,12 @@
         });
         h.appendChild(pad); a.appendChild(h); H.push(h);
       });
-      if (D.face) {                      /* rope runs up the side, between the two players */
+      if (isFace()) {                      /* rope runs up the side, between the two players */
         scr.removeChild(rope);
         var wrap = el('div', 'tug-face'); wrap.appendChild(a); wrap.appendChild(rope); scr.appendChild(wrap);
       } else scr.appendChild(a);
       function draw() {
-        if (D.face) { marker.style.left = '50%'; marker.style.top = (50 - pos * 42) + '%'; }
+        if (isFace()) { marker.style.left = '50%'; marker.style.top = (50 - pos * 42) + '%'; }
         else marker.style.left = (50 + pos * 44) + '%';
         H[1].classList.toggle('ahead', pos < -0.05); H[2].classList.toggle('ahead', pos > 0.05);
       }
@@ -672,7 +677,7 @@
 
       /* look carefully */
       var show = LS.screen('duel dcopy-show' + faceCls());
-      if (D.face) show.appendChild(mirror(t('remember')));
+      if (isFace()) show.appendChild(mirror(t('remember')));
       show.appendChild(LS.guide(t('remember'), 'big'));
       var f = figure(target); f.el.classList.add('big-fig'); show.appendChild(f.el);
       show.appendChild(timerBar(showSecs));

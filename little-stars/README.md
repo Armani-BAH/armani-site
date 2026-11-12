@@ -57,6 +57,13 @@ Double-click `index.html`. The game opens in your browser and is fully playable.
 
 ---
 
+## 2b. Works on any screen
+
+The game adjusts itself to the screen it is opened on: phones (upright or sideways), iPads and
+tablets, laptops, desktop computers and large TV screens. It can be played with touch or a mouse.
+Sideways (landscape) gives the best view on every device. On a phone held sideways, the two-player
+games always use the side-by-side layout, because face to face needs a bigger screen.
+
 ## 3. Put it on the shop iPad
 
 The iPad needs a web address to open. The simplest way is to place this folder inside your

@@ -12,7 +12,7 @@ LS.TEXT = {
     pickColour: 'Pick your colour and type your name!', yourName: 'Your name (optional)', namesNote: 'Names are only used during the game and are never saved.', player: 'Player {n}', letsPlay: 'Let\'s play!', changePlayers: 'Change colours',
     starName: '{c} Star', col_blue: 'Blue', col_green: 'Green', col_orange: 'Orange', col_purple: 'Purple',
     col_pink: 'Pink', col_yellow: 'Yellow', col_red: 'Red', col_teal: 'Teal',
-    duel: 'Challenge a Friend', duelSub: 'Two players, one iPad!', pink: 'Pink Star', blue: 'Blue Star',
+    duel: 'Challenge a Friend', duelSub: 'Two players, one screen!', pink: 'Pink Star', blue: 'Blue Star',
     duelPick: 'Pick a game to play together!', backGames: 'Back to my games',
     dCatch: 'Eagle Catch Duel', dCatchHow: 'Each player moves their own bag. Catch more eagles to win! Gold eagles count 3.',
     dMemory: 'Memory Duel', dMemoryHow: 'Take turns flipping two cards. Find a pair and go again!',
@@ -130,7 +130,7 @@ LS.TEXT = {
     staffSkip: 'Skip to results',
     staffFull: 'Full screen on / off',
     staffClose: 'Close', staffUpdate: 'Update the game (needs Wi-Fi)',
-    rotate: 'Turn the iPad sideways for the best view',
+    rotate: 'Turn your screen sideways for the best view',
     soundOn: 'Sound on', soundOff: 'Sound off', listen: 'Listen'
   },
 
@@ -141,7 +141,7 @@ LS.TEXT = {
     pickColour: 'اختر لونك واكتب اسمك!', yourName: 'اسمك (اختياري)', namesNote: 'الأسماء للعبة فقط ولا يتم حفظها.', player: 'اللاعب {n}', letsPlay: 'هيّا نلعب!', changePlayers: 'تغيير الألوان',
     starName: 'النجم {c}', col_blue: 'الأزرق', col_green: 'الأخضر', col_orange: 'البرتقالي', col_purple: 'البنفسجي',
     col_pink: 'الوردي', col_yellow: 'الأصفر', col_red: 'الأحمر', col_teal: 'الفيروزي',
-    duel: 'تحدَّ صديقك', duelSub: 'لاعبان على آيباد واحد!', pink: 'النجم الوردي', blue: 'النجم الأزرق',
+    duel: 'تحدَّ صديقك', duelSub: 'لاعبان على شاشة واحدة!', pink: 'النجم الوردي', blue: 'النجم الأزرق',
     duelPick: 'اختارا لعبة لتلعباها معًا!', backGames: 'العودة إلى ألعابي',
     dCatch: 'سباق التقاط النسور', dCatchHow: 'كل لاعب يحرّك حقيبته. من يلتقط نسورًا أكثر يفوز! النسر الذهبي بـ 3.',
     dMemory: 'تحدّي الذاكرة', dMemoryHow: 'تناوبا على قلب بطاقتين. من يجد زوجًا يلعب مرة أخرى!',
@@ -259,7 +259,7 @@ LS.TEXT = {
     staffSkip: 'الانتقال إلى النتيجة',
     staffFull: 'تشغيل / إيقاف ملء الشاشة',
     staffClose: 'إغلاق', staffUpdate: 'تحديث اللعبة (يلزم الواي فاي)',
-    rotate: 'أدر الآيباد بشكل أفقي لأفضل عرض',
+    rotate: 'أدر الشاشة بشكل أفقي لأفضل عرض',
     soundOn: 'الصوت يعمل', soundOff: 'الصوت متوقف', listen: 'استمع'
   }
 };

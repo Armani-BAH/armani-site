@@ -40,7 +40,7 @@ body {
   background: radial-gradient(130% 100% at 50% 0%, #5b3cc4 0%, #2a1f7a 38%, #131447 70%, #0a0b2b 100%) fixed;
   color: var(--pearl);
   font-family: var(--body);
-  font-size: clamp(16px, 1.9vw, 21px);
+  font-size: clamp(1rem, 1.9vw, 1.35rem);
   line-height: 1.35;
   overflow: hidden;
   -webkit-user-select: none; user-select: none;
@@ -1346,3 +1346,190 @@ html[dir='rtl'] .paper .c-title text { letter-spacing: 0; font-weight: 700; font
 .paper .c-sign-img { max-height: 3.6em; max-width: 16em; margin-bottom: -.2em; }
 .paper .c-sign-img { max-height: 4.6em; max-width: 19em; }
 .paper .c-sign { min-width: 20em; }
+
+/* ============================================================
+   EVERY SCREEN SIZE
+   The game was designed on an iPad (about 1180 x 820). These rules
+   make it fit phones (upright and sideways), laptops, desktops and TVs.
+   ============================================================ */
+/* the whole game grows with the screen: 15px on phones, ~16px on iPad, up to 26px on big screens */
+html { font-size: clamp(15px, 2vmin, 26px); }
+:root { --hud: 4.25rem; }
+#hud .logo { width: clamp(8rem, 17vw, 14rem); }
+.tool { min-width: 3rem; height: 3rem; }
+.tool svg { width: 1.4rem; height: 1.4rem; }
+.btn { min-height: 4rem; }
+.btn.big { min-height: 5.25rem; }
+.lang button { min-width: 8.75rem; min-height: 3.6rem; }
+.home .logo { width: min(64vw, 40rem); }
+.age { width: min(40vw, 24rem); min-height: min(46vh, 21rem); }
+.guide .mascot { width: clamp(4rem, 9vw, 6rem); }
+.guide .eagle-mascot { width: clamp(5rem, 11vw, 7.5rem); }
+.guide.big .eagle-mascot { width: clamp(6.25rem, 14vw, 10rem); }
+.mode { width: min(27vw, 19rem); }
+.pp { width: min(42vw, 28rem); }
+.levels button { min-width: 7.4rem; min-height: 4.25rem; }
+.swatch, .stick, .pat { width: clamp(2.9rem, 5.4vw, 3.75rem); height: clamp(2.9rem, 5.4vw, 3.75rem); }
+.pat { --tw: 2.75rem; }
+.arrow { width: clamp(3.5rem, 7vw, 4.5rem); height: clamp(3.5rem, 7vw, 4.5rem); }
+.mix-mid { width: clamp(6.9rem, 15vw, 10.6rem); height: clamp(3.5rem, 7vw, 4.5rem); }
+.cswatch { width: clamp(3.1rem, 6vw, 4rem); height: clamp(3.1rem, 6vw, 4rem); }
+.paper { width: min(94vw, 136vh, 62rem); }
+.pick-grid { grid-template-columns: repeat(auto-fill, minmax(clamp(6rem, 12vw, 9rem), 1fr)); }
+
+/* ---------- big screens (laptops, desktops, TVs): use the extra room ---------- */
+@media (min-width: 1300px) and (min-height: 700px) {
+  .hub-grid { --gw: min(19vw, 27vh); }
+  .duel-grid { --dw: min(17vw, 24vh); }
+  .tools { max-width: 46vw; }
+}
+
+/* ---------- narrow screens (phones held upright) ---------- */
+@media (max-width: 600px) {
+  :root { --hud: 3.4rem; }
+  #hud { gap: .4rem; padding: 0 .6rem; }
+  #hud .logo { width: 6.6rem; }
+  #progress { display: none; }
+  .hud-tools { gap: .35rem; }
+  .tool { min-width: 2.6rem; height: 2.6rem; padding: 0 .45em; }
+  .tool .lbl { display: none; }
+  #stars { min-width: 0; padding: .25em .7em; font-size: 1rem; }
+  .screen { padding-left: 12px; padding-right: 12px; }
+  .lang button { min-width: 7.5rem; }
+  .btn.big { padding: .7em 1.6em; }
+  .game-title { font-size: clamp(1.6rem, 8vw, 2.4rem); }
+  .bubble { font-size: 1rem; }
+  .guide.big .bubble { font-size: 1.1rem; }
+  .age { width: 42vw; min-height: 34vh; }
+  .age .num { font-size: 2.8rem; }
+  .mode { width: 86vw; }
+  .pp { width: 92vw; }
+  .pp-swatches { grid-template-columns: repeat(4, auto); }
+  .reward .badge { width: min(38vw, 22vh); }
+  .name-row input { width: 86vw; }
+  .duel-actions .btn.big, .again .btn.big { width: 86vw; }
+  #cert { padding: 10px; }
+  .paper { width: 94vw; font-size: 2.3vw; }
+}
+
+/* ---------- short screens (phones held sideways) ---------- */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root { --hud: 2.9rem; }
+  html { font-size: 14px; }
+  #hud .logo { width: 7.5rem; padding: 8px 0; }
+  #progress i { font-size: 1rem; }
+  .tool { min-width: 2.3rem; height: 2.3rem; padding: 0 .4em; font-size: .75rem; }
+  .tool .lbl { display: none; }
+  #stars { min-width: 0; padding: .2em .7em; font-size: .95rem; }
+  .screen { gap: 6px; padding: 6px 16px 10px; }
+  .prompt { font-size: clamp(1rem, 5.2vh, 1.5rem); }
+  .sub, .kicker { font-size: .75rem; }
+  .btn { min-height: 2.9rem; padding: .4em 1.4em; font-size: .85rem; }
+  .btn.big { min-height: 3.3rem; font-size: 1rem; padding: .4em 1.8em; }
+  .bubble { font-size: .95rem; padding: .45em .9em; }
+  .guide.big .bubble { font-size: 1.05rem; }
+  .guide .eagle-mascot { width: 4.2rem; }
+  .guide.big .eagle-mascot { width: 5rem; }
+  .game-title { font-size: clamp(1.4rem, 9vh, 2.4rem); }
+  /* welcome */
+  .home { gap: 6px; }
+  .home .logo { width: min(48vw, 64vh); }
+  .hero { font-size: clamp(2rem, 14vh, 4.2rem); }
+  .tagline { font-size: 1rem; }
+  .lang button { min-height: 2.7rem; min-width: 7rem; font-size: .95rem; }
+  /* menus */
+  .hub-grid { grid-template-columns: repeat(4, var(--gw)); --gw: min(18vw, 30vh); gap: 8px; }
+  .gcard { padding: 6px 6px 8px; border-radius: 16px; gap: 3px; }
+  .gname { font-size: .8rem; min-height: 2em; }
+  .duel-banner { min-height: 3.2rem; }
+  .duel-banner .ico { font-size: 1.5rem; }
+  .duel-grid { --dw: min(17vw, 25vh); }
+  .age { min-height: 52vh; width: min(34vw, 18rem); }
+  .age .num { font-size: 2.8rem; }
+  .intro .fan { width: min(26vw, 48vh); }
+  .levels button { min-height: 3.2rem; min-width: 5.5rem; }
+  /* games */
+  .card.target { width: min(16vw, 34vh); }
+  .grid { --cw: min(17vw, 52vh); }
+  .with-side .grid { --cw: min(13vw, 40vh); }
+  .board { width: min(22vw, 62vh); padding: 8px; gap: 6px; }
+  .board.final { width: min(36vw, 68vh); }
+  .mem-grid { --mw: min(calc(88vw / var(--c) - 12px), calc((100vh - 165px) / var(--rows) * .8 - 10px)); }
+  .mem-grid.m4 { --mw: min(17vw, calc((100vh - 165px) * .8)); }
+  .mem-info .pill { font-size: .75rem; }
+  .figure { --fw: min(20vw, calc((100vh - 120px) / 2.12)); }
+  .arrow { width: 2.7rem; height: 2.7rem; font-size: 1.7rem; }
+  .mix-mid { width: 6rem; height: 2.7rem; }
+  .mix-ctrl { gap: 6px; }
+  .easel { --tw: min(30vw, 58vh); padding: 8px; }
+  .swatch, .stick, .pat { width: 2.3rem; height: 2.3rem; }
+  .stick { font-size: 1.2rem; }
+  .tool-btns { gap: 5px; max-width: 54vw; }
+  .tools { gap: 5px; }
+  .tool-label { font-size: .7rem; }
+  .pz-board { --pw: min(34vw, calc((100vh - 140px) * .8)); }
+  .pz-ref .card { width: min(12vw, 30vh); }
+  .field { min-height: 0; }
+  .runway .card { width: min(15vw, 44vh); }
+  .gift { width: min(22vw, 42vh); }
+  .path .node { font-size: .6rem; }
+  /* results */
+  .reward { gap: 16px; }
+  .reward .badge { width: min(22vw, 40vh); }
+  .my-tee { --tw: min(10vw, 20vh); }
+  .reward-main { gap: 6px; }
+  .reward .game-title { font-size: clamp(1.3rem, 8vh, 2rem); }
+  .reward .total .n { font-size: clamp(2.2rem, 14vh, 3.4rem); }
+  .rank b { font-size: 1.1rem; }
+  .surprise { padding: .4em 1em; }
+  .surprise b { font-size: 1rem; }
+  .name-row input { min-height: 2.9rem; }
+  .photo-btn { min-height: 2.9rem; }
+  .photo-thumb { width: 2.2rem; height: 2.2rem; }
+  .again .btn.big { min-height: 3.1rem; }
+  /* certificate: page on the left, buttons on the right */
+  #cert { flex-direction: row; gap: 12px; padding: 8px; }
+  .paper { width: min(80vw, 128vh); font-size: 1.45vw; }
+  .cert-actions { flex-direction: column; }
+  /* two players */
+  .duel .half { padding: 6px; gap: 4px; }
+  .half-score { font-size: 1.6rem; }
+  .chip { padding: .2em .8em; font-size: .85rem; }
+  .dq-grid { --cw: min(12vw, calc((100vh - 200px) / 2 * .8)); gap: 6px; }
+  .duel.face .dq-grid { --cw: min(12vw, calc((50vh - 110px) * .8)); }
+  .mini .figure { --fw: calc((100vh - 170px) / 2.12); }
+  .duel.face .mini .figure { --fw: calc((50vh - 90px) / 2.12); }
+  .mini .arrow { width: 2.3rem; height: 2.3rem; font-size: 1.4rem; }
+  .mini .mix-mid { width: 3.4rem; height: 2.3rem; }
+  .ready-btn { min-height: 2.6rem; }
+  .xo-board { --xc: calc((100vh - 150px) / 3); gap: 6px; }
+  .duel.face.dxo .xo-board { --xc: calc((100vh - 210px) / 3); }
+  .pside { flex-basis: 8rem; padding: 8px; }
+  .dmemory .mem-grid { --mw: min(10vw, calc((100vh - 160px) / 3 * .8 - 8px)); }
+  .duel.face.dmemory .mem-grid { --mw: min(10vw, calc((100vh - 230px) / 2 * .8 - 8px)); }
+  .tap-pad { font-size: 2rem; }
+  .dpuzzle .pz-board, .duel.face.dpuzzle .pz-board { --pw: calc((50vh - 70px) * .8); }
+  .dtug .rope { height: 3.6rem; }
+  .pick-players { gap: 10px; }
+  .pp { padding: 8px 12px; gap: 6px; }
+  .pp-star { font-size: 2rem; }
+  .cswatch { width: 2.3rem; height: 2.3rem; }
+  .pp-input { min-height: 2.6rem; }
+  .seat-btn { min-height: 2.6rem; }
+  .duel-setup .guide { display: none; }
+  .winner { font-size: clamp(3rem, 22vh, 6rem); }
+  .count { font-size: 30vh; }
+}
+.name-row input { width: min(60vw, 15rem); }
+@media (max-width: 600px) { .name-row input { width: 86vw; } }
+.pp-input { max-width: 20rem; }
+@media (max-height: 500px) and (orientation: landscape) {
+  .mini.locked .figure { --fw: calc((100vh - 190px) / 2.12); }
+  .figure.big-fig { --fw: calc((100vh - 140px) / 2.12); }
+  .copy-col .figure { --fw: calc((100vh - 175px) / 2.12); }
+  .dpuzzle .pz-board { --pw: calc((100vh - 165px) * .8); }
+  .dpuzzle .pz-ref .card { width: min(10vw, 22vh); }
+  .dq-grid { --cw: min(13vw, calc((100vh - 185px) / 2 * .8)); }
+  .vote { height: 3rem; width: 5rem; font-size: 1.6rem; }
+}
+@media (max-height: 500px) and (orientation: landscape) { .mini.locked .figure { --fw: calc((100vh - 235px) / 2.12); } }
