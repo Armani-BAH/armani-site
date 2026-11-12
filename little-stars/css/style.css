@@ -1533,3 +1533,9 @@ html { font-size: clamp(15px, 2vmin, 26px); }
   .vote { height: 3rem; width: 5rem; font-size: 1.6rem; }
 }
 @media (max-height: 500px) and (orientation: landscape) { .mini.locked .figure { --fw: calc((100vh - 235px) / 2.12); } }
+
+/* certificate: photo and design are small and sit in the top corners, clear of the text */
+.paper .c-side { top: 7%; width: 6.4em; height: 6.4em; }
+.paper .c-photo { inset-inline-start: 6%; }
+.paper .c-photo.has { box-shadow: 0 0 0 .2em #fff, 0 0 0 .38em #ffb703, 0 0 0 .52em #ff6fb5; }
+.paper .c-tee { inset-inline-end: 6%; --tw: 6.4em; }

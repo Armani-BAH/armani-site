@@ -199,7 +199,7 @@ between the quotes on the right-hand side.
 | 5 · Little Star Challenge | Four quick tasks, then a bonus round: slide a finger to catch colourful flying Emporio Armani eagles (gold eagles count 3). |
 | 6 · Mini Designer | Chooses one: **mix & match** tops, bottoms, dresses, shoes and extras on a figure with arrows (or "Surprise me"), **design a T-shirt**, or **design a dress** (colour, pattern, stickers they can drag). |
 | 7 · Fashion Puzzle | A product photo is cut into pieces and mixed up. Tap two pieces to swap them (or drag one onto another). Juniors: 4 then 6 pieces. Seniors: 9 then 12. |
-| Gift | Taps a gift box three times to open it. |
+| Results box | Taps a box three times to open it and see their results (no physical gift is promised). |
 | Reward | Total stars, a fun title (Super Stylist, Memory Master, Quiz Champion, Eagle Catcher or Dream Designer), confetti, badge, surprise message, certificate. |
 
 ### Challenge a Friend (two players, one iPad)
