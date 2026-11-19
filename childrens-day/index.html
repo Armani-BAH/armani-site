@@ -39,6 +39,7 @@ h1{animation:shine 5s ease-in-out infinite}
 #hint{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-size:15px;letter-spacing:1px;color:#AEB7D4;background:rgba(18,26,54,.8);padding:8px 16px;border-radius:20px;transition:opacity .6s}
 @media (prefers-reduced-motion: reduce){*{animation-duration:0s!important;animation-iteration-count:1!important}.words span:first-child{opacity:1}}
 
+.words span{white-space:nowrap}
 #p,#l{display:none}
 body.portrait #p{display:block}
 body.landscape #l{display:block}
@@ -60,7 +61,7 @@ body.landscape #l{display:block}
 </svg>
 <div class="window" style="left:189px;top:560px;width:1209px;height:1260px">
 <div class="kicker">Welcome, little ones</div>
-<div class="words" style="--ws:150px"><span>Coloring</span><span>Games</span><span>Winter Smiles</span></div>
+<div class="words" style="--ws:130px"><span>Coloring</span><span>Games</span><span>Winter Smiles</span></div>
 <div class="time">4:00 PM – 8:00 PM</div>
 <div class="sub">Join us in store</div>
 </div>
@@ -114,7 +115,7 @@ body.landscape #l{display:block}
 </svg>
 <div class="window" style="left:560px;top:380px;width:1125px;height:880px">
 <div class="kicker">Welcome, little ones</div>
-<div class="words" style="--ws:140px"><span>Coloring</span><span>Games</span><span>Winter Smiles</span></div>
+<div class="words" style="--ws:120px"><span>Coloring</span><span>Games</span><span>Winter Smiles</span></div>
 <div class="time">4:00 PM – 8:00 PM</div>
 <div class="sub">Join us in store</div>
 </div>
@@ -157,13 +158,14 @@ body.landscape #l{display:block}
 <script>
 (function(){
 var body=document.body;
+function fitWords(){document.querySelectorAll('.words').forEach(function(w){var max=w.clientWidth*0.92;w.querySelectorAll('span').forEach(function(sp){sp.style.fontSize='';var fs=parseFloat(getComputedStyle(sp).fontSize);var sw=sp.scrollWidth;if(sw>max)sp.style.fontSize=(fs*max/sw)+'px';});});}
 function fit(){
 var land=window.innerWidth>window.innerHeight;
 body.className=land?'landscape':'portrait';
 var st=document.getElementById(land?'l':'p');var W=+st.dataset.w,H=+st.dataset.h;
 var s=Math.min(window.innerWidth/W,window.innerHeight/H);
-st.style.transform='scale('+s+')';st.style.margin=((s-1)*H/2)+'px '+((s-1)*W/2)+'px';}
-window.addEventListener('resize',fit);window.addEventListener('orientationchange',function(){setTimeout(fit,200)});fit();
+st.style.transform='scale('+s+')';st.style.margin=((s-1)*H/2)+'px '+((s-1)*W/2)+'px';fitWords();}
+window.addEventListener('resize',fit);window.addEventListener('load',fitWords);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitWords);window.addEventListener('orientationchange',function(){setTimeout(fit,200)});fit();
 document.querySelectorAll('.stage').forEach(function(st){var W=+st.dataset.w;var snow=st.querySelector('.snow');
 for(var i=0;i<110;i++){var f=document.createElement('div');f.className='flake';var sz=3+Math.random()*9;var d=9+Math.random()*12;
 f.style.cssText='left:'+(Math.random()*W)+'px;width:'+sz+'px;height:'+sz+'px;opacity:'+(.35+Math.random()*.55)+';animation-duration:'+d+'s;animation-delay:-'+(Math.random()*d)+'s;--dx:'+((Math.random()-.5)*220)+'px';snow.appendChild(f);}});
