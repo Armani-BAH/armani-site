@@ -167,7 +167,7 @@
     duel.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); LS.duelHub(); });
     foot.appendChild(duel);
     if (count) {
-      var fin = el('button', 'btn primary big', '🎁  ' + t('finish')); fin.type = 'button'; fin.id = 'finish';
+      var fin = el('button', 'btn primary big', '📜  ' + t('finish')); fin.type = 'button'; fin.id = 'finish';
       fin.addEventListener('click', function () { LS.unlockAudio(); LS.sfx.tap(); finish(); });
       foot.appendChild(fin);
     }

@@ -191,7 +191,7 @@ between the quotes on the right-hand side.
 |---|---|
 | Welcome | Chooses English or العربية, taps START YOUR ADVENTURE |
 | Age | Junior Little Stars (5–7) or Senior Little Stars (8–12) |
-| Game menu | Six game cards. The child taps any game, in any order. Played games get a tick. **Get my reward** appears after the first game. The **Games** button in the top bar returns to the menu at any time. |
+| Game menu | Six game cards. The child taps any game, in any order. Played games get a tick. **Get my certificate** appears after the first game. The **Games** button in the top bar returns to the menu at any time. |
 | 1 · Little Armani Stylist | Builds an outfit: matches colours, then picks shoes and a finishing touch. Tap or drag. |
 | 2 · Armani Memory Match | Finds the pairs. Easy 6 cards, Medium 8, Hard 12 (chosen on the intro screen). |
 | 3 · Little Fashion Quiz | Picture questions: jacket, sunny day, eagle logo, matching shoes, plus a zoomed-in "detective" question. |
