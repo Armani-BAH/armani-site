@@ -350,8 +350,34 @@
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }
     $('#cert').classList.add('on');
+    /* prepare the printable PDF straight away, so Print opens instantly */
+    certFile = null;
+    var btn = $('#c-print'), session = LS.state.session;
+    btn.classList.add('busy');
+    LS.makeCertificatePdf().then(function (blob) {
+      if (session !== LS.state.session) return;
+      certFile = new File([blob], 'Little-Star-Certificate.pdf', { type: 'application/pdf' });
+    }).catch(function () { certFile = null; }).then(function () { btn.classList.remove('busy'); });
   }
-  $('#c-print').addEventListener('click', function () { LS.hush(); window.print(); });
+  /* Print: hand the PDF to the device. On iPad / iPhone this opens the share sheet, where "Print"
+     sends it to the printer (or "Save to Files"). On a computer the PDF opens in a new tab to print.
+     If the PDF could not be made, the page itself is printed as before. */
+  var certFile = null;
+  $('#c-print').addEventListener('click', function () {
+    LS.hush();
+    var btn = $('#c-print');
+    if (btn.classList.contains('busy')) return;
+    if (!certFile) { window.print(); return; }
+    var touch = (navigator.maxTouchPoints || 0) > 0;
+    if (touch && navigator.canShare && navigator.canShare({ files: [certFile] })) {
+      navigator.share({ files: [certFile], title: t('certTitle') }).catch(function () { /* closed */ });
+      return;
+    }
+    var url = URL.createObjectURL(certFile);
+    var win = window.open(url, '_blank');
+    if (!win) { var a = document.createElement('a'); a.href = url; a.download = certFile.name; document.body.appendChild(a); a.click(); a.remove(); }
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+  });
   $('#c-back').addEventListener('click', function () { $('#cert').classList.remove('on'); });
 
   /* ---------- top-bar tools ---------- */

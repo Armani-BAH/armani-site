@@ -128,22 +128,22 @@ To change the waiting times, open `js/app.js`; the numbers are at the top under
 ## 5. The certificate
 
 1. On the results screen the child may type a first name (optional) and tap **Add my photo**
-   (optional) to take a picture with the iPad camera. Then tap **MY CERTIFICATE**.
-2. Tap **PRINT OR SAVE**.
-   - **Print:** choose your AirPrint printer. It prints one A4 landscape page.
-   - **Save as PDF:** in the print preview, pinch outwards on the page preview with two fingers,
-     then tap **Share** → **Save to Files** (or send by AirDrop / WhatsApp).
+   (optional) to take a picture with the camera. Then tap **MY CERTIFICATE**.
+2. Tap **PRINT OR SAVE**. The game turns the certificate into a one-page **A4 landscape PDF** (it takes
+   a second; the button shows "…" while it gets ready). The PDF prints edge to edge with **no website
+   address, date, time or page numbers**.
+   - **iPad / iPhone:** the share sheet opens. Tap **Print**, choose the printer
+     (**HP OfficeJet Pro 8020**), turn Colour on, and tap **Print**. Or tap **Save to Files**.
+   - **Computer:** the PDF opens in a new tab. Print it from there (choose A4, landscape).
 3. Tap **BACK**, then **NEW LITTLE STAR**.
 
-The name and the photo are shown on the certificate only. They stay on the iPad, are never sent
+**Connecting the shop printer:** the iPad and printer must be on the same network. If they are not,
+join the printer's own Wi-Fi on the iPad (**DIRECT-25-HP OfficeJet Pro 8020**; the password is shown under
+Wi-Fi Direct on the printer's screen). Open the game once on normal Wi-Fi first, so it works offline.
+
+The name and the photo are used only on the certificate. They stay on the device, are never sent
 anywhere, and are erased as soon as the next game starts. Please ask a parent before taking a
-child's photo. The first time, Safari may ask permission to use the camera: tap **Allow**.
-
----
-
-**Signature:** the certificate shows the Giorgio Armani signature (`assets/signature.png`, taken from the
-signature print supplied by the boutique) above a signature line, with the date underneath. To change it, replace `assets/signature.png` (dark ink on a transparent background). If the file
-is removed, the certificate shows "Emporio Armani" in italic instead.
+child's photo. The first time, the browser may ask permission to use the camera: tap **Allow**.
 
 ## 6. Change or replace the product photos
 

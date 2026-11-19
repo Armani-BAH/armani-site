@@ -1,7 +1,7 @@
 /* LITTLE STARS — offline support.
    After the game has been opened once with internet, it keeps working without it.
    Online it always loads the newest files; VERSION only matters for the offline copy. */
-const VERSION = '20261112-0955';
+const VERSION = '20261119-1228';
 const FILES = [
   "./",
   "assets/fonts/bodoni-moda-latin-400-normal.woff2",
@@ -208,6 +208,7 @@ const FILES = [
   "index.html",
   "js/app.js",
   "js/catalog.js",
+  "js/certpdf.js",
   "js/core.js",
   "js/games/adventure.js",
   "js/games/catch.js",
