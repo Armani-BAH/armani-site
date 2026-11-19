@@ -343,9 +343,17 @@
     while (slot.firstChild) slot.removeChild(slot.firstChild);
     var ph = $('#c-photo');
     while (ph.firstChild) ph.removeChild(ph.firstChild);
-    if (LS.state.photo) { var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi); ph.classList.add('has'); }
-    else ph.classList.remove('has');   /* no picture when no photo was taken */
-    if (LS.state.design) slot.appendChild(LS.tee(LS.state.design)); /* no picture when the child made no design */
+    /* polaroids: the child's photo (with their name written under it) and their design */
+    if (LS.state.photo) {
+      var pi = new Image(); pi.src = LS.state.photo; pi.alt = ''; ph.appendChild(pi);
+      ph.appendChild(el('span', 'pol-cap', name || t('badge')));
+      ph.classList.add('has');
+    } else ph.classList.remove('has');   /* no polaroid when no photo was taken */
+    if (LS.state.design) {
+      var art = el('span', 'pol-art'); art.appendChild(LS.tee(LS.state.design)); slot.appendChild(art);
+      slot.appendChild(el('span', 'pol-cap', t('myDesign')));
+      slot.classList.add('has');
+    } else slot.classList.remove('has');
     var locale = LS.state.lang === 'ar' ? 'ar-BH-u-nu-latn' : 'en-GB';
     try { $('#c-date').textContent = new Date().toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }); }
     catch (e) { $('#c-date').textContent = new Date().toDateString(); }

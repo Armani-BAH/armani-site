@@ -1541,3 +1541,36 @@ html { font-size: clamp(15px, 2vmin, 26px); }
 .paper .c-tee { inset-inline-end: 6%; --tw: 6.4em; }
 #c-print.busy { opacity: .6; }
 #c-print.busy::after { content: ' …'; }
+
+/* ============================================================
+   CERTIFICATE POLAROIDS (photo left with the name, design right)
+   ============================================================ */
+.paper .c-side { height: auto; display: none; }
+.paper .c-photo.has, .paper .c-tee.has {
+  display: flex; flex-direction: column; align-items: stretch; position: absolute; overflow: visible; border-radius: 2px;
+  background: #fff; box-shadow: 0 .35em 1em rgba(0, 0, 0, .2); z-index: 1;
+}
+.paper .c-photo.has { inset-inline-start: 6.5%; top: 30%; width: 21%; padding: .6em .6em 0; transform: rotate(-6deg); }
+html[dir='rtl'] .paper .c-photo.has { transform: rotate(6deg); }
+.paper .c-photo img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; border-radius: 0; }
+.paper .c-tee.has { inset-inline-end: 7.5%; top: 43%; width: 15.5%; padding: .45em .45em 0; transform: rotate(7deg); }
+html[dir='rtl'] .paper .c-tee.has { transform: rotate(-7deg); }
+.paper .pol-art { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; background: #fdebf3; }
+.paper .pol-art .tee { width: 84%; height: auto; font-size: 1em; }
+.paper .pol-cap {
+  display: block; text-align: center; padding: .35em .2em .5em; font-family: var(--display); font-style: italic; font-size: 1.25em; color: #333;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+html[dir='rtl'] .paper .pol-cap { font-style: normal; }
+.paper .c-tee .pol-cap { font-size: .95em; }
+.paper .c-photo.has::before, .paper .c-tee.has::before {
+  content: ''; position: absolute; top: -.75em; left: 34%; width: 32%; height: 1.5em; background: rgba(255, 210, 63, .78); transform: rotate(2deg);
+}
+.paper .c-name { min-width: 34%; }
+.paper .c-text { max-width: 24em; }
+.paper .c-text { max-width: 21em; }
+.paper .c-photo.has { inset-inline-start: 5.8%; top: 29%; width: 20%; }
+@media (max-width: 600px) {
+  .paper .c-text { max-width: 15em; }
+  .paper .c-tee .pol-cap { font-size: .75em; }
+}

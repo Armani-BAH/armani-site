@@ -138,11 +138,11 @@
     /* name */
     var name = document.getElementById('c-name').textContent || LS.t('certAnon');
     g.fillStyle = '#111';
-    var ns = fit(g, name, ar ? 'normal' : 'italic', ar ? 500 : 400, H * 0.075, display, W * 0.5);
+    var ns = fit(g, name, ar ? 'normal' : 'italic', ar ? 500 : 400, H * 0.075, display, W * 0.4);
     setFont(g, ar ? 'normal' : 'italic', ar ? 500 : 400, ns, display);
     g.fillText(name, cx, H * 0.495);
     g.strokeStyle = '#ffb703'; g.lineWidth = 3;
-    g.beginPath(); g.moveTo(cx - W * 0.2, H * 0.522); g.lineTo(cx + W * 0.2, H * 0.522); g.stroke();
+    g.beginPath(); g.moveTo(cx - W * 0.17, H * 0.522); g.lineTo(cx + W * 0.17, H * 0.522); g.stroke();
 
     /* star title */
     var rank = document.getElementById('c-rank').textContent || '';
@@ -153,11 +153,11 @@
     /* the two lines */
     g.fillStyle = '#222';
     var l1 = LS.t('certLine1');
-    fit(g, l1, 'normal', 300, H * 0.03, body, W * 0.66);
+    fit(g, l1, 'normal', 300, H * 0.03, body, W * 0.43);
     g.fillText(l1, cx, H * 0.64);
     g.fillStyle = '#5b3cc4';
     var l2 = LS.t('certLine2');
-    fit(g, l2, 'normal', 500, H * 0.044, display, W * 0.66);
+    fit(g, l2, 'normal', 500, H * 0.044, display, W * 0.48);
     g.fillText(l2, cx, H * 0.708);
 
     /* signature, line and date */
@@ -175,27 +175,41 @@
     setFont(g, 'normal', 400, H * 0.021, body);
     g.fillText(document.getElementById('c-date').textContent || '', cx, H * 0.875);
 
-    /* photo (top-left corner) */
-    var box = W * 0.1, top = H * 0.075;
+    /* polaroids: photo (left) with the name under it, design (right). Mirrored in Arabic. */
+    function polaroid(cxp, top, w, deg, cap, drawArt, artBg) {
+      var pad = w * 0.05, capH = w * 0.2, inner = w - pad * 2, h = pad + inner + capH;
+      g.save();
+      g.translate(cxp, top + h / 2); g.rotate(deg * Math.PI / 180);
+      g.shadowColor = 'rgba(0,0,0,0.22)'; g.shadowBlur = 28; g.shadowOffsetY = 10;
+      g.fillStyle = '#ffffff'; g.fillRect(-w / 2, -h / 2, w, h);
+      g.shadowColor = 'transparent'; g.shadowBlur = 0; g.shadowOffsetY = 0;
+      if (artBg) { g.fillStyle = artBg; g.fillRect(-w / 2 + pad, -h / 2 + pad, inner, inner); }
+      drawArt(-w / 2 + pad, -h / 2 + pad, inner);
+      g.fillStyle = '#333';
+      var cs = fit(g, cap, ar ? 'normal' : 'italic', ar ? 500 : 400, capH * 0.5, display, inner);
+      setFont(g, ar ? 'normal' : 'italic', ar ? 500 : 400, cs, display);
+      g.textAlign = 'center'; g.fillText(cap, 0, h / 2 - capH * 0.36);
+      /* a strip of tape */
+      g.fillStyle = 'rgba(255, 210, 63, 0.78)';
+      g.save(); g.translate(0, -h / 2); g.rotate(0.04); g.fillRect(-w * 0.16, -capH * 0.32, w * 0.32, capH * 0.62); g.restore();
+      g.restore();
+    }
+    var name2 = document.getElementById('c-name').textContent || '';
     if (LS.state.photo) {
       var ph = await loadImg(LS.state.photo);
       if (ph) {
-        var px = ar ? W - W * 0.065 - box : W * 0.065, r = box / 2, pcx = px + r, pcy = top + r;
-        [['#ff6fb5', r + 16], ['#ffb703', r + 10], ['#ffffff', r + 5]].forEach(function (ring) {
-          g.fillStyle = ring[0]; g.beginPath(); g.arc(pcx, pcy, ring[1], 0, Math.PI * 2); g.fill();
-        });
-        g.save(); g.beginPath(); g.arc(pcx, pcy, r, 0, Math.PI * 2); g.clip();
-        var s = Math.min(ph.width, ph.height);
-        g.drawImage(ph, (ph.width - s) / 2, (ph.height - s) / 2, s, s, px, top, box, box);
-        g.restore();
+        var pw = W * 0.2;
+        polaroid(ar ? W - W * 0.058 - pw / 2 : W * 0.058 + pw / 2, H * 0.29, pw, ar ? 6 : -6,
+          name2 || LS.t('badge'),
+          function (x, y, size) { var s = Math.min(ph.width, ph.height); g.drawImage(ph, (ph.width - s) / 2, (ph.height - s) / 2, s, s, x, y, size, size); });
       }
     }
-    /* the child's design (top-right corner) */
     if (LS.state.design) {
       var ti = await teeImage(LS.state.design);
       if (ti) {
-        var tx = ar ? W * 0.065 : W - W * 0.065 - box;
-        g.drawImage(ti, tx, top, box, box);
+        var dw = W * 0.155;
+        polaroid(ar ? W * 0.075 + dw / 2 : W - W * 0.075 - dw / 2, H * 0.43, dw, ar ? -7 : 7, LS.t('myDesign'),
+          function (x, y, size) { var m = size * 0.08; g.drawImage(ti, x + m, y + m, size - 2 * m, size - 2 * m); }, '#fdebf3');
       }
     }
     return c;
