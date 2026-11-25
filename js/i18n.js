@@ -28,11 +28,6 @@ const AR_UI = {
   "Search style, fabric or colour code": "ابحث برمز الموديل أو القماش أو اللون",
   "My selection": "اختياراتي",
 
-  /* stories on the home page */
-  "New this season": "جديد هذا الموسم",
-  "Add to my selection": "أضف إلى اختياراتي",
-  "In your selection": "ضمن اختياراتك",
-  "View piece": "عرض القطعة",
   "Previous": "السابق",
   "Next": "التالي",
   "Department": "القسم",
