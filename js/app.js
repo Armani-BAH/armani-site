@@ -1143,37 +1143,79 @@ $("#modalColours").addEventListener("click",e=>{
   const sw=e.target.closest("[data-pick]"); if(!sw) return;
   choose(sw.dataset.pick); paintModal(); syncUrl(true);
 });
+let openTap={t:0,x:0,y:0};
 $("#modalMediaInner").addEventListener("click",e=>{
-  const z=e.target.closest("[data-zoom]"); if(z) return openZoom(+z.dataset.zoom);
+  const z=e.target.closest("[data-zoom]");
+  if(z){                                       /* double-tap / double-click on the photo opens the viewer */
+    const now=e.timeStamp;
+    if(now-openTap.t<320 && Math.hypot(e.clientX-openTap.x,e.clientY-openTap.y)<40){ openTap.t=0; return openZoom(+z.dataset.zoom); }
+    openTap={t:now,x:e.clientX,y:e.clientY}; return;
+  }
   const thumb=e.target.closest("[data-gallery-index]"); if(!thumb) return;
   const track=$("#galleryTrack"); const i=+thumb.dataset.galleryIndex;
   track.scrollTo({left:i*track.clientWidth, behavior:"smooth"});
 });
-/* ---- Zoom: computer = follows the mouse; phone = pan with a finger, pinch works too ---- */
-const FINE_POINTER = matchMedia("(hover:hover) and (pointer:fine)").matches;
-let zoomIndex=0;
+/* ---- Photo viewer: pinch / wheel to zoom, drag to move, double-tap (or double-click) to close ---- */
+const ZOOM_MAX=5;
+let zoomIndex=0, zs=1, ztx=0, zty=0;
+const zPtrs=new Map();               /* active fingers: id -> {x,y} */
+let zPinch=null, zDrag=null, zLastTap={t:0,x:0,y:0};
+function applyZoom(){
+  const st=$("#zoomStage"), img=$("#zoomImg");
+  const mx=Math.max(0,(img.offsetWidth*zs-st.clientWidth)/2), my=Math.max(0,(img.offsetHeight*zs-st.clientHeight)/2);
+  ztx=Math.min(mx,Math.max(-mx,ztx)); zty=Math.min(my,Math.max(-my,zty));
+  img.style.transform=`translate(${ztx}px,${zty}px) scale(${zs})`;
+  st.classList.toggle("zoomed",zs>1.02);
+}
+function zoomAt(ns,cx,cy){            /* keep the point under (cx,cy) fixed while zooming */
+  ns=Math.min(ZOOM_MAX,Math.max(1,ns));
+  const st=$("#zoomStage").getBoundingClientRect();
+  const px=cx-(st.left+st.width/2), py=cy-(st.top+st.height/2);
+  ztx=px-(px-ztx)*(ns/zs); zty=py-(py-zty)*(ns/zs); zs=ns;
+  if(zs===1){ ztx=0; zty=0; }
+  applyZoom();
+}
 function openZoom(i){
   const p=modalCur(); if(!p?.images?.[i]) return;
-  zoomIndex=i;
-  const img=$("#zoomImg"); img.src=sized(p.images[i],IMG_ZOOM); img.alt=p.name;
-  $("#zoomStage").classList.toggle("zoomed", !FINE_POINTER);
+  zoomIndex=i; zs=1; ztx=0; zty=0; zPtrs.clear(); zPinch=null; zDrag=null;
+  const img=$("#zoomImg"); img.style.transform=""; img.alt=p.name;
+  img.src=sized(p.images[i],IMG_ZOOM);
+  $("#zoomStage").classList.remove("zoomed");
   $("#zoomOverlay").hidden=false; $("#zoomCloseBtn").focus();
-  if(!FINE_POINTER) img.onload=()=>{ const st=$("#zoomStage"); st.scrollLeft=(st.scrollWidth-st.clientWidth)/2; st.scrollTop=(st.scrollHeight-st.clientHeight)/3; };
 }
-function closeZoom(){ $("#zoomOverlay").hidden=true; $("#zoomImg").removeAttribute("src"); }
+function closeZoom(){ $("#zoomOverlay").hidden=true; $("#zoomImg").removeAttribute("src"); zPtrs.clear(); }
 $("#zoomCloseBtn").addEventListener("click",closeZoom);
-$("#zoomStage").addEventListener("click",e=>{
-  if(!FINE_POINTER) return;
-  const st=$("#zoomStage"); st.classList.toggle("zoomed"); moveZoom(e);
-});
-function moveZoom(e){
+(function(){
   const st=$("#zoomStage"), img=$("#zoomImg");
-  if(!st.classList.contains("zoomed") || !img.offsetWidth) return;
-  const r=st.getBoundingClientRect();                     /* un-zoomed photo box, so the maths stays steady */
-  const clamp=v=>Math.min(100,Math.max(0,v)).toFixed(1);
-  img.style.transformOrigin=`${clamp((e.clientX-r.left-img.offsetLeft)/img.offsetWidth*100)}% ${clamp((e.clientY-r.top-img.offsetTop)/img.offsetHeight*100)}%`;
-}
-$("#zoomStage").addEventListener("mousemove",e=>{ if(FINE_POINTER) moveZoom(e); });
+  const dist=()=>{ const [a,b]=[...zPtrs.values()]; return Math.hypot(a.x-b.x,a.y-b.y); };
+  const mid =()=>{ const [a,b]=[...zPtrs.values()]; return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}; };
+  st.addEventListener("pointerdown",e=>{
+    st.setPointerCapture?.(e.pointerId);
+    zPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,t0:e.timeStamp});
+    if(zPtrs.size===2){ zPinch={d:dist(),s:zs}; zDrag=null; }
+    else if(zPtrs.size===1) zDrag={x:e.clientX,y:e.clientY,tx:ztx,ty:zty};
+  });
+  st.addEventListener("pointermove",e=>{
+    const p=zPtrs.get(e.pointerId); if(!p) return;
+    p.x=e.clientX; p.y=e.clientY;
+    if(zPtrs.size>=2 && zPinch){ const m=mid(); zoomAt(zPinch.s*dist()/zPinch.d,m.x,m.y); }
+    else if(zDrag && zs>1){ ztx=zDrag.tx+(e.clientX-zDrag.x); zty=zDrag.ty+(e.clientY-zDrag.y); applyZoom(); }
+  });
+  const end=e=>{
+    const p=zPtrs.get(e.pointerId); if(!p) return;
+    zPtrs.delete(e.pointerId);
+    const wasTap=Math.hypot(p.x-p.x0,p.y-p.y0)<10 && e.timeStamp-p.t0<350 && !zPinch;
+    if(zPtrs.size<2) zPinch=null;
+    if(zPtrs.size===1){ const q=[...zPtrs.values()][0]; zDrag={x:q.x,y:q.y,tx:ztx,ty:zty}; } else zDrag=null;
+    if(e.type!=="pointerup" || !wasTap || zPtrs.size) return;
+    const dbl=e.timeStamp-zLastTap.t<320 && Math.hypot(e.clientX-zLastTap.x,e.clientY-zLastTap.y)<40;
+    zLastTap={t:dbl?0:e.timeStamp,x:e.clientX,y:e.clientY};
+    if(dbl){ if(zs>1.02){ zs=1; ztx=0; zty=0; applyZoom(); } else closeZoom(); }   /* zoomed in: first double-tap resets; at normal size: closes */
+  };
+  st.addEventListener("pointerup",end); st.addEventListener("pointercancel",end);
+  st.addEventListener("wheel",e=>{ e.preventDefault(); zoomAt(zs*Math.exp(-e.deltaY*0.0025),e.clientX,e.clientY); },{passive:false});
+  img.addEventListener("dragstart",e=>e.preventDefault());
+})();
 
 $("#modalCloseBtn").addEventListener("click",()=>closeModal());
 $("#modalOverlay").addEventListener("click",e=>{ if(e.target.id==="modalOverlay") closeModal(); });
@@ -1637,6 +1679,15 @@ $("#selectedOnlyToggle").addEventListener("change",e=>{ state.selectedOnly=e.tar
 $("#brandHomeBtn").addEventListener("click",()=>showScreen("gender"));
 $("#backToGender").addEventListener("click",()=>showScreen("gender"));
 $("#skipToAll").addEventListener("click",()=>enterCatalogue(null,null));
+/* Landing page search: opens the whole catalogue with the search applied */
+$("#landingSearchForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const q=$("#landingSearch").value.trim(); if(!q) return;
+  enterCatalogue(null,null);
+  state.search=q; $("#searchInput").value=q; state.visibleCount=PAGE_SIZE; render();
+  track("search",{ search_term:q, results:currentFilteredList.length });
+  $("#landingSearch").value=""; $("#landingSearch").blur();
+});
 $("#skipToGender").addEventListener("click",()=>enterCatalogue(state.activeGender,null));
 /* ====================== MOBILE BOTTOM SHEET ====================== */
 function openSheet(){

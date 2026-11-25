@@ -27,6 +27,7 @@ const AR_UI = {
   "Search": "بحث",
   "Search style, fabric or colour code": "ابحث برمز الموديل أو القماش أو اللون",
   "My selection": "اختياراتي",
+  "Search by code": "ابحث برمز",
 
   "Previous": "السابق",
   "Next": "التالي",
