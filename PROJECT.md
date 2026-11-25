@@ -30,7 +30,6 @@ armani-site/
 ├── js/app.js                   All logic; boutique details (STORE) at the top
 ├── js/advisors-data.js         The ONE list of Client Advisors (catalogue personal links + /advisors/ page) — see §7e
 ├── js/advisor.js               Personal advisor links (?a=<id>): WhatsApp goes to that advisor — see §7e
-├── js/stories.js               Stories on the home page (round sections, full-screen picks) — see §7f
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
 │   ├── products.json           Generated catalogue used by the site (1,276 items)
@@ -120,6 +119,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-10-31 | Stories on the home page (§7f): round sections above the departments, full-screen pieces with "Add to my selection" / "View piece". Pieces are chosen automatically and rotate daily. Placed on the home page only, so the catalogue stays straight to the products. |
 | 2026-11-01 | Clean-up of unused items: unused photo, 8 old CSS rules, `firstImage` / `trGender` helpers, outdated `README.md` (PROJECT.md is the description), empty `model` field in `products.json` / `build_products.py`. Also removed (same day): `scripts/check_missing.py`, `export_missing.py`, `test_images.py`. Kept on purpose: `/print/` ticket page (used in store), products without photos. |
 | 2026-11-02 | New staff page `/catalogue/` (mini-catalogue maker for VIP clients): advisor picks name, For, Category, Type, New season only, per style / every colour, cover title → PDF (cover + one section per type, Bodoni Moda + Jost fonts, pieces without photos left out, clickable "Chat on WhatsApp" with that advisor at the bottom of every page). Fonts `assets/fonts/bodoni-moda-latin-400/500-normal.woff2`. Removed piece/colour counts from the site (type buttons, "N pieces · N colours" line, "N colours" on cards). Service worker → ea-v34. |
+| 2026-11-25 | Stories removed from the home page (§7f). Search now ignores the department / category / type filters while a search term is typed, so a code from another section (e.g. Women while in Men) shows up. Clearing the search restores the filters. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)
@@ -183,14 +183,9 @@ The forwarding pages carry the WhatsApp/social preview tags: the site picture (`
 - **Generate (links, QR codes, forwarding pages):** `pip install "qrcode[pil]"` then `python scripts/make_advisor_links.py` → `advisor-qr/<id>.png` + `advisor-qr/links.csv` (git-ignored; `/qr/` is the shop QR page, so a different folder) AND the forwarding pages `<id>/index.html` + `404.html` (**commit and push these** — they are what makes the clean link work). The QR code holds the clean link. After adding/removing an advisor, run it again. Change `CAMPAIGN` in the script if the campaign name changes (the script rewrites the pages).
 - **Footer / home-page "WhatsApp" link** also goes to the advisor while one is active ("Call" stays the boutique).
 
-## 7f. Stories on the home page (2026-10-31) — fully automatic
+## 7f. Stories on the home page — removed (2026-11-25)
 
-A row of round "sections" (Women, Men, Bags & leather, Shoes, Kids, Accessories) sits above the department cards on the home page. Tapping one opens full-screen pieces, Instagram-style: tap the right side = next, left = previous, hold = pause, swipe sideways = next/previous section, swipe down or ✕ = close. Each piece has **Add to my selection** and **View piece**; "My selection · n" opens the selection panel. Rings turn grey once opened on that phone (`ea_story_seen`; new pieces make a ring dark again). Works in Arabic (right-to-left) and on computer (arrow keys, Esc).
-
-- **Nothing to maintain:** `js/stories.js` chooses the pieces itself — FW26 ("new season") pieces with a photo, one per style, mixed across types, and the mix changes every day at midnight (Bahrain time). Same story for every visitor (advisor links included). Sections and how many pieces each takes: `SECTIONS` at the top of `js/stories.js`.
-- **Code:** `js/stories.js`, styles at the end of `css/style.css`, `<div id="storyStrip">` in `index.html`, Arabic texts in `js/i18n.js`. After changing them bump the `?v=` numbers in `index.html` and `VERSION` in `sw.js`.
-- **Analytics:** `story_open` (`story_section`), `story_add`, `story_view_piece`; plus the usual `add_to_wishlist`; all carry `advisor=<id>` when a personal link is active.
-- **Decision:** hand-picked stories per advisor (sign-in editor page + Firebase logins) were built and then removed the same day — too much set-up and upkeep. Can be added back later if wanted.
+The home-page stories (round sections + full-screen picks) were taken out. `js/stories.js`, their markup, script tag and CSS are deleted; `sw.js` is ea-v41.
 
 ## 8. Custom domain — DONE: www.eawishlist.com (DNS checked 2026-10-14)
 

@@ -793,9 +793,13 @@ const showingNoPhoto = () => state.showNoPhoto || !!state.search || state.select
 function getFilteredProducts(){
   hiddenSet=new Set();
   let list=PRODUCTS.filter(p=>{
-    if(state.filters.gender.size   && !state.filters.gender.has(p.gender))     return false;
-    if(state.filters.category.size && !state.filters.category.has(p.category)) return false;
-    if(state.filters.sub.size      && !state.filters.sub.has(p.grp))           return false;
+    /* While searching, the department / category / type filters are ignored, so a code from
+       any section (e.g. Women while in Men) is found. Clearing the search restores them. */
+    if(!state.search){
+      if(state.filters.gender.size   && !state.filters.gender.has(p.gender))     return false;
+      if(state.filters.category.size && !state.filters.category.has(p.category)) return false;
+      if(state.filters.sub.size      && !state.filters.sub.has(p.grp))           return false;
+    }
     if(state.selectedOnly && !state.selected.has(p.id))                         return false;
     if(state.shared && !state.shared.has(p.id))                                 return false;
     if(!p.images?.length && !showingNoPhoto())                                   { hiddenSet.add(gKey(p)); return false; }
