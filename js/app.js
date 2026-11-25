@@ -1043,6 +1043,7 @@ function paintModal(){
           </button>`).join("")}</div>`:""}
       </div>`
     :`<div class="img-pending">${pendingSVG()}<span>${t("No photo yet")}</span></div>`;
+  { const u=hasImages&&p.images[0]; if(u) setTimeout(()=>preloadZoom(sized(u,IMG_ZOOM)),400); }   /* warm the sharp photo while the client looks */
   const track=$("#galleryTrack");
   if(track) track.addEventListener("scroll",()=>{
     const i=Math.round(track.scrollLeft/Math.max(1,track.clientWidth));
@@ -1149,7 +1150,9 @@ $("#modalMediaInner").addEventListener("click",e=>{
   if(z){                                       /* double-tap / double-click on the photo opens the viewer */
     const now=e.timeStamp;
     if(now-openTap.t<320 && Math.hypot(e.clientX-openTap.x,e.clientY-openTap.y)<40){ openTap.t=0; return openZoom(+z.dataset.zoom); }
-    openTap={t:now,x:e.clientX,y:e.clientY}; return;
+    openTap={t:now,x:e.clientX,y:e.clientY};
+    { const pc=modalCur(); const u=pc?.images?.[+z.dataset.zoom]; if(u) preloadZoom(sized(u,IMG_ZOOM)); }   /* first tap: begin loading the sharp photo */
+    return;
   }
   const thumb=e.target.closest("[data-gallery-index]"); if(!thumb) return;
   const track=$("#galleryTrack"); const i=+thumb.dataset.galleryIndex;
@@ -1157,6 +1160,17 @@ $("#modalMediaInner").addEventListener("click",e=>{
 });
 /* ---- Photo viewer: pinch / wheel to zoom, drag to move, double-tap (or double-click) to close ---- */
 const ZOOM_MAX=5;
+let zoomToken=0; const zoomReady=new Set(), zoomLoading=new Map();
+function preloadZoom(url){                        /* start (or reuse) the sharp-photo download */
+  if(zoomReady.has(url)) return Promise.resolve();
+  if(!zoomLoading.has(url)) zoomLoading.set(url,new Promise(res=>{
+    const im=new Image(); im.decoding="async";
+    im.onload=()=>{ (im.decode?im.decode().catch(()=>{}):Promise.resolve()).then(()=>{ zoomReady.add(url); res(); }); };
+    im.onerror=()=>{ zoomLoading.delete(url); res(); };
+    im.src=url;
+  }));
+  return zoomLoading.get(url);
+}
 let zoomIndex=0, zs=1, ztx=0, zty=0;
 const zPtrs=new Map();               /* active fingers: id -> {x,y} */
 let zPinch=null, zDrag=null, zLastTap={t:0,x:0,y:0};
@@ -1179,7 +1193,11 @@ function openZoom(i){
   const p=modalCur(); if(!p?.images?.[i]) return;
   zoomIndex=i; zs=1; ztx=0; zty=0; zPtrs.clear(); zPinch=null; zDrag=null;
   const img=$("#zoomImg"); img.style.transform=""; img.alt=p.name;
-  img.src=sized(p.images[i],IMG_ZOOM);
+  /* open instantly with the photo already on screen, then swap in the sharp 2048px one */
+  const slideImg=document.querySelectorAll("#galleryTrack .gallery-slide img")[i];
+  const hi=sized(p.images[i],IMG_ZOOM), token=++zoomToken;
+  img.src=(zoomReady.has(hi)||!slideImg?.currentSrc)?hi:slideImg.currentSrc;
+  if(img.src!==hi) preloadZoom(hi).then(()=>{ if(token===zoomToken && !$("#zoomOverlay").hidden) img.src=hi; });
   $("#zoomStage").classList.remove("zoomed");
   $("#zoomOverlay").hidden=false; $("#zoomCloseBtn").focus();
 }
