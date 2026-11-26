@@ -226,20 +226,6 @@ document.addEventListener("error", e=>{
   img.src=PHOTO_COPIES+encodeURIComponent(name);
 }, true);
 
-/* Overexposed photos (a white item on a white backdrop) lose their detail: when a product photo
-   measures very light, darken it a little so the item's folds, seams and print stay visible. */
-const TONE_LIGHT = 200, TONE_VERY_LIGHT = 225;
-document.addEventListener("load", async e=>{
-  const img=e.target;
-  if(!(img instanceof HTMLImageElement) || img.dataset.toned || !img.closest(".card-media, .modal, .gallery-slide, .thumb, .drawer-item")) return;
-  img.dataset.toned="1";
-  const src=img.getAttribute("src")||"";
-  if(!/^https?:/.test(src)) return;
-  const l = await itemLightness(src);
-  if(l==null || l<TONE_LIGHT) return;
-  img.style.filter = l>=TONE_VERY_LIGHT ? "brightness(.8) contrast(1.12)" : "brightness(.9) contrast(1.08)";
-}, true);
-
 /* ========================= LOAD ========================= */
 async function loadProducts(){
   try{
