@@ -226,6 +226,37 @@ document.addEventListener("error", e=>{
   img.src=PHOTO_COPIES+encodeURIComponent(name);
 }, true);
 
+/* Light items (a white piece on a white backdrop) lose their detail. For those photos only, the white
+   studio backdrop is toned down to a soft grey, while the item's own colours are left as they are.
+   Works only where the browser may read the photo's pixels; otherwise the photo is shown unchanged. */
+const TONE_LIGHT = 200, BACKDROP_MIN = 235, BACKDROP_TARGET = 0.82, MAX_TONE_PX = 800;
+document.addEventListener("load", async e=>{
+  const img=e.target;
+  if(!(img instanceof HTMLImageElement) || img.dataset.toned || !img.closest(".card-media, .modal, .gallery-slide, .thumb, .drawer-item")) return;
+  img.dataset.toned="1";
+  const src=img.getAttribute("src")||"";
+  if(!/^https?:/.test(src) || !img.naturalWidth) return;
+  const l = await itemLightness(src);
+  if(l==null || l<TONE_LIGHT) return;
+  try{
+    const k = Math.min(1, MAX_TONE_PX/Math.max(img.naturalWidth, img.naturalHeight));
+    const W = Math.round(img.naturalWidth*k), H = Math.round(img.naturalHeight*k);
+    const c = document.createElement("canvas"); c.width=W; c.height=H;
+    const x = c.getContext("2d", {willReadFrequently:true});
+    x.drawImage(img,0,0,W,H);
+    const px = x.getImageData(0,0,W,H), d = px.data;
+    for(let i=0;i<d.length;i+=4){
+      const r=d[i], g=d[i+1], b=d[i+2];
+      const lum=.299*r+.587*g+.114*b, chroma=Math.max(r,g,b)-Math.min(r,g,b);
+      if(lum>=BACKDROP_MIN && chroma<12){           /* neutral near-white = backdrop */
+        d[i]=r*BACKDROP_TARGET; d[i+1]=g*BACKDROP_TARGET; d[i+2]=b*BACKDROP_TARGET;
+      }
+    }
+    x.putImageData(px,0,0);
+    img.src = c.toDataURL("image/jpeg", .92);      /* also re-triggers load; the toned flag stops a loop */
+  }catch(err){ /* photo not readable from this page: keep it as it is */ }
+}, true);
+
 /* ========================= LOAD ========================= */
 async function loadProducts(){
   try{
