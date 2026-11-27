@@ -135,7 +135,7 @@ def main():
             "category":    category,
             "family":      family,
             "sub":         sub,
-            "name":        display_name(sub),
+            "name":        display_name(sub or category),   # no sub-family yet: show the category
             "styleCode":   style,
             "fabricCode":  fabric,
             "colorCode":   color,

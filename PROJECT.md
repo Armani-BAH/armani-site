@@ -216,3 +216,4 @@ Self-contained in-store game for the Emporio Armani Kids activity (shop iPad, Sa
 - First load: 1,253 of 1,276 products priced. 63 price rows match no product on the site; 23 site products have no price — to review later.
 - Known data issue: EW004413 / AF25603 / UC001 is filed under MAN · Ready to wear in `armani_styles.xlsx` but is WOMAN · Underwear in the price list (price is the same either way).
 - When prices change, also bump `VERSION` in `sw.js` so phones fetch the new `prices.json`.
+- 27 Nov 2026: the 63 price-list codes that were missing were appended to the END of `armani_styles.xlsx` (rows 1311–1373, so existing ids did not change) → 1,339 products, all price rows now on the site. 7 took family/sub-family from the same style already on the site; 56 have no family/sub-family yet, so they show under an "Other" chip with the category as their name (`build_products.py` now falls back to the category). None of the 63 has a photo yet.
