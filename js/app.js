@@ -148,6 +148,11 @@ const subLabel     = s => trType(s)     || sentenceCase(s);
 const famLabel     = f => trFamily(f)   || sentenceCase(f);
 const genderRank   = g => { const i = GENDER_ORDER.indexOf(g); return i===-1 ? GENDER_ORDER.length : i; };
 const fmt          = n => n.toLocaleString("en-US");
+/* Retail price in Bahraini dinar. Only the EXACT style + fabric + colour has a price
+   (data/prices.json, built by scripts/build_prices.py): the same style in another fabric
+   or colour can cost more or less, so there is never a "same style" fallback. */
+const priceText    = p => p.price ? (IS_AR ? `${fmt(p.price)} د.ب` : `BHD ${fmt(p.price)}`) : "";
+const priceHTML    = (p, cls) => p.price ? `<div class="${cls}"${IS_AR?"":` dir="ltr"`}>${esc(priceText(p))}</div>` : "";
 const piecesText   = n => IS_AR ? arCount(n,"قطعة واحدة","قطعتان","قطع","قطعة") : `${fmt(n)} ${n===1?"piece":"pieces"}`;
 const coloursText  = n => IS_AR ? arCount(n,"لون واحد","لونان","ألوان","لوناً") : `${fmt(n)} colours`;
 const esc          = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -260,15 +265,17 @@ document.addEventListener("load", async e=>{
 /* ========================= LOAD ========================= */
 async function loadProducts(){
   try{
-    const [r, rp] = await Promise.all([ fetch("data/products.json"), fetch("data/perfumes.json").catch(()=>null) ]);
+    const [r, rp, rq] = await Promise.all([ fetch("data/products.json"), fetch("data/perfumes.json").catch(()=>null), fetch("data/prices.json").catch(()=>null) ]);
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     PRODUCTS = await r.json();
     const PERFUMES = rp && rp.ok ? await rp.json().catch(()=>({})) : {};   /* fragrance names + notes (data/perfume_notes.xlsx) */
+    const PRICES   = rq && rq.ok ? await rq.json().catch(()=>({})) : {};   /* BHD, exact style-fabric-colour (data/prices.xlsx) */
     PRODUCTS.forEach(p=>{
       if(p.category==="TEXTILE ACCESSORIES") p.category="SOFT ACCESSORIES";   /* shown together (ties, stoles…) */
       const g=groupOf(p.category, displayGender(p.gender), p.sub, p.family);
       p.grp=g.key; p.grpOrder=g.order; p.subOrder=g.subOrder;
       p.nameEn=p.name; if(IS_AR) p.name=trType(p.sub)||p.name;
+      p.price=PRICES[pKey(p)]||0;          /* exact code only — no price shown when there is no exact match */
       const f=PERFUMES[p.styleCode];
       if(f && f.name){ p.perfume=f; p.name=p.nameEn=f.name; }
       /* season comes from the photo file name, e.g. …_F_FW2026.jpg */
@@ -937,6 +944,7 @@ function cardHTML(group){
           <span>${esc(genderLabel(p.gender))}</span>
           <span>${p.perfume ? `${esc(subLabel(p.sub))} · ${esc(sizeLabel(p.colorCode))}` : esc(catLabel(p.category))}</span>
         </div>
+        ${priceHTML(p,"card-price")}
         ${p.perfume ? keyNotesHTML(p.perfume) : ""}
         ${swatchesHTML(group,p,"card")}
         <!-- codes live in the product window, WhatsApp message and PDF; search still finds them -->
@@ -1084,6 +1092,7 @@ function paintModal(){
   $("#modalCat").textContent=catLabel(p.category);
   $("#modalName").textContent=p.name;
   $("#modalGender").textContent=genderLabel(p.gender);
+  { const mp=$("#modalPrice"); mp.textContent=priceText(p); mp.hidden=!p.price; }
   $("#modalStyle").textContent=p.styleCode;
   $("#modalFabric").textContent=p.fabricCode;
   $("#modalColor").textContent=p.colorCode;
@@ -1310,6 +1319,7 @@ function renderDrawer(){
       <div class="drawer-item-info">
         <div class="name">${esc(p.name)}</div>
         <div class="meta">${esc(genderLabel(p.gender))}${IS_AR?"، ":", "}${esc(catLabel(p.category))}</div>
+        ${priceHTML(p,"drawer-price")}
         <div class="codes">${t("Style")} ${esc(p.styleCode)}<br>${t("Fabric")} ${esc(p.fabricCode)}<br>${t("Colour")} ${esc(p.colorCode)}</div>
         <div class="drawer-note${state.notes[p.id]?" open":""}">
           <textarea data-note="${esc(p.id)}" rows="2" maxlength="300"

@@ -1,6 +1,6 @@
 # Emporio Armani Bahrain — Product Selection Site
 
-Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Clients browse the FW26 collection, add pieces to "My selection", and send it to their Client Advisor on WhatsApp (or save it as a PDF) to start a conversation. No prices, sizes or quantities — on purpose.
+Static catalogue website for Emporio Armani (Bahrain – Marassi Mall). Clients browse the FW26 collection, add pieces to "My selection", and send it to their Client Advisor on WhatsApp (or save it as a PDF) to start a conversation. Retail prices (BHD) are shown on each piece since 27 Nov 2026; no sizes or quantities — on purpose.
 
 - **Repo:** https://github.com/Armani-BAH/armani-site
 - **Live (GitHub Pages):** https://armani-bah.github.io/armani-site/
@@ -33,8 +33,11 @@ armani-site/
 ├── data/
 │   ├── armani_styles.xlsx      Source of truth (item list from Excel)
 │   ├── products.json           Generated catalogue used by the site (1,276 items)
+│   ├── prices.xlsx             Retail price list (BHD) — source for prices.json
+│   ├── prices.json             Generated: exact "style-fabric-colour" -> BHD price
 └── scripts/
     ├── build_products.py       Excel -> products.json (+ image lookup on Armani CDN)
+    ├── build_prices.py         prices.xlsx -> prices.json (strict exact-code matching + check report)
     └── make_advisor_links.py   Personal links: <id>/index.html forwarding pages + 404.html (committed) and QR codes -> advisor-qr/ (git-ignored)
 ```
 
@@ -200,3 +203,15 @@ The home-page stories (round sections + full-screen picks) were taken out. `js/s
 ## 9. Little Stars kids game — www.eawishlist.com/little-stars/ (2026-11-11)
 
 Self-contained in-store game for the Emporio Armani Kids activity (shop iPad, Safari, English + Arabic). Lives entirely in `little-stars/` with its own photos, fonts, manifest and `sw.js` (scope `/little-stars/`); it does not use or change the catalogue site. Not linked from the site and marked `noindex`. Full guide: `little-stars/README.md`. After changing any file there, raise `VERSION` in `little-stars/sw.js` (or run `python little-stars/tools/build_offline_list.py`).
+
+
+## Prices (added 27 Nov 2026)
+
+- Source: `data/prices.xlsx` (columns Sector/Gender2, Category2, Style, Fabric, Color, Retail Price (Correct)), in **BHD**.
+- Run `python scripts/build_prices.py` after changing the price list or `products.json`; it rewrites `data/prices.json` and prints a check report.
+- **Matching is exact on style + fabric + colour.** 41 styles have different prices per fabric, and some even per colour (e.g. EM000098 / TE10154: 550 or 580), so there is deliberately **no fallback** to the same style. No exact match → no price shown.
+- Price 0 or blank → hidden. "Grand Total" row ignored. The same code listed twice with two different prices → hidden.
+- Shown on: product card (changes with the colour swatch), product window, "My selection" drawer. Not (yet) in the WhatsApp message, PDF or mini-catalogue.
+- First load: 1,253 of 1,276 products priced. 63 price rows match no product on the site; 23 site products have no price — to review later.
+- Known data issue: EW004413 / AF25603 / UC001 is filed under MAN · Ready to wear in `armani_styles.xlsx` but is WOMAN · Underwear in the price list (price is the same either way).
+- When prices change, also bump `VERSION` in `sw.js` so phones fetch the new `prices.json`.

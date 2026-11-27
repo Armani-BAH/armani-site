@@ -897,3 +897,9 @@ footer{border-top:1px solid var(--line);padding:40px 0 90px;background:#faf9f7;}
 
 /* number of pieces on a sub-category chip, e.g. "Shirts 35" */
 
+
+/* Retail price (BHD) — card, product window, selection list */
+.card-price{margin-top:6px;font-size:.95rem;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink,#111);}
+[dir="rtl"] .card-price,[dir="rtl"] .drawer-price,[dir="rtl"] .modal-price{text-align:right;}
+.modal-price{margin-top:10px;font-size:1.15rem;letter-spacing:.02em;font-variant-numeric:tabular-nums;}
+.drawer-price{margin-top:2px;font-size:.85rem;font-variant-numeric:tabular-nums;}
