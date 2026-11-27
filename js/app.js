@@ -283,6 +283,12 @@ async function loadProducts(){
       p.isNew = p.season===NEW_SEASON;
     });
 
+    /* Price used to group colours into cards. A colour with no price joins its style's card
+       when that style has exactly one price; otherwise it gets its own (unpriced) card. */
+    { const prices=new Map();
+      PRODUCTS.forEach(p=>{ const k=displayGender(p.gender)+"|"+p.styleCode; if(!prices.has(k)) prices.set(k,new Set()); if(p.price) prices.get(k).add(p.price); });
+      PRODUCTS.forEach(p=>{ const s=prices.get(displayGender(p.gender)+"|"+p.styleCode); p.cardPrice = p.price || (s.size===1 ? [...s][0] : 0); }); }
+
     /* Build display gender list — deduplicated and ordered */
     const seen = new Set();
     GENDERS = [];
@@ -867,7 +873,9 @@ let currentFilteredList=[];
 let currentGroups=[];               /* [[variant, variant…], …] in display order */
 let groupByKey=new Map();           /* group key -> variants (filtered) */
 const pick=new Map();               /* group key -> id of the colour on show */
-const gKey = p => displayGender(p.gender)+"|"+p.styleCode;
+/* Colours share a card only when they also share a price: a style whose fabrics (or colours)
+   are priced differently gets one card per price (Nov 2026). */
+const gKey = p => displayGender(p.gender)+"|"+p.styleCode+"|"+(p.cardPrice||0);
 /* Sub-category groups present in a list of products, in the approved order,
    with how many cards each would show. */
 function groupsIn(prods){

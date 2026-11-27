@@ -211,7 +211,8 @@ Self-contained in-store game for the Emporio Armani Kids activity (shop iPad, Sa
 - Run `python scripts/build_prices.py` after changing the price list or `products.json`; it rewrites `data/prices.json` and prints a check report.
 - **Matching is exact on style + fabric + colour.** 41 styles have different prices per fabric, and some even per colour (e.g. EM000098 / TE10154: 550 or 580), so there is deliberately **no fallback** to the same style. No exact match → no price shown.
 - Price 0 or blank → hidden. "Grand Total" row ignored. The same code listed twice with two different prices → hidden.
-- Shown on: product card (changes with the colour swatch), product window, "My selection" drawer. Not (yet) in the WhatsApp message, PDF or mini-catalogue.
+- Shown on: product card, product window, "My selection" drawer.
+- **One card per price:** colours of a style share a card only when they share a price (`gKey` = department | style | price). A colour with no price joins its style's card if that style has exactly one price, otherwise it gets its own card. Catalogue went from 806 to 865 cards. Not (yet) in the WhatsApp message, PDF or mini-catalogue.
 - First load: 1,253 of 1,276 products priced. 63 price rows match no product on the site; 23 site products have no price — to review later.
 - Known data issue: EW004413 / AF25603 / UC001 is filed under MAN · Ready to wear in `armani_styles.xlsx` but is WOMAN · Underwear in the price list (price is the same either way).
 - When prices change, also bump `VERSION` in `sw.js` so phones fetch the new `prices.json`.
