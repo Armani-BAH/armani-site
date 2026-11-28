@@ -95,7 +95,7 @@ Images are now read from the Excel's Image 1–4 columns (no CDN crawling). Rows
 
 7. Visitor statistics (Google Analytics 4) — code ready, ON — `ANALYTICS_ID = "G-1098C6F5SS"` at the top of `js/app.js`. Events: page_view, view_item, select_colour, add_to_wishlist / remove_from_selection, send_selection (whatsapp_boutique / whatsapp_other), save_pdf, share (copy_link / share_piece), search, contact (whatsapp_chat / call / directions), open_shared_selection, add_all_shared, language_change, install_app, advisor_link_open (see §7e). Product info is always sent in English (item_id = style-fabric-colour). Debug: `window.EA_DEBUG=true` in the browser console prints every event.
 
-Open: 269 products without photos; CDN hot-linking permission; custom domain.
+Open: 63 products without photos (28 Nov 2026); CDN hot-linking permission; custom domain.
 
 ## 5. Working notes
 
@@ -123,6 +123,7 @@ Open: 269 products without photos; CDN hot-linking permission; custom domain.
 | 2026-11-01 | Clean-up of unused items: unused photo, 8 old CSS rules, `firstImage` / `trGender` helpers, outdated `README.md` (PROJECT.md is the description), empty `model` field in `products.json` / `build_products.py`. Also removed (same day): `scripts/check_missing.py`, `export_missing.py`, `test_images.py`. Kept on purpose: `/print/` ticket page (used in store), products without photos. |
 | 2026-11-02 | New staff page `/catalogue/` (mini-catalogue maker for VIP clients): advisor picks name, For, Category, Type, New season only, per style / every colour, cover title → PDF (cover + one section per type, Bodoni Moda + Jost fonts, pieces without photos left out, clickable "Chat on WhatsApp" with that advisor at the bottom of every page). Fonts `assets/fonts/bodoni-moda-latin-400/500-normal.woff2`. Removed piece/colour counts from the site (type buttons, "N pieces · N colours" line, "N colours" on cards). Service worker → ea-v34. |
 | 2026-11-25 | Stories removed from the home page (§7f). Search now ignores the department / category / type filters while a search term is typed, so a code from another section (e.g. Women while in Men) shows up. Clearing the search restores the filters. |
+| 2026-11-28 | Prices + missing family/sub-family filled from the all-products list; EW004413 moved to Woman. 234 photos added for pieces that had none (approved by Jasim): Armani CDN older seasons (SS2019–SS2027, views F/D/L/R/B/A/E), Armani Beauty (perfumes), and retailer listings matched on exact style + fabric + colour (Urbanheer, Edel-Optics, vistaexpert.it, Carmen Boutique, Junior Couture, Wisteria via its `_ipx` link, Rubino Kids, Vitkac, Bianco, International Jock, Tops and Bottoms USA). Links are in `armani_styles.xlsx` Image 1–4; the Photo backup job copies them to Armani-images. 63 still without a photo. Service worker → ea-v51. |
 | 2026-09-21 | Restructured folders (`assets/`, `scripts/`), fixed bugs #1–#7, #10, #11; smoke-tested rendering, filtering, sort-by-name, modal and selection. |
 
 ## 7. Link format (Phase 2)
